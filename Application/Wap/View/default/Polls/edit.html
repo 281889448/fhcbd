@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+    <include file="cssjs"/>
+   
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>修改社情民意</h1>
+       
+    </header>
+     
+    <section class="ui-container">
+
+<form action="{:U('Wap/Polls/doPost')}" method="post">
+    <input type="hidden" name="id" value="{$polls['id']}"/>
+    <input type="hidden" name="status" value="2">
+<div class="search-box">
+    {:W('InputRender/InputRender',array('modelid'=>7,'name'=>'time',$polls['id']))}
+    <select name="type_id" >
+        <option value="">--请选择--</option>
+        <volist name="tree" id="top">
+            <option value="{$top.id}" <eq name="polls.type_id" value="$top.id">selected</eq> >
+                {$top.title}
+            </option>
+        </volist>
+    </select>
+        	<div class="add_btn" id="J_author">选择参与人员</div>
+</div>
+        	
+        <h4 class="tit">参与人员列表</h4>
+        <div class="textwrap">
+        	<textarea name="" rows="3" cols="" id="text-author" readonly>{$polls.people_view}</textarea>
+        </div>
+
+
+
+     <div class="content">
+         {:W('InputRender/InputRender',array('modelid'=>7,'name'=>'title',$polls['id']))}
+         {:W('InputRender/InputRender',array('modelid'=>7,'name'=>'content',$polls['id']))}
+
+
+         <div class="fujian">
+             {:W('InputRender/InputRender',array('modelid'=>7,'name'=>'upload',$polls['id'],0))}
+         </div>
+         <if condition="$polls['back_suggest']">
+             <div class="back-suggest">
+                 退回意见
+                 <textarea name="" id="" cols="30" rows="5" style="width: 98%;margin: 5px auto;display: block;border: 1px solid #ddd;" placeholder="退回意见" readonly>{$polls.back_suggest}</textarea>
+             </div>
+         </if>
+       <button class="self_btn_h ui-btn-primary">提交</button>
+     </div>
+
+
+</form>
+        
+    </section>
+ 
+ <div class="ui-dialog">
+    <div class="ui-dialog-cnt">
+      <header class="ui-dialog-hd ui-border-b">
+                  <h3>搜索参与人员</h3>
+                  <i class="ui-dialog-close" data-role="button"></i>
+              </header>
+        <div class="ui-dialog-bd">
+        	<div class="s_bar">
+        		<span class="c777">已选择的参与人员：</span>
+        		<div class="textarea clear">
+        			
+        		</div>
+        	</div>
+        	<div class="s_bar">
+        		<input type="text" /> <button class="ui-btn">搜索</button>
+        	</div>
+  
+           <table  class="ui-table ui-border" id="searchtable">
+           	
+
+           	
+           </table>
+        </div>
+        <div class="ui-dialog-ft">
+            <button type="button" data-role="button" id="dis">取消</button>
+            <button type="button" data-role="button" id="yes">确定</button>
+        </div>
+    </div>        
+</div>
+
+    
+    
+    
+    
+    
+    
+    
+    
+<!--script src="__PUBLIC__/Wap/js/jquery.min.js"></script-->
+<script src="__PUBLIC__/Wap/js/mobiscroll_date.js" charset="gb2312"></script>
+<script src="__PUBLIC__/Wap/js/mobiscroll.js"></script>
+<script type="text/javascript">
+$(function () {
+	var currYear = (new Date()).getFullYear();	
+	var opt={};
+	opt.date = {preset : 'date'};
+	opt.datetime = {preset : 'datetime'};
+	opt.time = {preset : 'time'};
+	opt.default = {
+		theme: 'android-ics light', //皮肤样式
+		display: 'modal', //显示方式 
+		mode: 'scroller', //日期选择模式
+		dateFormat: 'yyyy-mm-dd',
+		lang: 'zh',
+		showNow: true,
+		nowText: "今天",
+		startYear: currYear - 50, //开始年份
+		endYear: currYear + 10 //结束年份
+	};
+
+	$("#USER_AGE").mobiscroll($.extend(opt['date'], opt['default']));
+	$("#USER_AGE2").mobiscroll($.extend(opt['date'], opt['default']));
+
+});
+</script>
+<script >
+$(function(){
+	$("#J_author").click(function(){
+		$(".ui-dialog").show();
+		
+	})
+	$("#dis").click(function(){
+		$(".ui-dialog").hide();
+	});
+	$("#yes").click(function(){
+		var arr=[];
+		$(".textarea").find("span").each(function(i,el){
+			arr.push($(el).text())
+		})
+		$("#text-author").val(arr)
+		$(".ui-dialog").hide();
+	});
+	$("#searchtable").on("click",".author_btn",function(){
+		var author = $(this).text();
+		$(".textarea").append('<span class="author_del">'+author+'</span>')
+	});
+	$(".textarea").on("click",".author_del",function(){
+		$(this).remove();
+	})
+})
+
+</script>   
+    
+
+</body>
+
+</html>

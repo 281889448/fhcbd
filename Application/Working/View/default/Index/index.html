@@ -1,0 +1,178 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                     <div class="clearfix" style="margin-left:0px;margin-bottom:15px;">
+                        <h4 style="margin:5px;margin-left:0">工作动态列表</h4>
+                        <if condition="$group == '委员' || $group == '集体'">
+                        <a href="{:U('Working/Index/add')}" class="btn btn-primary btn-sm col-sm-1" style="margin-right:15px;padding-left:0">添加工作动态</a>
+                       </if>
+
+                        <form name="frme" method="post" action="{:U('Working/Index/index',array('status'=>$status))}">
+                            <div class="col-sm-1" style="padding:0">
+                            {:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'title'))}
+                            </div>
+
+                            <div class="col-sm-2" style="padding:0">
+                                <input size="16" type="text" value="" name="stime" readonly class="form-control laydate-icon" placeholder="开始日期" required onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" />
+                            </div>
+                            <div class="col-sm-2" style="padding:0">
+                                <input size="16" type="text" value="" name="etime" readonly class="form-control laydate-icon" placeholder="结束日期" required onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" />
+                            </div>
+
+                        <div class="col-sm-1" style="padding:0;margin-left:15px">
+                            <button type="submit" class="btn btn-primary btn-sm">查询</button>
+                        </div>
+                            </form>
+                            </div>
+                        <table class="table table-bordered table-responsive table-condensed" id="table1">
+                            <thead>
+                            <tr>
+                                <th>
+                                    日期
+                                </th>
+
+                                <th>
+                                    标题
+                                </th>
+                                <th>发布人</th>
+
+                                <th>
+                                    状态
+                                </th>
+                                <th style="width:270px">
+                                    操作
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <volist name="resaut" id="v">
+                                <tr>
+                                    <td style="width:180px">
+                                       {$v.time|date='Y-m-d',###}
+                                    </td>
+
+
+                                    <td>
+                                        {$v.title}
+                                    </td>
+                                    <td>{$v.author}</td>
+                                    <td>
+                                        <if condition="$v['status'] eq 1">
+                                            未提交
+                                            <elseif condition="$v['status'] eq 2"/>
+                                            初审中
+                                            <elseif condition="$v['status'] eq 3"/>
+                                            终审中
+                                            <elseif condition="$v['status'] eq 4"/>
+                                            初审退回
+                                            <elseif condition="$v['status'] eq 5"/>
+                                            终审退回
+                                            <elseif  condition="$v['status'] eq 6"/>
+                                            审核完成
+                                        </if>
+                                    </td>
+                                    <td style="width:150px">
+                                        <a class="btn btn-primary btn-sm" href="{:U('Working/Index/prepare',array('id'=>$v['id']))}">查看</a>
+                                        <if condition="$v['backflag']">
+                                        <button data="{$v['id']}" data-toggle="modal" data-target="#myModal" class="btn btn-primary btn-sm btn-return" onclick="$('#return_status').val({$v[status]});">退回意见</button>
+                                        </if>
+                                        <in name="v['status']" value="1,4">
+                                            <a class="btn btn-primary btn-sm" href="{:U('Working/Index/edit',array('id'=>$v['id']))}">修改</a>
+                                            <a class="btn btn-danger  btn-sm btn-del" href="javascript:;" delid="{$v['id']}" >删除</a>
+
+
+                                        </in>
+                                    </td>
+                                </tr>
+                            </volist>
+                            </tbody>
+                        </table>
+                        <div>
+                            {$page}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var delid='';
+        $(function() {
+            $(".btn-del").click(function() {
+                delid=$(this).attr('delid');
+                var choose =confirm('您是否确认删除该记录？');
+                if(choose) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{:U('Working/Index/remove')}",
+                        data: {'id': delid},
+                        success: function (data) {
+                            data = $.parseJSON(data);
+                            if (data.code == 1) {
+                                $('#myModal').modal('hide');
+                                window.location.reload();
+                            } else {
+                                alert(data.msg);
+                            }
+                        }
+                    })
+                }
+            });
+            $(".btn-return").click(function() {
+                    var self = $(this);
+                    id = self.attr('data');
+                    status = $('#return_status').val();
+                    $.ajax({
+                        type: "POST",
+                        url: "{:U('Working/Index/return_ajax')}",
+                        data: {'id': id,'status':status},
+                        datatype: 'json',
+                        success: function (response) {
+                            if(response.status != 0){
+
+                                $('#myModal').find('textarea').val(response.data.suggest);
+
+
+                            }else{
+                                $('#myModal').find('textarea').val('无反馈意见');
+                            }
+                        }
+                    })
+
+            });
+
+        });
+    </script>
+
+
+    <!-- Small modal -->
+    <div class="modal fade bs-example-modal-sm" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" style="color: #68d8ff;">理由！</h4>
+                </div>
+
+                    <input type="hidden" id="return_status" />
+                    <div class="modal-body">
+                        <textarea name="suggest" rows="3" cols="3" class="form-control" readonly></textarea>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+</block>
+

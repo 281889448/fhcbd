@@ -1,0 +1,167 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form name="frme" method="post" action="{:U('Survey/Index/inse',array('id'=>$sur[id]))}">
+                            <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                                <thead>
+                                <tr>
+                                    <th colspan="6">
+                                        调研添加
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        日期
+                                    </td>
+                                    <td class="col-sm-3">
+                                        <input type="text" class="form-control" name="time" value="{$sur.time}"/>
+                                    </td>
+                                    <td>
+                                        作者
+                                    </td>
+                                    <td class="col-sm-3">
+                                        <input type="text" class="form-control" name="uid" value="{$sur.uid}"/>
+                                    </td>
+                                    <td>
+                                        类别
+                                    </td>
+                                    <td class="col-sm-3">
+                                        <select name="type" class="form-control" value="{$sur.type}">
+                                            <option value="1">2</option>
+                                            <option value="2">2</option>
+                                            <option value="3">2</option>
+                                            <option value="4">2</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        发言或报告题目
+                                    </td>
+                                    <td colspan="5">
+                                        <input type="text" class="form-control" name="title" value="{$sur.title}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        参与人
+                                    </td>
+                                    <td colspan="5">
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-3"> 姓名：<input type="text" id="leaderval" class="form-control input-sm" name="name" value="{$sur.name}"/></div>
+                                            <div class="col-sm-3">联系电话：
+                                                <input type="text" class="form-control input-sm " id="adminval" name="phone" value="{$sur.phone}"/>
+                                            </div>
+                                            <div class="btn btn-default btn-sm" id="addbtn" style="margin-top: 20px;">添加</div>
+                                        </div>
+                                        <input type="hidden" name="people" value="" id="tableval" />
+                                        <div class="col-sm-6">
+                                            <table border="" cellspacing="" cellpadding="" id="tableDate2" name="people">
+                                                <tr>
+                                                    <th class="text-center">姓名</th>
+                                                    <th class="text-center">联系电话</th>
+                                                    <th class="text-center">操作</th>
+                                                </tr>
+
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <script>
+                                    $(function() {
+                                        $('.btn-save').click(function() {
+                                            var table = $('#tableDate').tableToJSON();
+                                            for(var j = 0; j < table.length; j++) {
+                                                for(var i in table[j]) {
+                                                    if(i == "操作") {
+                                                        delete table[j][i];
+                                                    }
+                                                }
+                                            }
+                                            var Tdate = JSON.stringify(table);
+                                            $("#tableval").val(Tdate)
+                                        });
+
+                                    })
+                                </script>
+                                </tr>
+                                <tr>
+                                <tr>
+                                    <td>
+                                        备注
+                                    </td>
+                                    <td colspan="5">
+                                        <textarea name="content" rows="" cols="" class="form-control">{$sur.content}</textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>附件</td>
+                                    <td colspan="5">
+                                        <input type="file" name="upload" value="{$sur.upload}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        发言交流情况<font color="red"></font>
+                                    </td>
+                                    <td colspan="5">
+                                            {:W('Common/InputRender/InputRender',array('modelid'=>11,'name'=>'adopt'))}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        退回意见<font color="red"></font>
+                                    </td>
+                                    <td colspan="5">
+                                        <textarea name="back" rows="" cols="" class="form-control"></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <button class="btn btn-primary">审核通过</button>
+                                        <a class="btn btn-primary" id="add" href="#">退回</a>
+                                        <a class="btn btn-default" href="{:U('Survey/Index/index')}">返回</a>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script>
+        $('#add').click(function(){
+            var data = {
+                'id':"{$sur.id}",
+              /*  'time' : $('input[name=time]').val(),
+                'uid' : $('input[name=uid]').val(),
+                'type' : $('select[name=type]').val(),
+                'title' : $('input[name=title]').val(),*/
+                'content' : $('textarea[name=content]').val(),
+               /* 'upload' : $('input[name=upload]').val(),
+                'name' : $('input[name=name]').val(),
+                'phone' : $('input[name=phone]').val(),
+                'back' : $('textarea[name=back]').val(),
+                'adopt' : $('textarea[name=adopt]').val()*/
+            };
+            $.post("<?php echo U('Index/save1');?>",data,function(msg){
+                if(msg==1){
+                    alert('退回成功');
+                }else{
+                    alert('退回失败');
+                }
+            });
+        });
+    </script>
+</block>

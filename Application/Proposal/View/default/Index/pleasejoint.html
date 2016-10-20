@@ -1,0 +1,145 @@
+<extend name="Base/common"/>
+
+
+
+<block name="body">
+
+
+  <div class="ar_content">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="tableWrap" >
+
+
+
+            {:W('Menumark/index')}
+
+
+
+         <eq name="status" value="8">
+            <div class="btn btn-default" ><button class="btn btn-primary btn-sm" onClick="document.proposallist.status.value='18';document.proposallist.action='{:U('Proposal/Index/changeStatus18')}';document.proposallist.submit();">批量移交</button></div>
+         </eq>
+
+
+
+            <eq name="status" value="18">
+              <div class="btn btn-default" ><button class="btn btn-primary btn-sm" onClick="document.proposallist.status.value='19';document.proposallist.action='{:U('Proposal/Index/batchHandover',array('status'=>19))}';document.proposallist.submit();">批量交办</button></div>
+            </eq>
+            <eq name="status" value="13">
+              <div class="btn btn-default" ><button class="btn btn-primary btn-sm" onClick="document.proposallist.status.value='17';document.proposallist.action='{:U('Proposal/Index/changeStatus17')}';document.proposallist.submit();">批量移交</button></div>
+            </eq>
+
+            <div class="alert alert-info">参与联名提案的列表</div>
+            <form name="proposallist" method="post">
+              <input type="hidden" name="status">
+            <table class="table table-bordered table-responsive table-condensed" >
+
+              <tbody>
+              <tr class="textc">
+                <td>
+                  <label ><input type="checkbox" name=""  id="checkAll" value=""/>全选</label>
+                </td>
+                <td>
+                  案号
+                </td>
+
+                <td>
+                  提案类型
+                </td>
+                <td class="col-sm-2">
+                  案由
+                </td>
+                <td>
+                  界别组
+                </td>
+
+                <td>
+                  提案人
+                </td>
+                <td>
+                  联系方式
+                </td>
+                <td>
+                  是否联名
+                </td><td>
+                是否并案
+              </td>
+                <in name="status" value="13,17,9">
+                <td class="col-sm-2">
+                  办理单位
+                </td>
+                </in>
+                <td>
+                  状态
+                </td>
+                <td>
+                  操作
+                </td>
+              </tr>
+
+              <volist name="contents" id="c">
+                <tr>
+                  <td class="checkboxbtn">
+                    <input type="checkbox" name="ids[]" id="" value="{$c.id}" onchange="chtrue($(this))"/>
+                  </td>
+                  <td>
+                    {$c.id}
+                  </td>
+                  <td>
+                    {$c.type.title}
+                  </td>
+                  <td>
+                    <a href="{:U('Proposal/index/detail',array('id'=>$c[id]))}" class="text_derection">{$c.title}</a>
+                  </td>
+                  <td>
+                    {$c.jiebie}
+                  </td>
+                  <td>
+                    {$c.author}
+                  </td>
+                  <td>
+                    {$c.telephone}
+                  </td>
+                  <td class="text-center">
+                    <if condition="$c[is_joint]==0">否<else/><a href="{:U('jointly',array('proposal_id'=>$c[id]))}" class="text_derection">是</a></if>
+
+                  </td>
+                  <td class="text-center">
+                    <if condition="$c['is_merge'] == 1 || $c['is_merge'] == 2"><a href="{:U('mergeList',array('proposal_id'=>$c[merge_id]))} " class="text_derection">是</a><else/>否</if>
+
+
+                  </td>
+
+                  <td><if condition="$c[is_agree]==1">同意<elseif condition="$c[is_agree]==2"/>不同意<else/>未操作</if></td>
+
+                  <td>
+                    <a href="{:U('Proposal/index/detail_joint',array('id'=>$c[id]))}" class="btn btn-primary">详情</a>
+                    <in name="status" value="13">
+                    <a href="#"  class="btn btn-primary">查办</a>
+                    </in>
+
+
+
+                  </td>
+                </tr>
+              </volist>
+              </tbody>
+            </table>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block>
+
+
+
+
+
+
+
+
+
+

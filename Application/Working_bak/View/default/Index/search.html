@@ -1,0 +1,76 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <h4>工作管理列表</h4>
+                        <form name="frme" method="post" action="{:U('Working/Index/search')}">
+                            <table border="0" cellspacing="" cellpadding="" class="col-sm-10">
+                                <tr><td><input type="text" class="form-control" placeholder="标题" name="title" value="{$title}"/>
+                                </td><td></td><td><input size="16" type="text" value="{$ttime}" name="ttime" readonly class="form_datetime_day form-control" required placeholder="发布日期"></td>
+                                    <td><button class="btn btn-primary">查询</button></td></tr>
+                            </table>
+                        </form>
+                        <form action="" method="post" name="frm">
+                            <table class="table table-bordered table-responsive table-condensed">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        标题
+                                    </th>
+                                    <th>
+                                        发布人
+                                    </th>
+
+                                    <th>
+                                        发布日期
+                                    </th>
+                                    <th>
+                                        操作
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <volist name="work" id="work">
+                                    <tr>
+                                        <td>
+                                            {$work.title}
+                                        </td>
+                                        <td>
+                                            {$work.uid}
+                                        </td>
+                                        <td>
+                                            {$work.time}
+                                        </td>
+
+                                        <td>
+                                            <a class="btn btn-primary btn-sm" href="{:U('Working/Index/detail',array('id'=>$work['id']))}">查看</a>
+                                            <a class="btn btn-danger  btn-sm btn-del" href="{:U('Working/Index/edit',array('id'=>$work['id']))}">修改</a>
+                                            <a class="btn btn-danger  btn-sm" href="{:U('Working/Index/del',array('id'=>$work[id]))}">删除</a>
+                                        </td>
+                                    </tr>
+                                </volist>
+                                </tbody>
+                            </table>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+
+
+
+
+
+
+
+
+
+
+

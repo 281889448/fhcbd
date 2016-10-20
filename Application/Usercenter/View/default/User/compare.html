@@ -1,0 +1,49 @@
+<extend name="Base/common"/>
+<block name="body">
+
+
+
+    <h4 style="padding: 5px;"> 委员资料修改对照表</h4>
+    <table class="table table-bordered">
+        <tr class="text-center"><th class="text-center">属性</th><th class="text-center">修改前</th><th class="text-center">修改后</th></tr>
+        <tbody>
+        <tr>
+            <td>data</td>
+            <td>data</td>
+            <td>data</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap" class="clearfix">
+
+                        <h4 style="padding: 5px;"> 委员资料修改对照表</h4>
+                        <table class="table table-bordered">
+                            <tr class="text-center"><th class="text-center">属性</th><th class="text-center">修改前</th><th class="text-center">修改后</th></tr>
+                            <tbody>
+                            <volist name="compare" id="c">
+                            <tr>
+                                <td>{$c['property']}</td>
+                                <td>{$c['old']}</td>
+                                <td><if condition="$c['result']==1">{$c['new']}<else/><font color="red">{$c['new']}</font></if></td>
+
+                            </tr>
+                            </volist>
+                            </tbody>
+                        </table>
+                            <form action="{:U('Usercenter/User/passed',['id'=>$id])}" name="compare" method="post">
+                                <input type="hidden" name="status" />
+                                <button class="btn btn-primary btn-sm" onclick="document.compare.status.value=1">审核通过</button>
+                              <button class="btn btn-primary btn-sm"  onclick="document.compare.status.value=2">退回</button>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>

@@ -1,0 +1,663 @@
+<extend name="Base/common"/>
+<block name="style">
+    <link href="__CSS__/event.css" rel="stylesheet" type="text/css"/>
+    <link href="__STATIC__/datetimepickerV3/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
+
+
+
+</block>
+<block name="body">
+	
+	
+
+<div class="ar_content">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<div class="span12">
+							<div id="tableWrap">
+							<form name="proposal" method="post" >
+								<input type="hidden" name="status" value="{$content.status}">
+								<input type="hidden" name="ids" id="id" value="{$content.id}">
+								<table class="table table-bordered table-responsive table-condensed detail_right" style="width: 1000px;">
+									<thead>
+										<tr>
+											<th colspan="6">
+												提案详情
+											</th>
+										</tr>
+									</thead>
+						<php>
+										if($content[status]==2){
+										$htmlstatus = 0;
+										}else{
+										$htmlstatus = 1;
+										}
+									if($content[status] == 17 || $content[status] == 2){
+										$htmlstatus_9 = 0;
+									}else{
+										$htmlstatus_9 = 1;
+									}
+						</php>
+									<tbody>
+										<tr>
+											<td>
+												提出期间
+											</td>
+											<td>
+												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet_type','id'=>$content['id'],$html_status))}
+											</td>
+											<td style="width: 100px">
+												类别
+											</td>
+											<td>
+												<php>$group = get_group($content[uid])</php>
+
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'leibie','id'=>$content['id'],1,$group))}
+											</td>
+											<td style="width: 100px">
+												提出日期
+											</td>
+											<td>
+												<php>$time = date('Y-m-d H:i:s',NOW_TIME); </php>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'create_time','id'=>$content['id'],$html_status,'defval'=>$time))}
+											</td>
+										</tr>
+										<tr>
+											<td >
+												提案类型
+											</td>
+											<td><php>$group =get_group(get_uid())</php>
+												<if condition="$content[status]==1 || $content[status]==3 || ($group=='提案委' && $content[status]==2)" >
+												<select name="type_id" class="form-control input-sm" >
+													<volist name="tree" id="top">
+														<option value="{$top.id}" <eq name="top.id" value="$content[type_id]">selected</eq> >
+															{$top.title}
+														</option>
+													</volist>
+												</select>
+													<else/>
+													<select name="type_id" class="form-control input-sm" disabled>
+														<volist name="tree" id="top">
+															<option value="{$top.id}" <eq name="top.id" value="$content[type_id]">selected</eq> >
+																{$top.title}
+															</option>
+														</volist>
+													</select>
+												</if>
+											</td>
+											<td >
+												会议次数
+											</td>
+											<td>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet','id'=>$content['id'],1))}
+											</td>
+											<td >
+												人数
+											</td>
+											<td>
+												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'renshu','id'=>$content['id'],$html_status))}
+											</td>
+										</tr>
+										
+										<tr>
+											<td>
+												案由
+											</td>
+											<td colspan="3">
+
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title','id'=>$content['id'],$html_status))}
+
+
+											</td>
+											<td>
+												是否公开
+											</td>
+											<td class="text-align:left">
+											<div class="pull-left">
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'is_public','id'=>$content['id'],$html_status))}
+											</div>
+												
+											</td>
+
+
+										</tr>
+										<tr>
+											<td>
+											内容
+											</td>
+											<td colspan="5">
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'content','id'=>$content['id'],$html_status))}
+
+
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<附件></附件>
+											</td>
+											<td colspan="5">
+												<div class="pull-left text-align:left">
+													
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'fujian','id'=>$content['id'],$html_status))}
+												</div>
+												
+												
+											</td>
+										</tr>
+									<in name="content.status" value="3,4,5,6,7,8,9,10,11,12,13,14,15,16">
+										<php>
+											if( $content[status]==8 ){
+												$htmlstatus=0;
+											}else{
+												$htmlstatus=1;
+											}
+										</php>
+
+									</in>
+										<in name="content.status" value="9,13,18,19">
+										<tr>
+											<td rowspan="2">
+												办理单位
+
+											</td>
+										<if condition="$content[status] != 9 && (empty($result_list) || $content[status] == 18 || $count_pr)">
+											<td colspan="5">
+												<div class="col-sm-3" style="margin-left:0;padding-left:0">
+													
+													<select name="" class="form-control input-sm" id="danweilist" >
+														<option  disabled selected hidden>--单位列表--</option>
+														<volist name="units" id="u">
+															<option value="{$u['uid']}">{$u['名称']}</option>
+
+														</volist>
+
+
+													</select>
+													
+												</div>
+												<div class="col-sm-3" style="margin-left:0;padding-left:0"> <input type="text" id="leaderval" class="form-control input-sm" placeholder="督办领导" /></div>
+												<!--div class="col-sm-3" style="margin-left:0;padding-left:0">
+													<input type="text" class="form-control input-sm " id="adminval" placeholder="经办人" />
+												</div-->
+												<div class="btn btn-primary btn-sm pull-left" id="addbtn" >添加</div>
+											</td>
+										</if>
+										</tr>
+										</in>
+										<in name="content.status" value="9,13,18,19">
+										<tr>
+											<td colspan="5">
+												<table border="" cellspacing="" cellpadding="" id="tableDate">
+													<tr >
+														<th class="text-center">单位</th>
+														<th class="text-center">督办领导</th>
+
+														<th class="text-center">办理情况</th>
+														<in name="content.status" value="18,19">
+														<th class="text-center">操作</th>
+
+													</tr>
+										</in>
+												<volist name="result_list" id="r">
+													<tr>
+														<td  class="text-center">{$r['user']['名称']}</td>
+														<td  class="text-center">{$r['duban_leader']}</td>
+
+
+														<td  class="text-center status">
+															<switch name="r[status]">
+																<case value="1">未处理</case>
+																<case value="2">已处理</case>
+																<case value="3">移交办理申请中</case>
+																<case value="4">移交办理已处理</case>
+																<case value="5">退回重办</case>
+																<case value="6">已接收</case>
+															</switch>
+
+
+
+														</td><td  class="text-center">
+														<in name="content.status" value="18">
+
+
+														<div class="btn btn-default btn-sm del-btn" data="{$r['id']}">移除</div>
+
+
+														</in>
+														<in name="content.status" value="19">
+															<switch name="r.status">
+																<case value="1"></case>
+																<case value="2"> <a href="{:U('Proposal/Result/handCheck',array('proposal_id'=>$content[id]))}"  class="btn btn-primary">查办</a></case>
+																<case value="3"><a class="btn btn-default btn-sm unit-btn"  data-toggle="modal" data-target="#myModal2" data="{$r['id']}">移交办理原因</a>
+																	<a class="btn btn-default btn-sm unit-btn"  data-toggle="modal" data-target="#myModal7" onclick="document.proposal_back.result_id.value={$r['id']}">退回</a>
+																</case>
+																<case value="4"></case>
+																<case value="5"></case>
+															</switch>
+
+															</in>
+														</td>
+													</tr>
+												</volist>
+												</table>
+											</td>
+										</tr>
+											</in>
+											<script>
+
+
+												//添加办理单位
+												$(function() {
+													//删除
+													$("#tableDate").delegate("td .del-btn", "click", function() {
+														var myData = 'id='+ $(this).attr('data'); //build a post data structure
+														var self=$(this);
+														jQuery.ajax({
+															type: "POST", // HTTP method POST or GET
+															url: "{:U('Proposal/Index/del_result_ajax')}", //Where to make Ajax calls
+															dataType:"json", // Data type, HTML, json etc.
+															data:myData, //Form variables
+															success:function(response){
+																self.closest("tr").remove();
+															},
+															error:function (xhr, ajaxOptions, thrownError){
+																//On error, we alert user
+																alert(thrownError);
+															}
+														});
+
+
+													});
+													//移交办理处理
+													$("#tableDate").delegate("td .unit-btn", "click", function() {
+														var myData = 'result_id='+ $(this).attr('data'); //build a post data structure
+														var self=$(this);
+														jQuery.ajax({
+															type: "POST", // HTTP method POST or GET
+															url: "{:U('Proposal/Index/handtransfer_ajax')}", //Where to make Ajax calls
+															dataType:"json", // Data type, HTML, json etc.
+															data:myData, //Form variables
+															success:function(response){
+																$("#myModal2").find('textarea').val(response.data.suggest);
+
+															},
+															error:function (xhr, ajaxOptions, thrownError){
+																//On error, we alert user
+																alert(thrownError);
+															}
+														});
+
+
+													});
+
+
+
+													//添加
+													$("#addbtn").click(function() {
+
+														if($("#duban_leader").val()===''  )
+														{
+															alert("请检查输入办理单位信息");
+															return false;
+														}
+														var myData = 'duban_leader='+ $("#duban_leader").val(); //build a post data structure
+														jQuery.ajax({
+															type: "POST", // HTTP method POST or GET
+															url: "{:U('Proposal/Index/add_result_ajax')}", //Where to make Ajax calls
+															dataType:"json", // Data type, HTML, json etc.
+															data:{'proposal_id':$("#id").val(),'duban_leader':$("#leaderval").val(),'user_id':$("#danweilist").val()}, //Form variables
+															success:function(response){
+																	if(response.status !=0){
+																	var selectval = $('#danweilist option:selected').html();
+																	var leaderval = $('#leaderval').val();
+																//	var adminval = $('#adminval').val();
+
+																	$("#tableDate tbody").append('<tr><td  class="text-center">' + selectval + '</td><td  class="text-center">' + leaderval + '</td><td  class="text-center">未处理</td><td  class="text-center"><div class="btn btn-default btn-sm del-btn" data="'+response.id+'">移除</div></td></tr>')
+																		}else{
+																			alert(response.content);
+																	}
+															},
+															error:function (xhr, ajaxOptions, thrownError){
+																alert(thrownError);
+															}
+														});
+
+
+
+
+
+													})
+
+												});
+
+
+
+
+
+
+											</script>
+										</in>
+										<tr>
+											
+											<td>
+												提案人
+											</td>
+											<td>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'author','id'=>$content['id'],$html_status))}
+											</td>
+											<td>
+												联系人
+											</td>
+											<td>
+
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'contact','id'=>$content['id'],$html_status,$member['名称']))}
+											</td>
+											<td>联系方式</td><td>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'telephone','id'=>$content['id'],$html_status,$member['办公电话']))}</td>
+											<tr>
+											<td>
+												界别组
+											</td>
+											<td>
+												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'jiebie','id'=>$content['id'],$html_status))}
+											</td>
+											<td>联系人单位</td><td colspan="3">
+								{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'contact_unit','id'=>$content['id'],$html_status))}</td>
+						
+											</td>
+											</tr>
+										</tr>
+
+								<php>$group=get_group(get_uid());</php>
+								<if condition="$group!='委员'">
+
+										<notin name="content.status" value="1">
+
+
+
+											<tr>
+											<div class="pull-left">
+												<notin name="content.status" value="9">
+												<td>
+													预案号
+												</td>
+
+												<td>
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'ycode','id'=>$content['id'],1))}
+												</td>
+												</notin>
+												<in name="content.status" value="9">
+												<td>
+													正式案号
+												</td>
+												<td colspan="3">
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'code','id'=>$content['id'])),1}
+												</td>
+												</in>
+												<td>
+													推荐为
+												</td>
+												<td colspan="5">
+												<div class="pull-left" style="width:400px ">
+													
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'recommend','id'=>$content['id'],$htmlstatus_9))}
+												</div>
+												</td>
+</div>
+											</tr>
+
+
+
+
+
+
+										</notin>
+
+
+
+										<in name="content.status" value="18,19,13,14,17,9">
+
+											<tr>
+												<td>交办意见</td>
+												<td colspan="5">
+
+													<php>
+														if($content[status] != 18)
+														$handsuggest_htmlstatus = 1; </php>
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'handsuggest','id'=>$content['id'],$handsuggest_htmlstatus))}
+												</td>
+											</tr>
+											</in>
+										<in name="content.status" value="17,9">
+
+											<tr>
+												<td>
+													采用情况
+												</td>
+												<td>
+												<div class="pull-left" style="width: 300px">
+													
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'adopt','id'=>$content['id'],$htmlstatus_9))}
+												</div>
+
+												</td>
+												<td>
+													批示情况
+												</td>
+												<td colspan="3">
+												<div class="pull-left" style="width: 300px">
+													
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'write','id'=>$content['id'],$htmlstatus_9))}
+												</div>
+												</td>
+											</tr>
+
+									<tr>
+
+
+										<td>已办理反馈：</td>
+										<td colspan="6">
+											{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'content','id'=>$content['id'],$htmlstatus))}
+
+
+										</td>
+
+									</tr>
+									</in>
+								</if>
+										<tr>
+										
+											<td colspan="6">
+											<div class="pull-left">
+									<php>$group=get_group(get_uid());</php>
+										<switch name="group">
+
+											<case value="委员|集体">
+											<in name="content.status" value="1,3">
+													<a class="btn btn-primary btn-sm " href="{:U('Proposal/Index/jointly',array('proposal_id'=>$content[id]))}" >选择联名</a>
+													<button type="submit" class="btn btn-primary btn-sm" onClick="document.proposal.status.value='1';document.proposal.action='{:U('Proposal/Index/doPost')}'">保存</button>
+													<button type="submit" class="btn btn-primary btn-sm" onClick="document.proposal.status.value='2';document.proposal.action='{:U('Proposal/Index/doPost')}'">直接提交</button>
+											</in>
+
+											</case>
+
+
+											<case value="提案委">
+											<in name="content.status" value="2">
+													<a class="btn btn-primary btn-sm"  href="{:U('Proposal/Index/mergeIndex',array('id'=>$content[id]))}">并案</a>
+													<a class="btn btn-primary btn-sm backbtn" data-toggle="modal" data-target="#myModal" onClick="document.return.action='{:U('Proposal/Index/changeStatus3')}'">退回</a>
+													<a class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#myModal" onClick="document.return.action='{:U('Proposal/Index/changeStatus4')}'">不立案</a>
+													<a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" onClick="document.return.action='{:U('Proposal/Index/changeStatus5')}'">撤案</a>
+													<a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" onClick="document.return.action='{:U('Proposal/Index/changeStatus6')}'">不在管辖区</a>
+											<a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" onClick="document.return.action='{:U('Proposal/Index/changeStatus7')}'">委员来信</a>
+												<a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal6" onClick="document.proposal_put.action='{:U('Proposal/Index/changeStatus8')}'">立案</a>
+												<button type="submit" class="btn btn-primary btn-sm" onClick="document.proposal.status.value='2';document.proposal.action='{:U('Proposal/Index/doPost')}'">保存</button>
+
+
+											</in>
+												<in name="content.status" value="17">
+													<button class="btn btn-primary btn-sm"  onClick="document.proposal.action='{:U('Proposal/Index/changeStatus9')}'">结案</button>
+
+												</in>
+
+											</case>
+
+
+											<case value="政府督查室">
+
+
+
+												<in name="content.status" value="18">
+
+												<if condition="$content[handsuggest]==''">
+
+													<button class="btn btn-primary btn-sm" onclick="document.proposal.action='{:U('Proposal/Index/doHandsuggest',array('proposal_id'=>$content[id]))}'">交办意见提交</button>
+												</if>
+												</in>
+
+											</case>
+
+
+											<case value="办理单位">
+
+												<in name="content.status" value="19">
+
+													<!--button class="btn btn-primary btn-sm"  onClick="document.proposal.action='{:U('Proposal/Index/setDo',array('proposal_id'=>$content[id]))}'">已办理</button-->
+													<button class="btn btn-primary btn-sm" onclick="document.proposal.action='{:U('Proposal/Index/handAgain',array('proposal_id'=>$content[id]))}'">退回重办</button>																																														<!--针对这个操作会更改 //TODO-->
+													<button class="btn btn-primary btn-sm" onclick="document.proposal.action='{:U('Proposal/Index/handOver',array('proposal_id'=>$content[id]))}'">申请退回办理</button>
+
+												</in>
+
+											</case>
+
+										</switch>
+												<a class="btn btn-default btn-sm" href='{$back_url}'>返回</a>
+												</div>
+											</td>
+										
+										</tr>
+									</tbody>
+								</table>
+								</form>
+							</div>
+						</div>
+						</div>
+
+
+
+
+					</div>
+				</div>
+			</div>
+
+
+
+	<in name="content.status" value="2">
+	<!-- Small modal -->
+	<div class="modal fade bs-example-modal-sm" id="myModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" style="color: #68d8ff;">理由！</h4>
+				</div>
+				<form name="return" action="" method="post">
+					<input type="hidden" name="ids"  value="{$content.id}">
+				<div class="modal-body">
+					<textarea name="suggest" rows="3" cols="3" class="form-control"></textarea>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="document.return.submit();" >提交</button>
+				</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+
+
+		</in>
+
+	<!-- Small modal -->
+	<div class="modal fade bs-example-modal-sm" id="myModal2">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" style="color: #68d8ff;">理由！</h4>
+				</div>
+				<form name="return1" action="" method="post">
+					<input type="hidden" name="ids"  value="{$content.id}">
+					<div class="modal-body">
+						<textarea name="suggest" rows="3" cols="3" class="form-control"></textarea>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+
+	<!-- Small modal -->
+	<div class="modal fade bs-example-modal-sm" id="myModal6">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" style="color: #68d8ff;">是否立案！</h4>
+				</div>
+				<form name="proposal_put" action="" method="post">
+					<input type="hidden" name="ids"  value="{$content.id}">
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="document.proposal_put.submit();" >提交</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+	<!-- Small modal -->
+	<div class="modal fade bs-example-modal-sm" id="myModal7">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" style="color: #68d8ff;">退回申请理由！</h4>
+				</div>
+				<form name="proposal_back" action="{:U('Proposal/Index/denyBack')}" method="post">
+					<input type="hidden" name="ids"  value="{$content.id}">
+					<input type="hidden" name="result_id" />
+					<div class="modal-body">
+						<textarea name="suggest" rows="3" cols="3" class="form-control"></textarea>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="document.proposal_back.submit();" >确定</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+
+</block>

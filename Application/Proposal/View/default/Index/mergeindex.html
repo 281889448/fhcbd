@@ -1,0 +1,336 @@
+<extend name="Base/common"/>
+<block name="body">
+  <div class="ar_content">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="tableWrap" style="margin-bottom:0">
+
+
+            <form name="search_merge" method="post">
+
+              <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:15px">
+
+                <tr>
+                  <td> {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet_type'))}</td>
+                  <td> {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'jiebie'))}</td>
+                  <td>
+                    <select name="type_id" class="form-control input-sm">
+                                                <option disabled="" selected="" hidden="">--请选择提案类型--</option>
+                                                <volist name="tree" id="top">
+                        <option value="{$top.id}" >
+                        {$top.title}
+                        </option>
+                        </volist>
+                                            </select></td>
+                  <td>
+
+                    {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'author'))}</td>
+
+
+                  <td>
+
+                    {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title'))}
+                  </td>
+                  <td> <button class="btn btn-default input-sm" onClick="document.search_merge.action='{:U('mergeindex',array('id'=>$proposal[id]))}';document.search_merge.submit();">搜索</button></td>
+                </tr>
+              </table>
+
+            </form>
+
+
+
+
+
+            
+            <table class="table table-bordered table-responsive table-condensed" id="table1" >
+              <thead>
+              <tr>
+                <th colspan="11">
+                  检索列表
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr class="textc">
+                <td>
+                  正式案号
+                </td>
+
+                <td>
+                  提案类型
+                </td>
+                <td>
+                  案由
+                </td>
+
+                <td>
+                  界别组
+                </td>
+                <td>
+                  提案人
+                </td>
+                <td>
+                  联系电话
+                </td>
+
+                <td>
+                  提出时间
+                </td>
+
+                <td>
+                  是否联名
+                </td>
+                <td>
+                  是否并案
+                </td>
+
+                <td>
+                  状态
+                </td>
+
+                <td>
+                  操作
+                </td>
+
+              </tr>
+              <volist name="content" id="c">
+              <tr>
+
+                <td>
+                  {$c.ycode}
+                </td>
+                <td>
+                  {$c.type.title}
+                </td>
+                <td>
+                  <a href="{:U('Proposal/Index/detail',array('id'=>$c[id]))}">{$c.title}</a>
+                </td>
+                <td>
+                  {$c.jiebie}
+                </td>
+                <td>
+                  {$c.author}
+                </td>
+                <td>
+                  {$c.telephone}
+                </td>
+                <td>
+                  {$c.create_time|date='Y-m-d',###}
+                </td>
+
+
+                <td>
+                  <if condition="$c[is_joint]==1">是<else/>否</if>
+
+                </td>
+
+
+                <td>
+                  <if condition="$c[is_merge]==1">是<elseif condition="$c[is_merge]==2"/>第一提案人<else/>否</if>
+
+                </td>
+                <td>
+
+                  {$status[$c[status]]}
+                </td>
+
+                <td>
+
+                  <div class="btn btn-primary btn-sm btn-add" data="{$c[id]}">添加</div>
+                </td>
+
+              </tr>
+              </volist>
+              </tbody>
+            </table>
+          </div>
+
+          <div id="tableWrap">
+           
+            <table class="table table-bordered table-responsive table-condensed" id="table2">
+                <tr><th colspan="11">并案列表</th></tr>
+              <tbody class="tbody_list">
+              <tr class="textc">
+                <td>
+                  正式案号
+                </td>
+
+
+                <td>
+                  提案类型
+                </td>
+                <td>
+                  案由
+                </td>
+
+                <td>
+                  界别组
+                </td>
+                <td>
+                  提案人
+                </td>
+                <td>
+                  联系电话
+                </td>
+
+                <td>
+                  提出时间
+                </td>
+
+                <td>
+                  是否联名
+                </td>
+                <td>
+                  是否并案
+                </td>
+
+                <td>
+                  状态
+                </td>
+                <if condition="$proposal[status] == 2">
+                <td>
+                  操作
+                </td>
+                </if>
+              </tr>
+              <volist name="merge_list" id="ml">
+              <tr>
+
+                <td>
+                  {$ml.ycode}
+                </td>
+                <td>
+                  {$ml.type.title}
+                </td>
+                <td>
+                  <a href="{:U('Proposal/Index/detail',array('id'=>$ml[id]))}">{$ml.title}</a>
+                </td>
+
+                <td>
+                  {$ml.jiebie}
+                </td>
+                <td>
+                  {$ml.author}
+                </td>
+                <td>
+                  {$ml.telephone}
+                </td>
+
+                <td>
+                  {$ml.create_time|date='Y-m-d',###}
+                </td>
+                <td>
+                  <if condition="$ml[is_joint]==1">是<else/>否</if>
+                </td>
+                <td>
+                  <if condition="$ml[is_merge]==1">是<elseif condition="$ml[is_merge]==2"/>第一提案人<else/>否</if>
+                </td>
+                <td>
+
+                  {$status[$ml[status]]}
+                </td>
+                <if condition="$proposal[status] == 2">
+                <td>
+
+                  <div class="btn btn-default btn-sm btn-remove" data="{$ml.id}">移除</div>
+
+                </td>
+                </if>
+              </tr>
+              </volist>
+              </tbody>
+            </table>
+
+            <form name="proposalmerge" method="post">
+              <input type="hidden" name="merge_id" id="merge_id" value="{$proposal.id}"/>
+            <if condition="$proposal[status] == 2">
+             <button class="btn btn-primary btn-sm" onclick="document.proposalmerge.action='{:U('Proposal/Index/merge',array('ids'=>$proposal[id]))}'">确定并案</button>
+            </if>
+              <a class="btn btn-default btn-sm" href="{$back_url}">返回</a>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    $(function(){
+      //添加
+      $("#table1").delegate("td .btn-add",'click',function(){
+        var self=$(this)
+        var myData = 'id='+ $(this).attr('data')+'&merge_id=' + $('#merge_id').val();
+        jQuery.ajax({
+          type: "POST", // HTTP method POST or GET
+          url: "{:U('Proposal/Index/add_merge_ajax')}", //Where to make Ajax calls
+          dataType:"json", // Data type, HTML, json etc.
+          data:myData, //Form variables
+          success:function(response){
+            if(response.status != 0){
+              var val=self.closest("tr").find("td").not(".add_btnbox");
+              var arr=[];
+              for (var i=0 ;i<val.length;i++) {
+                arr.push(val.eq(i).text())
+              }
+             self.closest("tr").remove();
+              $("#table2 .tbody_list").append('<tr><td>'+arr[0]+'</td><td>'+arr[1]+'</td><td>'+arr[2]+'</td><td>'+arr[3]+'</td><td>'+arr[4]+'</td><td>'+arr[5]+'</td><td>'+arr[6]+'</td><td>'+arr[7]+'</td><td>'+arr[8]+'</td><td>'+arr[9]+'</td><td class="btn-rem"><div class="btn btn-default btn-sm btn-remove">移除</div></td></tr>')
+
+            }else{
+              alert(response.content);
+            }
+          },
+          error:function (xhr, ajaxOptions, thrownError){
+            //On error, we alert user
+            alert(thrownError);
+          }
+        });
+
+      });
+      //删除
+      $("#table2").delegate("td .btn-remove",'click',function(){
+        var self=$(this)
+        var val2=self.closest("tr").find("td").not(".btn-rem")
+        var myData = 'id='+ $(this).attr('data');
+        jQuery.ajax({
+          type: "POST", // HTTP method POST or GET
+          url: "{:U('Proposal/Index/del_merge_ajax')}", //Where to make Ajax calls
+          dataType:"json", // Data type, HTML, json etc.
+          data:myData, //Form variables
+          success:function(response){
+            self.closest("tr").remove();
+          },
+          error:function (xhr, ajaxOptions, thrownError){
+            //On error, we alert user
+            alert(thrownError);
+          }
+        });
+
+
+
+          var arr2=[];
+          for (var i=0 ;i<val2.length;i++) {
+            arr2.push(val2.eq(i).text())
+          };
+          $(this).closest("tr").remove();
+          $("#table1 tbody").append('<tr><td>'+arr2[0]+'</td><td>'+arr2[1]+'</td><td>'+arr2[2]+'</td><td>'+arr2[3]+'</td><td>'+arr2[4]+'</td><td>'+arr2[5]+'</td><td>'+arr2[6]+'</td><td>'+arr2[7]+'</td><td>'+arr2[8]+'</td><td>'+arr2[9]+'</td><td class="add_btnbox"><div class="btn btn-primary btn-sm  btn-add">添加</div></td></tr>')
+        })
+
+      //数据格式化：
+      $('.btn-save').click(function() {
+        var table = $('#table2').tableToJSON();
+        for(var j = 0; j < table.length; j++) {
+          for(var i in table[j]) {
+            if(i == "操作") {
+              delete table[j][i];
+            }
+          }
+        }
+        var Tdate = JSON.stringify(table);
+        $("#tableval").val(Tdate);
+        alert(Tdate)
+      });
+
+    })
+  </script>
+</block>

@@ -1,0 +1,173 @@
+<extend name="Base/common"/>
+<block name="body">
+<!--日历-->
+        <link rel="stylesheet" type="text/css" href="/Public/static/zx/laydate/need/laydate.css"/>
+    
+    <script src="/Public/static/zx/laydate/laydate.js"></script>
+ <style type="text/css">
+        .con, .people_N{
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .con label {
+            width: 100px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .people_N input {
+            vertical-align: middle;
+        }
+         .iconBtn {
+                        height: 20px;
+                        width: 20px;
+                        display: block;
+                        line-height: 20px;
+                        text-align: center;
+                        background: #eee;
+                        color: #666;
+                        cursor: pointer;
+                        margin-right: 15px;
+                        border-radius: 3px;
+                        margin-left: 14px;
+
+                    }
+
+                    .iconBtn:after {
+                        content: "+";
+                    }
+
+                    .active_on:after {
+                        content: "-";
+                    }
+                    
+    </style>
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form name="frm" method="post" action="{:U('Event/Index/inset')}">
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="6">
+                                    活动详情
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td style="width:75px">
+                                    活动类型
+                                </td>
+                                <td colspan="5">
+                                <div class="col-sm-2" style="padding-left:0">
+                                    <select name="event_type" class="form-control input-sm span4" value="{$event_type[0][title]}">
+                                        <volist name="event_type" id="vo">
+                                        <option value="{$vo.title}">{$vo.title}</option>
+                                        </volist>
+                                    </select>
+                                </div>
+                                    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    活动名称
+                                </td>
+                                <td colspan="5">
+                                    <input type="text" class="form-control input-sm" name="title"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    开始时间
+                                </td>
+                                <td colspan="5">
+                                    <div class="col-sm-2" style="padding-left:0">
+                                        <input size="16" type="text" value="" name="sTime" readonly class="form-control laydate-icon" required onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    结束时间
+                                </td>
+                                <td colspan="5">
+                                    <div class="col-sm-2" style="padding-left:0">
+                                      <input size="16" type="text" value="" name="eTime" readonly class="form-control laydate-icon" required onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" />
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                活动地点
+                                </td>
+                                <td colspan="5">
+                                    <input type="text" class="form-control input-sm" name="address"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    参与人员
+                                </td>
+                                <td colspan="5">
+                                    <input type="hidden"  name="people" id="uids" value=""/>
+                                    <div id="Groups" class="btn btn-primary" data-toggle="modal" data-target="#myModalx">
+                                        选择参与人员
+                                    </div>
+                                    <textarea name="" readonly id="contact_user" class="form-control" style="margin-top: 10px"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    活动内容
+                                </td>
+                                <td colspan="5">
+                                    <textarea class="form-control" name="explain" id="" cols="30" rows="10"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>签到次数</td>
+                                <td colspan="5">
+                                    <div class="col-sm-2">
+
+                                        <div class="btn btn-default add-time">添加签到次数</div>
+                                    </div>
+
+                                    <div class="col-sm-5" style="padding-bottom:50px">
+                                        <table border="" cellspacing="" cellpadding="" id="time-table" name="">
+                                            <tr>
+                                                <th class="col-sm-2">签到顺序</th>
+                                                <th class="col-sm-4">签到结束时间</th>
+                                            </tr>
+                                            <tr>
+                                                <td><input value='1' name="mark_sort[1]" style="border:none;" readonly="readonly" class="text-center form-control"/></td>
+                                                <td><input size="16" type="text" value="" name="mark_time[1]" readonly class="form-control laydate-icon" required onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" /></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+                                    <a class="btn btn-default" href="{:U('Event/Index/index')}">返回</a>
+                                    <button class="btn btn-default">提交</button>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {:W('Common/Tongxunlu/index')}
+</block>

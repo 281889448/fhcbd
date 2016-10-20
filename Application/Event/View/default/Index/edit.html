@@ -1,0 +1,133 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form action="{:U('Event/Index/save',array('id'=>$edit['id']))}" method="post" name="frm">
+                            <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                                <thead>
+                                <tr>
+                                    <th colspan="6">
+                                        活动修改
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td style="width:80px" ">
+                                        活动类型
+                                    </td>
+                                    <td colspan="5">
+                                        <select name="event_type" class="form-control input-sm span4" value="{$edit.event_type}">
+                                            <volist name="event_type" id="vo">
+                                            <option value="{$vo.title}">{$vo.title}</option>
+                                            </volist>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        活动名称
+                                    </td>
+                                    <td colspan="5">
+                                        <input type="text" class="form-control  span4" name="title" value="{$edit.title}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        开始时间
+                                    </td>
+                                    <td colspan="5">
+                                        <input size="16" type="text" value="{$edit.sTime|date='Y-m-d H:i:s',###}" name="sTime" class="form-control laydate-icon" required onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        结束时间
+                                    </td>
+                                    <td colspan="5">
+                                        <input size="16" type="text" value="{$edit.eTime|date='Y-m-d H:i:s',###}" name="eTime" class="form-control laydate-icon" required onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        活动地点
+                                    </td>
+                                    <td colspan="5">
+                                        <input type="text" class="form-control input-sm" name="address" value="{$edit.address}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        参与人员
+                                    </td>
+                                    <td colspan="5">
+                                        <input type="hidden"  name="people" id="uids" value="{$edit.people}"/>
+                                        <div id="Groups" class="btn btn-primary" data-toggle="modal" data-target="#myModalx">
+                                            选择参与人员
+                                        </div>
+                                        <textarea name="" readonly id="contact_user" class="form-control" style="margin-top: 10px">
+                                             <volist name="people" id="vo">
+                                                 {$vo.truename};&nbsp;&nbsp;
+                                             </volist>
+                                        </textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        活动内容
+                                    </td>
+                                    <td colspan="5">
+                                       
+                                            <textarea class="form-control" name="explain" id="" cols="30" rows="10">{$edit.explain}</textarea>
+                                       
+                                    </td>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>签到次数</td>
+                                    <td colspan="5" style="padding-bottom:50px">
+                                        <div style="width:120px"  class="pull-left">
+
+                                            <div class="btn btn-default add-time">添加签到次数</div>
+                                        </div>
+
+                                        <div style="width:500px" class="pull-left">
+                                            <table border="" cellspacing="" cellpadding="" id="time-table" name="qdchishu">
+                                                <tr>
+                                                    <th class="col-sm-2">签到顺序</th>
+                                                    <th class="col-sm-4">签到结束时间</th>
+                                                </tr>
+                                               
+                                                    <volist name="markset" id="vo">
+                                                    <tr>
+                                                    <td><input type="hidden" name="id[{$vo.mark_sort}]" value="{$vo.id}" />
+                                                        <input name="mark_sort[{$vo.mark_sort}]" style="border:none;" readonly="readonly" class="text-center form-control" value="{$vo.mark_sort}" /></td>
+                                                    <td><input size="16" type="text" value="{$vo.mark_time|date='Y-m-d H:i:s',###}" name="mark_time[{$vo.mark_sort}]"  class="form-control laydate-icon" required onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" readonly="readonly" /></td>
+                                                    </tr>
+                                                </volist>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <a class="btn btn-default" href="{:U('Event/Index/index')}">返回</a>
+                                        <button class="btn btn-default">修改</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {:W('Common/Tongxunlu/index')}
+</block>

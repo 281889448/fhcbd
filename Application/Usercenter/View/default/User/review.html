@@ -1,0 +1,73 @@
+<extend name="Base/common"/>
+<block name="body">
+
+
+
+
+
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap" class="clearfix">
+
+                        <h4 style="padding: 5px;">待审核委员信息列表</h4>
+                        <table class="table table-bordered table-responsive table-condensed">
+                            <thead>
+                            <tr class="text-center">
+
+                                <th class="text-center">
+                                    姓名
+                                </th>
+                                <th class="text-center">
+                                    手机号
+                                </th>
+                                <th class="text-center">
+                                    工作单位
+                                </th>
+
+                                <th class="text-center">
+                                    职务
+                                </th>
+                                <th class="text-center">
+                                    提出时间
+                                </th>
+                                <th class="text-center">
+                                    操作
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <volist name="users" id="user" key="k">
+                            <tr>
+
+                                <td>
+                                    {$user['名称']}
+                                </td>
+
+                                <td>
+                                    {$user['手机号']}
+                                </td>
+                                <td>
+                                    {$user['工作单位']}
+                                </td>
+                                <td>
+                                    {$user['职称']}
+                                </td>
+                                <td>{$user.create_time|date='Y-m-d',###}</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm" href="{:U('Usercenter/User/compare',['id'=>$user['id']])}">详情</a>
+
+                                </td>
+                            </tr>
+                            </volist>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>

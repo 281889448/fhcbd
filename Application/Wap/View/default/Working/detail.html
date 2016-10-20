@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>{$working.title}</title>
+    <style>
+
+    </style>
+    <include file="cssjs"/>
+
+</head>
+
+<body ontouchstart="">
+<header class="ui-header ui-header-positive ui-border-b">
+    <i class="ui-icon-return" onclick="history.back()"></i>
+    <h1>工作动态详情</h1>
+
+</header>
+
+<section class="ui-container">
+
+    <div class="ui-form ui-border-t">
+
+
+            <div class="ui-form-item ui-form-item-show ui-border-b">
+                <label for="#">标题：</label>
+                <input type="text" value="{$working.title}" replaceholder="点击输入" readonly="readonly" style="padding-left: 50px">
+            </div>
+
+
+
+    </div>
+
+
+
+
+    <div class="content">
+
+        {:W('InputRender/InputRender',array('modelid'=>15,'name'=>'content',$working['id'],1))}
+    </div>
+
+    <div class="fujian">
+        {:W('InputRender/InputRender',array('modelid'=>15,'name'=>'upload',$working['id'],1))}
+    </div>
+
+</section>
+
+
+
+
+
+
+</body>
+
+</html>

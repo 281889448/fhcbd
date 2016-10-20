@@ -1,0 +1,266 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form name="frme" method="post" action="{:U('Survey/Index/upload')}" >
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="6">
+                                    添加调研报告
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td style="width:160px">
+                                    日期
+                                </td>
+                                <td >
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>9,'name'=>'time','',1,NOW_TIME))}</td>
+                                <td style="width:160px" class="text-right">
+                                    类别
+                                </td>
+                                <td >
+                                    <select name="type_id" class="form-control input-sm">
+                                        <option disabled="" selected="" hidden="">--请选择--</option>
+                                        <volist name="tree" id="top">
+                                            <option value="{$top.id}" >
+                                                {$top.title}
+                                            </option>
+                                        </volist>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                            <td>
+                                作者
+                            </td>
+                            <td colspan="3" >
+
+                                    <div class="col-sm-12" style="margin: 0;padding: 0;">
+                                        <div class="btn btn-primary btn-sm" id="add_author" style="margin-left: 10px"> 添加作者</div>
+                                        <div class="col-sm-8"  style="margin: 0;padding: 0;">
+                                            <input type="text" class="form-control input-sm" id="select_id" name="author" readonly="readonly" />
+                                            <input type="hidden" name="author_id" id="s_id"/>
+                                        </div>
+                                    </div>
+
+
+                            </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    发言或报告题目
+                                </td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>9,'name'=>'title'))}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    参与人员
+                                </td>
+                                <td colspan="5">
+                                    <input type="hidden"  name="people" id="uids" value=""/>
+                                    <div id="Groups" class="btn btn-primary" data-toggle="modal" data-target="#myModalx">
+                                        选择参与人员
+                                    </div>
+                                    <textarea name="people_view" readonly id="contact_user" class="form-control" style="margin-top: 10px"></textarea>
+                                </td>
+                            </tr>
+                            </tr>
+                            <tr>
+                            <tr>
+                                <td>
+                                    内容
+                                </td>
+                                <td colspan="5">
+                                <div class="pull-left">
+                                     {:W('Common/InputRender/InputRender',array('modelid'=>9,'name'=>'content'))}
+                                </div>
+                                   
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    采用<font color="red"></font>
+                                </td>
+                                <td colspan="5">
+                                        <label>{:W('Common/InputRender/InputRender',array('modelid'=>9,'name'=>'speak'))}</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>附件</td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>9,'name'=>'upload'))}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="6">
+                                    <button class="btn btn-primary">提交</button>
+                                    <a class="btn btn-default" href="{:U('Survey/Index/index')}">返回</a>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    {:W('Common/Tongxunlu/index')}
+
+
+
+    <!--/////////////////-->
+
+    <!-- Modal -->
+    <style type="text/css">
+        .anthor_btn {
+            padding: 5px 10px;
+            background: #eee;
+            cursor: pointer;
+        }
+
+        .anthor_btn:after {
+            content: "√";
+        }
+
+        .selected_author {
+            border: 1px solid #ddd;
+            padding: 15px 15px 0 15px;
+            min-height: 57px;
+        }
+
+        .selected_name {
+            padding: 5px 10px;
+            background: #0088CC;
+            cursor: pointer;
+            color: #fff;
+            margin-right: 10px;
+            margin-bottom: 10PX;
+            border-bottom: 1PX SOLID #0088CC;
+            float: left;
+        }
+
+        .selected_name:after {
+            content: "×";
+        }
+    </style>
+    <div class="modal fade" id="myModals" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel"><font color="blue">添加作者</font></h4>
+                </div>
+                <div class="modal-body clearfix">
+                    已选择的作者：
+                    <div class="selected_author clearfix">
+
+                    </div>
+                    <div class="col-sm-12 clearfix" style="padding: 5PX;padding-left: 0;margin: 0">
+                        <div class="col-sm-8" style="margin: 0;padding-left: 0;"><input type="text" class="form-control input-sm" id="author" /></div><button class="btn btn-primary btn-sm" id="search">搜索</button>
+                    </div>
+                    <table class="table table-bordered" id="seach-table">
+                        <tr>
+                            <th>用户名</th>
+                            <th>姓名</th>
+                        </tr>
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary btn-sel-on" data-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function() {
+            $("#add_author").click(function() {
+                $("#myModals").modal('show')
+            });
+            $("#seach-table").on("click",".anthor_btn", function() {
+                var authorName = $(this).text();
+                var s_id = $(this).attr('data');
+                var str = "<span class='selected_name' data='"+s_id+"' >" + authorName + "</span>"
+                $(".selected_author").append(str)
+            });
+            $(".selected_author").on("click", "span", function() {
+                $(this).remove()
+            });
+            $(".btn-sel-on").click(function() {
+                var selarr = [];
+                var s_id = [];
+                $(".selected_author").find("span").each(function(i, e) {
+                    selarr.push($(e).text());
+                    s_id.push($(e).attr('data'));
+                })
+                $("#select_id").val(selarr)
+                $("#s_id").val(s_id)
+                console.log(s_id);
+            });
+
+
+
+
+            //添加
+            $("#search").click(function() {
+
+
+                jQuery.ajax({
+                    type: "POST", // HTTP method POST or GET
+                    url: "{:U('Survey/Index/search_user_ajax')}", //Where to make Ajax calls
+                    dataType:"json", // Data type, HTML, json etc.
+                    data:{'author':$("#author").val()}, //Form variables
+                    success:function(response){
+                        $("#seach-table").html('');
+                        if(response.status !=0){
+                            var trel ;
+
+                            for(var i=0;i<response.content.length;i++){
+                               trel += "<tr><td>"+response.content[i]['nickname']+"</td><td><span class='anthor_btn' data='"+response.content[i]['uid']+"'>"+response.content[i]['名称']+"</span></td></tr>"
+
+                            }
+                            $("#seach-table").append(trel)
+
+
+
+                        }else{
+                            alert('非法访问');
+                        }
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert(thrownError);
+                    }
+                });
+
+
+
+
+
+            })
+
+        })
+
+
+
+
+
+
+
+
+    </script>
+
+        </block>

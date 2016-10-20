@@ -1,0 +1,44 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <h4>添加工作动态</h4>
+                        <form action="{:U('Working/Index/save3',array('id'=>$read['id']))}" method="post" name="frm">
+                            <table class="table table-bordered table-responsive table-condensed">
+                                <tbody>
+                                <tr><td class="col-sm-1">发布人</td>
+                                    <td><input type="text" class="form-control" name="author" value="{$read.author}" readonly="readonly"/></td>
+                                    <td class="col-sm-1">发布日期</td>
+                                    <td><input size="16" type="text" value="{$read.time}" name="time" readonly="readonly" class="form_datetime form-control" required></td></tr>
+                                <tr><td>标题</td><td colspan="3"><input type="text" class="form-control"  name="title" value="{$read.title}"/></td></tr>
+                                <tr><td>内容</td><td colspan="3"><textarea  name="content" rows="" cols="" class="form-control">{$read.content}</textarea></td></tr>
+                                <tr><td>附件</td><td colspan="3"><input type="file" name="upload" id="" value="{$read.upload}" /></td></tr>
+
+                                <tr>
+                                    <td>
+                                        退回意见
+                                    </td>
+                                    <td colspan="5">
+                                        <textarea name="back" rows="" cols="" class="form-control">{$read.back}</textarea>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="6">
+                                        <button class="btn btn-primary btn-sm">提交</button>
+                                        <a class="btn btn-default" href="{:U('Working/Index/index')}">返回</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

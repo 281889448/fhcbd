@@ -1,0 +1,68 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <!--个人资料修改-->
+  <div class="ar_content">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="tableWrap">
+            <h4 style="padding: 5px;">提案查询<neq name="search_flag" value="1">（委员）</neq></h4>
+            <hr>
+            <form method="post" name="proposal_search">
+            <table border="0" cellspacing="" cellpadding="" style="margin-bottom: 10px;">
+              <tr><th>提案类别
+                <select name="type_id" class="form-control input-sm">
+                <option disabled="" selected="" hidden="">--请选择--</option>
+                <volist name="tree" id="top">
+                  <option value="{$top.id}" >
+                    {$top.title}
+                  </option>
+                </volist>
+              </select>
+              </th>
+                <th>提案人
+                  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'author'))}
+
+                </th>
+                <th>正式案号
+                  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'code'))}
+                </th>
+
+                <th>案由
+                  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title'))}
+                </th>
+                <th>会议次数
+                  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet'))}
+
+
+
+                </th>
+                <if condition="$search_flag == 1">
+                <th>专委会  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'zwh'))}</th>
+                <th>街道联络委  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'jdllw'))}</th>
+                <th>界别组  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'jiebie'))}</th>
+                </if>
+                <th>提出日期 起<input size="16" type="text" value="" name="sTime" id="sTime" readonly="" class="form-control laydate-icon" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" placeholder="起始时间"></th>
+                <th>提出日期 止<input size="16" type="text" value="" name="eTime" id="eTime" readonly="" class="form-control laydate-icon" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" placeholder="截止时间"></th>
+                <th><button class="btn btn-primary" style="margin-top: 18px;">搜索</button></th>
+              </tr>
+            </table>
+            </form>
+            <table border="" cellspacing="" cellpadding="" class="table table-bordered">
+              <tr><th>正式案号</th><th>提案类别</th><th>案由</th><th>提案人</th><th>联系电话</th><th>专委会</th><th>街道联络委</th><th>界别组</th><th>提出日期</th><th>是否联名</th><th>是否并案</th><th>办理单位</th><th>状态</th><th>操作</th></tr>
+             <php>$status_config = C('PROPOSAL_STATUS');</php>
+              <volist name="proposals" id="p">
+              <tr><td>{$p.code}</td><td>{$p.type.title}</td><td>{$p.title}</td><td>{$p.author}</td><td>{$p.telephone}</td><td>{$p.zwh}</td><td>{$p.jdllw}</td><td>{$p.jiebie}</td><td>{$p.create_time|date='Y-m-d',###}</td><td><if condition="$p[is_joint]==0">否<else/>是</if></if></td><td><if condition="$p[is_merge]==0">否<else/>是</if></if></td><td>{$p.units}</td><td>{$status_config[$p[status]]}</td><td><a href="{:U('Proposal/Index/detail',array('id'=>$p['id']))}" class="btn btn-primary">查看详情</a></td></tr>
+              </volist>
+            </table>
+
+            {:getPagination($totalPageCount,16)}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</block>

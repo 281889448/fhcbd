@@ -1,0 +1,106 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form name="frme" method="post" action="{:U('Polls/Index/search')}">
+                        <div class="col-sm-1">
+                            <input type="text" placeholder="作者" class="form-control" value="{$uid}" name="uid"/>
+                        </div>
+                        <div class="col-sm-1">
+                            <select name="status" class="form-control" value="{$status}">
+                                <option value="">--状态--</option>
+                                <option value="0">未提交</option>
+                                <option value="1">已提交</option>
+                                <option value="2">退回</option>
+                                <option value="3">已审核</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-1">
+                            <select name="type" class="form-control" value="{$type}">
+                                <option value="">--类别--</option>
+                                <option value="新闻报告">新闻报告</option>
+                                <option value="奥运会">奥运会</option>
+                                <option value="明星绯闻">明星绯闻</option>
+                                <option value="宋吉吉">宋吉吉</option>
+                            </select>
+                        </div>
+                            <div class="col-sm-2">
+                                <input size="16" type="text" value="" name="stime" readonly class="form_datetime_day form-control" required placeholder="起始日期">
+                            </div>
+                            <div class="col-sm-2">
+                                <input size="16" type="text" value="" name="etime" readonly class="form_datetime_day form-control" required placeholder="截止日期">
+                            </div>
+
+                        <div class="col-sm-1">
+                            <button type="submit" class="btn btn-default btn-sm">查询</button>
+                        </div>
+                        <table class="table table-bordered table-responsive table-condensed" id="table1">
+                            <thead>
+                            <tr>
+                                <th>
+                                    日期
+                                </th>
+                                <th>
+                                    类别
+                                </th>
+                                <th>
+                                    作者
+                                </th>
+                                <th>
+                                    标题
+                                </th>
+
+                                <th>
+                                    状态
+                                </th>
+                                <th>
+                                    操作
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <volist name="re" id="re">
+                                <tr>
+                                    <td>
+                                        {$re.time}
+                                    </td>
+
+                                    <td>
+                                        {$re.type_id}
+                                    </td>
+                                    <td>
+                                        {$re.uid}
+                                    </td>
+                                    <td>
+                                        {$re.title}
+                                    </td>
+                                    <td>
+                                        <if condition="$re.status eq 0">未提交</if>
+                                        <if condition="$re.status eq 1">已提交</if>
+                                        <if condition="$re.status eq 2">退回</if>
+                                        <if condition="$re.status eq 3">已审核</if>
+                                    </td>
+                                    <td>
+                                        <in name="re['status']" value="1,2,3">
+                                            <a class="btn btn-primary btn-sm" href="{:U('Polls/Index/del',array('id'=>$his[id]))}">查看</a>
+                                            <else/>
+                                            <a class="btn btn-primary btn-sm" href="{:U('Polls/Index/del',array('id'=>$his[id]))}">查看</a>
+                                            <a class="btn btn-danger  btn-sm btn-del" href="{:U('Polls/Index/remove',array('id'=>$his[id]))}" >删除</a>
+                                        </in>
+                                    </td>
+                                </tr>
+                            </volist>
+
+
+                            </tbody>
+                        </table>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

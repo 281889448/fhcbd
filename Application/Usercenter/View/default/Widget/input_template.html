@@ -1,0 +1,26 @@
+<eq name="type" value="personal">
+
+
+
+        <div >
+            <input type="text" onblur="check(this,{$field_id})" require="{$required}" min_length="{$validation.min}" max_length="{$validation.max}" text_type="{$child_form_type}" class="form-control input-sm" id="expand_{$field_id}" name="expand_{$field_id}" value="{$field_data|htmlspecialchars}">
+            <input type="hidden" class="canSubmit" id="canSubmit_{$field_id}" value="{$canSubmit}">
+            <neq name="input_tips" value=""> <span class="help-block">{$input_tips}</span></neq>
+        </div>
+
+          <small id="label_{$field_id}" class="alert alert-danger" style="margin:0;padding:0;border:none"></small>
+
+
+<else/>
+    <dt class="expandinfo-dt">
+        {$field_name}：
+    </dt>
+
+    <dd class="expandinfo-dd">
+        <if condition="($field_data neq null)&&($field_data neq '')">
+            {$field_data|htmlspecialchars}
+            <else/>
+            无
+        </if>
+    </dd>
+</eq>

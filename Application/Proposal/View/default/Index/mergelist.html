@@ -1,0 +1,126 @@
+<extend name="Base/common"/>
+
+
+
+<block name="body">
+
+
+  <div class="ar_content">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="tableWrap">
+            <table class="table table-bordered table-responsive table-condensed" >
+              <thead>
+              <tr>
+                <th colspan="17">
+                  并案列表&nbsp;&nbsp;&nbsp;&nbsp;<small>默认第一条显示第一提案人</small>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr class="textc">
+
+                <td>
+                  案号
+                </td>
+
+                <td>
+                  提案类型
+                </td>
+                <td>
+                  案由
+                </td>
+
+                <td>
+                  界别组
+                </td>
+                <td>
+                  提案人
+                </td>
+                <td>
+                  联系电话
+                </td>
+
+                <td>
+                  提出时间
+                </td>
+
+                <td>
+                  是否联名
+                </td>
+                <td>
+                  是否并案
+                </td>
+
+                <td>
+                  状态
+                </td>
+                <td>操作</td>
+
+              </tr>
+              <volist name="content" id="c">
+              <tr>
+
+                <td>
+                  {$c.ycode}
+                </td>
+                <td>
+                  {$c.type.title}
+                </td>
+                <td>
+                  {$c.title}
+                </td>
+                <td>
+                  {$c.jiebie}
+                </td>
+                <td>
+                  {$c.author}
+                </td>
+                <td>
+                  {$c.telephone}
+                </td>
+                <td>
+                  {$c.create_time|}
+                </td>
+
+                <td>
+                  <if condition="$c[is_joint]==0">否<else/>是</if>
+
+                </td>
+
+                <td>
+                  <if condition="$c['is_merge'] == 1 || $c['is_merge'] == 2">是<else/>否</if>
+
+                </td>
+                <td>
+
+                  {$status_config[$c[status]]}
+                </td>
+                <td>
+                  <if condition="$c[is_merge]==2" >
+                  <a href="{:U('detail_merge',array('proposal_id'=>$c[id]))}">详情</a>
+                  </if>
+                </td>
+
+              </tr>
+              </volist>
+              </tbody>
+            </table>
+            <a class="btn btn-default btn-sm" href='{$back_url}'>返回</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block>
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,152 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <div id="tableWrap">
+                    <form name="frme" method="post" action="{:U('Working/Index/upload')}" enctype="multipart/form-data">
+                        <input type="hidden" name="status"/>
+                    <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                        <thead>
+                        <tr>
+                            <th colspan="6">
+                                添加工作动态
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="width: 120px">
+                                日期
+                            </td>
+                            <td >
+                                {:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'time','',1,NOW_TIME))}
+                            </td>
+
+
+                        </tr>
+
+                        <tr>
+                            <td>
+                                标题
+                            </td>
+                            <td colspan="5">
+                                {:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'title'))}
+                            </td>
+
+
+                        </tr>
+                        <tr>
+                            <td>
+                                内容
+                            </td>
+                            <td colspan="5">
+                            <div class="pull-left">
+                                 {:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'content'))}
+
+                            </div>
+                               
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>附件上传</td>
+                            <td colspan="5">
+                                {:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'upload'))}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <button class="btn btn-primary btn-sm" onclick="document.frme.status.value=1">保存</button>
+                                <button class="btn btn-primary btn-sm" onclick="document.frme.status.value=2">提交</button>
+                                <a class="btn btn-default btn-sm" href="{:U('Working/Index/index',array('status'=>1))}">返回</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <script>
+ /*       $('#add').click(function(){
+            var data = {
+                'time' : $('input[name=time]').val(),
+                'author' : $('input[name=author]').val(),
+                'type' : $('select[name=type]').val(),
+                'title' : $('input[name=title]').val(),
+                'content' : $('textarea[name=content]').val(),
+                'upload' : $('input[name=upload]').val(),
+                'status' : 2
+            };
+            $.post('<?php echo U("Index/add");?>',data,function(msg){
+                if(msg == 1 ){
+                    alert('提交成功');
+                    window.location.href ="{:U('Index/Index',array('status'=>1))}";
+                }else{
+                    alert('提交失败');
+                }
+            });
+        });
+        */
+    </script>
+    <script type="text/javascript">
+        $(function() {
+
+            /////////////
+
+            $("#search_uid").click(function() {
+                /*搜索ajax*/
+                var aj = $.ajax({
+                    url: "{:U('Working/Index/searchuser')}", // 跳转到 action
+                    data: "nickname="+nickname,
+                    type: 'post',
+                    cache: false,
+                    dataType: 'json',
+                    success: function(data) {
+                        var uid= data.uid;
+                        var nckname=data.nickname;
+                        $("#uid").html=uid;
+                        $("#nickname").html=nickname;
+                    },
+                    error: function() {
+                        alert("异常！");
+                    }
+                });
+            });
+            //////
+            $("#uid_ok").click(function(){
+                /*确定ajax*/
+                var aj = $.ajax({
+                    url: "{:U('Working/Index/searchuser')}", // 跳转到 action
+                    data: "nickname="+nickname,
+                    type: 'post',
+                    cache: false,
+                    dataType: 'json',
+                    success: function(data) {
+                        alert("成功！");
+                        //成功后关闭对话框
+                        $('#myModal').modal('hide')
+                    },
+                    error: function() {
+                        alert("异常！");
+                    }
+                });
+            })
+            $("#search_table").find(".btn").click(function() {
+                $(this).text("移除")
+                var trItem = $(this).closest("tr");
+                $("#choise_table").append(trItem)
+            });
+
+            $("#choise_table").on("click", ".btn", function() {
+                $(this).closest("tr").remove();
+            })
+        })
+    </script>
+    {:W('Common/Tongxunlu/index')}
+</block>

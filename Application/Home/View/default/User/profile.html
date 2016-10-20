@@ -1,0 +1,66 @@
+<extend name="Base/common" />
+<block name="header">
+<header class="jumbotron subhead" id="overview">
+  <div class="container">
+    <h2>修改密码</h2>
+    <p><span><span class="pull-left"></span> </span></p>
+  </div>
+</header>
+</block>
+
+<block name="body">
+<div class="ar_content">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div id="tableWrap">
+							          <form name="" method="post" action="{:U('User/profile')}">
+                            <table class="table table-bordered table-responsive table-condensed" style="width: 600px !important;">
+                               
+                                <tbody>
+                                    <tr>
+                                        <td class="col-sm-2">
+                                           原密码：
+                                        </td>
+                                        
+                                         
+                                        <td>
+                                             <input type="password" id="inputPassword"  class="form-control" placeholder="请输入密码"  errormsg="密码为6-20位" nullmsg="请填写密码" datatype="*6-20" name="old">
+                                        </td>
+                                        </tr>
+                                        <tr>
+                                        <td>
+                                            新密码：
+                                        </td>
+                                         
+                                        <td>
+                                             <input type="password" id="inputPassword"  class="form-control" placeholder="请输入密码"  errormsg="密码为6-20位" nullmsg="请填写密码" datatype="*6-20" name="password">
+                                        </td>
+                                         </tr>
+                                          <tr>
+                                        <td >
+                                            确认密码：
+                                        </td>
+                                        <td >
+                                            <input type="password" id="inputPassword" class="form-control" placeholder="请再次输入密码" recheck="password" errormsg="您两次输入的密码不一致" nullmsg="请填确认密码" datatype="*" name="repassword">
+                                        </td>
+                                    </tr>
+                                   <tr> <td colspan="2"><button type="submit"  class="btn btn-primary btn-sm" >提 交</button></td></tr>
+                                </tbody>
+                            </table>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+</block>
+
+
+

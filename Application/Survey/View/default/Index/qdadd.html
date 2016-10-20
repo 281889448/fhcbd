@@ -1,0 +1,60 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="6">
+                                    会议签到
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    签到人员
+                                </td>
+                                <td colspan="5">
+                                    <input type="text" name="" id="" value="" readonly="readonly" class="form-control peopleN" placeholder="点击选择" />
+                                    <div class="panel panel-default peopleN_s" id="" style="display: none;">
+                                        <div class="panel-heading">请选择参与人员</div>
+                                        <div class="panel-body" id="allpeople">
+                                            <label for="id1" class="span2">
+                                                <input type="checkbox" onchange="checkP($(this))" name="" id="id1" value="张三" /><span style="line-height: 30px;">张三</span></label>
+                                            <label for="id2" class="span2">
+                                                <input type="checkbox" onchange="checkP($(this))" name="" id="id2" value="王五" />王五</label>
+                                            <label for="id3" class="span2">
+                                                <input type="checkbox" onchange="checkP($(this))" name="" id="id3" value="赵二" />赵二</label>
+                                            <label for="id4" class="span2">
+                                                <input type="checkbox" onchange="checkP($(this))" name="" id="id4" value="李四" />李四</label>
+                                            <label for="id5" class="span2">
+                                                <input type="checkbox" onchange="checkP($(this))" name="" id="id5" value="傻六" />傻六</label>
+                                            <label for="id6" class="span2">
+                                                <input type="checkbox" onchange="checkP($(this))" name="" id="id6" value="王五" />王五</label>
+                                            <label for="id7" class="span2">
+                                                <input type="checkbox" onchange="checkP($(this))" name="" id="id7" value="赵二" />赵二</label>
+                                            <label for="id8" class="span2">
+                                                <input type="checkbox" onchange="checkP($(this))" name="" id="id8" value="李四" />李四</label>
+                                            <label for="id9" class="span2">
+                                                <input type="checkbox" onchange="checkP($(this))" name="" id="id9" value="傻六" />傻六</label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+                                    <button class="btn btn-default">提交</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </block>

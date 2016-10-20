@@ -1,0 +1,117 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="6">
+                                    签到详情
+                                </th>
+                            </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="span2">
+                                            会议时间:
+                                        </td>
+                                        <td colspan="5">
+                                            <div name=""class="form-control input-sm span4">
+                                                {:date('Y-m-d',$content['sTime'])}-至-{:date('Y-m-d',$content['eTime'])}
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="span2">
+                                            报名截止时间：
+                                        </td>
+                                        <td colspan="5">
+                                            <div name=""class="form-control input-sm span4">
+                                                {:date('Y-m-d H:i',$content['deadline'])}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="span2">
+                                            人数限制：
+                                        </td>
+                                        <td colspan="5">
+                                            <div name=""class="form-control input-sm span4">
+                                                {$content.limitCount}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="span2">
+                                            已报名：
+                                        </td>
+                                        <td colspan="5">
+                                            <div name=""class="form-control input-sm span4">
+                                                {$content.attentionCount}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="span2">
+                                            剩余人数：
+                                        </td>
+                                        <td colspan="5">
+                                            <div name=""class="form-control input-sm span4">
+                                                {$content['limitCount']-$content['attentionCount']}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="span2">
+                                            地点：
+                                        </td>
+                                        <td colspan="5">
+                                            <div name=""class="form-control input-sm span4">
+                                                {$content.address}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8" style="margin-top: 400px;">
+                <form class="form-horizontal  ajax-form" role="form" action="{:U('Meet/Index/doSign')}" method="post">
+                    <div class="form-group has-feedback">
+                        <label for="name" class="col-sm-2 control-label">姓名</label>
+
+                        <div class="col-sm-10">
+                            <input id="name" name="name" type="" class="form-control form_check" check-type="Text"  value="" placeholder="请填写姓名"/>
+                            <input id="meet_id" name="meet_id" type="hidden" class="form-control"
+                                   value="{$content.id}"/>
+                        </div>
+
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label for="phone" class="col-sm-2 control-label">手机</label>
+
+                        <div class="col-sm-10">
+                            <input id="phone" name="phone" type="" class="form-control form_check" check-type="Phone"  value="" placeholder="请填写联系方式"/>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary " href="{:U('Meet/Index/doSign')}">提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="__JS__/form_check.js"></script>
+</block>

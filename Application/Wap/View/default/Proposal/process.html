@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+     <include file="cssjs"/>
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>办理流程</h1>
+        <!--<button class="ui-btn">回首页</button>-->
+    </header>
+     
+    <section class="ui-container">
+        
+        <div class="searchlistwrap">
+			<volist name="resultprocess" id="r">
+				<ul class="process  <if condition="$key==0">active-line </if>">
+					<li class="line">
+						<span></span>
+					</li>
+				<li>
+					<p>时间：{$r.create_time|date='Y-m-d H:i:s',###}</p>
+				</li>
+				<li>
+					<p>执行人：{$r.group}</p>
+				</li>
+				<li>
+					<p>操作状态：{$proposalstatus[$r[to_status]]}</p>
+				</li>
+				<li>
+					<p>描述：{$r.remark}</p>
+				</li>
+				<li>
+					<p>备注：{$r.suggest}</p>
+				</li>
+
+			</ul>
+			</volist>
+        	
+        </div>
+       
+        
+    </section>
+ 
+    
+    
+</body>
+
+</html>

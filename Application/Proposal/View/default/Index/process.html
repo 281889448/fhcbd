@@ -1,0 +1,61 @@
+<extend name="Base/common"/>
+
+
+
+<block name="body">
+<style>
+	.history_item .dot_now {
+		position: absolute;
+		top: -8px;
+		left: -8px;
+		height: 16px;
+		width: 16px;
+		background: #FF480E;
+		border-radius: 50% ;
+	}
+
+</style>
+
+	<div class="ar_content">
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span12">
+					<div id="tableWrap">
+					<volist name="resultprocess" id="r">
+						<div class="history_item">
+							<if condition="$key==0"><span class="dot_now"></span><else/><span class="dot"></span></if>
+							
+							<div class="info">
+								<p>时间：<b>{$r.create_time|date='Y-m-d H:i:s',###}</b></p>
+								<p>执行人：<b>{$r.group}</b></p>
+								<p>操作状态：<b>{$proposalstatus[$r[to_status]]}</b></p>
+								<p>描述：<b>{$r.remark}</b></p>
+								<p>备注：<b>{$r.suggest}</b></p>
+							</div>
+						</div>
+					</volist>
+
+
+					</div>
+				</div>
+			</div>
+			<div>
+				<a  href="{$back_url}" class="btn btn-default">返回</a>
+				</div>
+		</div>
+	</div>
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

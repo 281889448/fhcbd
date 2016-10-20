@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+    <link rel="stylesheet" href="../frozenui/css/frozen.css">
+    <link rel="stylesheet" href="css/css.css">
+    <script src="../frozenui/lib/zepto.min.js"></script>
+    <script src="../frozenui/js/frozen.js"></script>
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>未提交</h1>
+       <!-- <button class="ui-btn">回首页</button>-->
+    </header>
+    <section class="ui-container">
+        <table class="editTable">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <a href="#" class="self_btn self_btn_h">撰写提案</a>
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td> <a href="#" class="self_btn">未提交</a></td>
+                    <td>
+                        <a href="#" class="self_btn">待审核</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td> <a href="#" class="self_btn">未立案</a></td>
+                    <td>
+                        <a href="#" class="self_btn">已立案</a>
+                    </td>
+                </tr>
+                
+                <tr>
+                	<td colspan="2">
+                		<p class="hr"></p>
+                	</td>
+                </tr>
+                
+                <tr>
+                	<td colspan="2">
+                		<select name="" id="" class="self_select_h">
+                            <option value="">提出期间</option>
+                            <option value="">会议期间</option>
+                        </select>
+                	</td>
+                </tr>
+               <tr>
+                	<td colspan="2">
+                		<select name="" id="" class="self_select_h">
+                            <option value="">界别组</option>
+                            <option value="">界别组</option>
+                        </select>
+                	</td>
+                </tr>
+                <tr>
+                	<td colspan="2">
+                		<select name="" id="" class="self_select_h">
+                            <option value="">请选择提案类型</option>
+                            <option value="">请选择提案类型</option>、
+                        </select>
+                	</td>
+                </tr>
+                <tr>
+                	<td>
+                		<input type="" name="" id="" value="" placeholder="提案人"  class="self_input"/>
+                	</td>
+                	<td><input type="" name="" id="" value="" placeholder="案由"  class="self_input"/></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button class="self_btn_h ui-btn-primary">
+                            搜索
+                        </button>
+                        
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="searchlistwrap">
+        	<h4 class="tit">未提交列表</h4>
+        	<ul class="searchlist">
+        	<li>
+        		<p>案号:十五届一次会议031号-20160925</p>
+        	</li>
+        	<li>
+        		<p>提案类型：经济发展类</p>
+        	</li>
+        	<li>
+        		<p>案由：关于帮助大学生创业相关提案</p>
+        	</li>
+        	<li>
+        		<p>提案人：王浩 &nbsp;&nbsp;&nbsp;&nbsp;联系方式：13250000000</p>
+        	</li>
+        	
+        	<li>
+        		<p>是否联名：否&nbsp;&nbsp;&nbsp;&nbsp;是否并案：否 &nbsp;&nbsp;&nbsp;&nbsp;状态：未提交</p>
+        	</li>
+        	<li>
+        		<button class="self_btn_f">详情</button>
+        	</li>
+        </ul>
+        <ul class="searchlist">
+        	<li>
+        		<p>案号:十五届一次会议031号-20160925</p>
+        	</li>
+        	<li>
+        		<p>提案类型：经济发展类</p>
+        	</li>
+        	<li>
+        		<p>案由：关于帮助大学生创业相关提案</p>
+        	</li>
+        	<li>
+        		<p>提案人：王浩 &nbsp;&nbsp;&nbsp;&nbsp;联系方式：13250000000</p>
+        	</li>
+        	
+        	<li>
+        		<p>是否联名：否&nbsp;&nbsp;&nbsp;&nbsp;是否并案：否 &nbsp;&nbsp;&nbsp;&nbsp;状态：未提交</p>
+        	</li>
+        	<li>
+        		<button class="self_btn_f">详情</button>
+        	</li>
+        </ul>
+        </div>
+        
+    </section>
+    
+    
+    <div class="ui-dialog">
+    <div class="ui-dialog-cnt">
+      <header class="ui-dialog-hd ui-border-b">
+                  <h3>搜索结果</h3>
+                  <i class="ui-dialog-close" data-role="button"></i>
+              </header>
+        <div class="ui-dialog-bd">
+  
+           <table  class="ui-table ui-border" id="searchtable">
+           	<tr><th>提出日期</th><th>案由</th></tr>
+           	<tr><td><p class="time">2016-09-05</p></td><td>
+           		<p class="searchtit">第十三届第一次会议</p>
+           		</td></tr>
+           	<tr><td><p class="time">2016-09-05</p></td><td><p class="searchtit">第十三届第一次会议</p></td></tr>
+           	<tr><td><p class="time">2016-09-05</p></td><td><p class="searchtit">第十三届第一次会议</p></td></tr>
+           	<tr><td><p class="time">2016-09-05</p></td><td><p class="searchtit">第十三届十三届十三届第一次会议</p></td></tr>
+           </table>
+        </div>
+        <div class="ui-dialog-ft">
+            <button type="button" data-role="button">取消</button>
+            <button type="button" data-role="button">确定</button>
+        </div>
+    </div>        
+</div>
+<script class="demo-script">
+$(function(){
+	$("#searchbtn").click(function(){
+		$(".ui-dialog").dialog("show");
+	})
+})
+
+</script>
+</body>
+
+</html>

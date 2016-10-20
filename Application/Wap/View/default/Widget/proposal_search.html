@@ -1,0 +1,45 @@
+<form name="search_proposal" action="{:U(ACTION_NAME,array('status'=>$status))}" method="post">
+    <input type="hidden" id="status" value="{$status}"/>
+<tr>
+    <td colspan="2">
+        <select name="meet_type"  class="self_select_h" id="meet_type">
+            <option disabled="" selected hidden="" value="">--请选择会议状态--</option>
+            <option value="会议期间" <if condition="$map[meet_type]=='会议期间'">selected</if> >会议期间</option>
+            <option value="闭会期间" <if condition="$map[meet_type]=='闭会期间'">selected</if> >闭会期间</option>
+        </select>
+    </td>
+</tr>
+<tr>
+
+    <td colspan="2">
+     <!--   {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'jiebie','','',$map['jiebie']))} -->
+    </td>
+</tr>
+<tr>
+    <td colspan="2">
+
+        <select name="type_id" class="self_select_h">
+            <option disabled="" selected hidden="" value="">--请选择提案类型--</option>
+            <volist name="tree" id="top">
+                <option value="{$top.id}"  <if condition="$map[type_id]==$top[id]">selected</if> >
+                    {$top.title}
+                </option>
+            </volist>
+        </select>
+    </td>
+</tr>
+<tr>
+    <td>
+        <input type="text" name="author" class="self_input" value="{$map[author]}" placeholder="--提案人--">
+    </td>
+    <td> <input type="text" name="title" class="self_input" value="{$map[title]}" placeholder="--案由--"></td>
+</tr>
+<tr>
+    <td colspan="2">
+        <button class="self_btn_h ui-btn-primary" onclick="document.search_proposal.submit();">
+            搜索
+        </button>
+
+    </td>
+</tr>
+</form>

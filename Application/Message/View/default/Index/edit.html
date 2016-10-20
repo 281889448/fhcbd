@@ -1,0 +1,76 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <style type="text/css">
+        .con{
+            max-height:400px ;
+            overflow-y: auto;
+            display: none;
+
+        }
+        .con label{
+            width: 100px;
+            text-align: center;
+            display: inline-block;
+        }
+        .people_N input{
+            vertical-align: middle;
+        }
+    </style>
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <h4>添加公告</h4>
+                        <form name="frm" method="post" action="{:U('Message/Index/upload',array('id'=>$me[id]))}">
+                            <table class="table table-bordered table-responsive table-condensed">
+
+                                <tbody>
+                                <tr><td class="col-sm-1">发布日期</td>
+                                    <input type="hidden" name="id" value="{$me['id']}">
+                                   <td>
+                                       {:W('Common/InputRender/InputRender',array('modelid'=>12,'name'=>'stime',$me['id'],0,NOW_TIME))}
+                                   </td>
+                                </tr>
+                                <tr><td>标题</td><td >
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>12,'name'=>'title',$me['id'],0))}
+                                </td>
+                                    <td class="text-right">类型</td>
+                                    <td >
+                                        {:W('Common/InputRender/InputRender',array('modelid'=>12,'name'=>'type',$me['id']))}
+                                    </td>
+                                </tr>
+                                <tr><td>接收人员</td>
+                                    <td colspan="5">
+                                        <input type="hidden"  name="people" id="uids" value="{$me['people']}"/>
+                                        <div id="Groups" class="btn btn-primary" data-toggle="modal" data-target="#myModalx">
+                                            选择参与人员
+                                        </div>
+                                        <textarea name="" readonly id="contact_user" class="form-control" style="margin-top: 10px">
+                                            <volist name="people" id="vo">
+                                                {$vo.truename};&nbsp;&nbsp;
+                                            </volist>
+                                        </textarea>
+                                    </td>
+                                </tr>
+                                <tr><td>内容</td><td colspan="3">
+                               
+                              
+                                <div class="pull-left">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>12,'name'=>'content',$me['id']))}
+                                </div>
+                                </td></tr>
+                                <tr><td>附件</td><td colspan="3">{:W('Common/InputRender/InputRender',array('modelid'=>12,'name'=>'file',$me['id']))}</td></tr>
+                                <tr><td colspan="4"><button class="btn btn-primary">修改</button>
+                                    <a class="btn btn-default" href="{:U('Message/Index/index')}">返回</a></td></tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {:W('Common/Tongxunlu/index')}
+</block>

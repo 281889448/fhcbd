@@ -1,0 +1,23 @@
+<eq name="type" value="personal">
+    
+
+       
+           
+                <volist name="items" id="vl">
+                    <div class="radio-inline">
+                        <label ><input  type="radio" name="expand_{$field_id}" value="{$vl.value}" {$vl.checked}>{$vl.value|htmlspecialchars}</label>
+                    </div>
+                </volist>
+          
+           
+            <neq name="input_tips" value=""> <span class="help-block">{$input_tips}</span></neq>
+       
+   
+    <else/>
+    <dt class="expandinfo-dt">
+        {$field_name}：
+    </dt>
+    <dd class="expandinfo-dd">
+        {$checked|htmlspecialchars}
+    </dd>
+</eq>

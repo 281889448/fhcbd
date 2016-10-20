@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+	<style>
+		.self_btn_f{
+			width:140px !important;
+		}
+	</style>
+	<include file="cssjs"/>
+
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>选择联名</h1>
+        <!--<button class="ui-btn">回首页</button>-->
+    </header>
+     <footer class="ui-footer ui-footer-btn" style="height: 45px">
+     	<a href="{:U('Wap/proposal/jointly',array('proposal_id'=>$proposal[id]))} " style="line-height: 45px;display: block;">进入我的联名列表</a>
+           
+        </footer>
+    <section class="ui-container">
+		<form name="" action="{:U('Wap/proposal/jointly_chosen',array('proposal_id'=>$proposal[id]))}" method="post">
+        <ul class="searchform">
+        	<li>
+				<input type="search" name="nickname"  value="{$map['nickname']}" class="self_input_h" placeholder="--用户名--" />
+
+        	</li>
+        	<li>
+				<input type="search" name="名称"   value="{$map['名称']}" class="self_input_h" placeholder="--委员姓名--" />
+
+        	</li>
+        	<li>
+				<button type="submit" class="self_btn_h ui-btn-primary">搜索</button>
+
+        	</li>
+        	<li>
+        		<p class="hr"></p>
+        	</li>
+        </ul>
+			</form>
+        <div class="searchlistwrap">
+			<volist name="users" id="u">
+        	<ul class="searchlist">
+        		
+        	<li>
+        		<p>用  户  名:{$u['nickname']}</p>
+        	</li>
+        	<li>
+        		<p>委员姓名:{$u['名称']}</p>
+        	</li>
+        	<li>
+        		<p>界  别  组:{$u['界别']}</p>
+        	</li>
+        	<li>
+        		<p>专  委  会:{$u['专委会']}</p>
+        	</li>
+        	<li>
+        		<p>街道联络委:{$u['街道联络委']}</p>
+        	</li>
+        	<li>
+        		<button class="self_btn_f " style="margin: 0 auto;display: block;" data-uid="{$u[uid]}">选择联名<if condition="$u['chosen']"><span style='color:green;font-weight: bold;' class='chosen_status'>√</span></if></button>
+
+        	</li>
+        </ul>
+			</volist>
+        </div>
+        
+    </section>
+
+<script>
+
+	//移交办理处理
+	$(".searchlist").on( "click",".self_btn_f", function() {
+	var myData = 'uid='+ $(this).attr('data-uid'); //build a post data structure
+
+	var self=$(this);
+	jQuery.ajax({
+	type: "POST", // HTTP method POST or GET
+	url: "{:U('Wap/Proposal/jointly_chosen_ajax',['proposal_id'=>$proposal[id]])}", //Where to make Ajax calls
+	dataType:"json", // Data type, HTML, json etc.
+	data:myData, //Form variables
+	success:function(response){
+		if(response.status == 1){
+			if(response.msg == 1){
+				self.append("<span style='color:green;font-weight: bold;' class='chosen_status'>√</span>");
+			}else{
+				self.find(".chosen_status").remove();
+			}
+		}
+
+	},
+	error:function (xhr, ajaxOptions, thrownError){
+	//On error, we alert user
+	alert(thrownError);
+	}
+	});
+
+
+	});
+</script>
+</body>
+
+</html>

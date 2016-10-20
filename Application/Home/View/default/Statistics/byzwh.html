@@ -1,0 +1,22 @@
+<extend name="Base/common"/>
+
+<block name="body">
+ <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                    	<h4 style="padding: 5px;">按专委会统计</h4>
+                        <table border="" cellspacing="" cellpadding="" class="table table-bordered">
+                        	<tr><th>专委会</th><th>原案数</th><th>立案数</th><th>重点提案数</th><th>优秀提案数</th><th>建议案数</th></tr>
+	                        <volist name="data" id="d">
+                        	<tr><td>{$d.name}</td><td><a href="" class="text_derection">{$d.count.countta}</a></td><td><a href="" class="text_derection">{$d.count.countl}</a></td><td><a href="" class="text_derection">{$d.count.countz}</a></td><td><a href="" class="text_derection">{$d.count.countt}</a></td><td>{$d.count.countj}</td></tr>
+	                        </volist>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>

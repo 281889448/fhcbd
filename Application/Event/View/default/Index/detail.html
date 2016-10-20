@@ -1,0 +1,137 @@
+<extend name="Base/common"/>
+
+
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="6">
+                                   活动详情
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td style="width:160px" class="text-center">
+                                    活动类型
+                                </td>
+                                <td colspan="5">
+                                    <div class="col-sm-12">
+                                        {$edit.event_type}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    会议名称
+                                </td>
+                                <td colspan="5">
+                                <div class="col-sm-12">
+                                     {$edit.title}
+                                </div>
+                                   
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    开始时间
+                                </td>
+                                <td colspan="5">
+                                    <div class="col-sm-12" >
+                                        {$edit.sTime|date="Y-m-d H:i:s",###}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    结束时间
+                                </td>
+                                <td colspan="5">
+                                    <div class="col-sm-12">
+                                        {$edit.eTime|date="Y-m-d H:i:s",###}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    活动地点
+                                </td>
+                                <td colspan="5">
+                                    <div class="col-sm-12"  >
+                                    <input type="text"class="form-control input-sm" value="{$edit.address}" readonly="readonly">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    参与人员
+                                </td>
+                                <td colspan="5">
+                                    <div class="col-sm-12">
+                                        <volist name="people" id="vo">
+                                            <button type="button" class="btn btn-default">{$vo}</button>
+                                        </volist>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    活动内容
+                                </td>
+                                <td colspan="5">
+                                    <div class="col-sm-12">
+                                        <textarea name="" rows="" cols="" class="form-control" readonly="readonly">{$edit.explain|htmlspecialchars_decode}</textarea>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    签到二维码
+                                </td>
+                                <td colspan="5" class="clearfix">
+                                    <div class="pull-left">
+                                        {:hook('checkinModule',array('id'=>$edit['id'],'type'=>'event'))}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    签到时间
+                                </td>
+                                <td>
+                                    <div style="width:500px" class="pull-left">
+                                        <table border="" cellspacing="" cellpadding="" id="time-table" name="qdchishu">
+                                            <tr>
+                                                <th class="col-sm-2">签到顺序</th>
+                                                <th class="col-sm-4">签到结束时间</th>
+                                            </tr>
+                                            <tr>
+                                                <volist name="markset" id="vo">
+                                            <tr>
+                                                <td>{$vo.mark_sort}</td>
+                                                <td>{$vo.mark_time|date='Y-m-d H:i:s',###}</td>
+                                            </tr>
+                                            </volist>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div>
+                            <a class="btn btn-default" href="{:U('Event/Index/index')}">返回</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

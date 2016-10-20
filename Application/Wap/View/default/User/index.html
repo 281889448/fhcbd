@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+    <include file="cssjs"/>
+</head>
+<style>
+.J_box{
+	height: 44px;
+}
+	.J_box label{
+		color: #777;
+		font-size: 14px;
+		padding-left: 10px;
+		width: 95px;
+    position: absolute;
+    text-align: left;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+	}
+	.J_box input{
+		height: 100%;
+		    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    border: 0;
+    background: none;
+    padding-left: 95px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+	}
+	.ui-container label{
+		font-size: 14px;
+	}
+	.J_radio{
+		height: 100%;
+		    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    border: 0;
+    background: none;
+    padding-left: 95px;
+	}
+	.J_label{
+		color: #777;
+		font-size: 14px;
+		width: 95px;
+    position: absolute;
+    text-align: left;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    line-height: 20px;
+	}
+</style>
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>个人中心</h1>
+    </header>
+    <section class="ui-container">
+        <div class="ui-form ui-border-t">
+    <form action="#">
+        <div class="ui-form-item ui-form-item-show  ui-border-b">
+            <label for="#">状态</label>
+            <div style="padding-left: 100px"><if condition="$review==1">审核中<else/>正常</if></div>
+        </div>
+        
+    </form>
+</div>
+<h3 style="padding: 15px;">信息设置</h3>
+<div class="ui-form ui-border-t">
+    <form action="{:U('User/edit_expandinfo')}" method="post">
+        <input type="hidden" name="profile_group_id" value="13"/>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">姓名：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'名称',$uid),'personal'))}
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">曾  用  名：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'曾用名',$uid),'personal'))}
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">手  机  号：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'手机号',$uid),'personal'))}
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">婚       姻：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'婚否',$uid),'personal'))}
+
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">电子邮箱：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'email',$uid),'personal'))}
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">邮      编：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'邮政编码',$uid),'personal'))}
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">职       称：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'职称',$uid),'personal'))}
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">现任职务：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'现任职称',$uid),'personal'))}
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">工作单位：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'工作单位',$uid),'personal'))}
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">单位地址：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'单位地址',$uid),'personal'))}
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">家庭电话：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'家庭电话',$uid),'personal'))}
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">家庭住址：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'家庭地址',$uid),'personal'))}
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">办公电话：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'办公电话',$uid),'personal'))}
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">Q Q号码：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'qq',$uid),'personal'))}
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <span	class="J_label">是否港澳台<br />
+关系及联系：</span>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'是否华侨',$uid),'personal'))}
+        </div>
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <label for="#">爱好及特长：</label>
+            {:W('InputRenderUser/inputRender',array(getExtend(13,'兴趣爱好',$uid),'personal'))}
+        </div>
+        <if condition="$review != 1">
+        <div class="ui-form-item ui-form-item-show ui-border-b">
+            <button class="self_btn" >提交</button>
+        </div>
+        </if>
+    </form>
+</div>
+        
+    </section>
+</body>
+
+</html>

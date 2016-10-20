@@ -1,0 +1,64 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="7">
+                                    活动列表
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="textc">活动类别</td>
+                                <td class="textc">活动名称</td>
+                                <td class="textc">活动地点</td>
+                                <td class="textc">活动时间</td>
+                                <td class="textc">请假人数</td>
+                                <td class="textc">审批人</td>
+                                <td class="textc">管理操作</td>
+                            </tr>
+                            <volist name="event" id="event">
+                                <if condition="$event['leave_mem'] eq 0">
+                                    <else/>
+                                <tr>
+                                    <td>{$event.event_type}</td>
+                                    <td>{$event.title}</td>
+                                    <td>{$event.address}</td>
+                                    <td>{$event.sTime|date="Y-m-d H:i:s",###}--{$event.eTime|date="Y-m-d H:i:s",###}</td>
+                                    <td>{$event.leave_mem}</td>
+                                    <td>{$name}</td>
+                                    <td style="width:410px">
+                                        <a class="btn btn-primary  btn-sm" href="{:U('Event/Index/leave',array('id'=>$event[id]))}">活动请假审核</a><span ></span>
+                                    </td>
+                                </tr>
+                                </if>
+                            </volist>
+                            </tbody>
+                        </table>
+                        <if condition="$lockback eq 1">
+                            <a href="javascript:history.back(-1);" class="btn btn-danger ">返回</a>
+                        </if>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+

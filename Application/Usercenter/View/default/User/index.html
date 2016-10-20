@@ -1,0 +1,111 @@
+<extend name="Base/common"/>
+<block name="body">
+
+
+
+
+
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap" class="clearfix">
+
+                        <h4 style="padding: 5px;">委员信息列表</h4>
+                        <table class="table table-bordered table-responsive table-condensed">
+                            <thead>
+                            <tr class="text-center">
+
+                                <th class="text-center">
+                                    姓名
+                                </th>
+                                <th class="text-center">
+                                    性别
+                                </th>
+                                <th class="text-center">
+                                    籍贯
+                                </th>
+
+                                <th class="text-center">
+                                    民族
+                                </th>
+                                <th class="text-center">
+                                    专委会
+                                </th>
+                                <th class="text-center">
+                                    街道
+                                </th>
+                                <th class="text-center">
+                                    党派
+                                </th>
+                                <th class="text-center">
+                                    常委
+                                </th>
+                                <th class="text-center">
+                                    手机
+                                </th>
+                                <th class="text-center">
+                                    办公电话
+                                </th>
+                                <th class="text-center">
+                                    届别
+                                </th>
+                                <th class="text-center">
+                                    操作
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <volist name="users" id="user" key="k">
+                            <tr>
+
+                                <td>
+                                    {$user['名称']}
+                                </td>
+
+                                <td>
+                                    {$user['性别']}
+                                </td>
+                                <td>
+                                    {$user['籍贯']}
+                                </td>
+                                <td>
+                                    {$user['民族']}
+                                </td>
+                                <td>
+                                    {$user['专委会']}
+                                </td>
+                                <td>
+                                    {$user['街道联络委']}
+                                </td>
+                                <td>
+                                    {$user['政治面貌']}
+                                </td>
+                                <td>
+                                    {$user['是否常委']}
+                                </td>
+                                <td>
+                                    {$user['手机号']}
+                                </td>
+                                <td>
+                                    {$user['办公电话']}
+                                </td>
+                                <td>
+                                    {$user['届别']}
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm" href="{:U('Usercenter/Config/user',['id'=>$user['id']])}">详情</a>
+                                    <a class="btn btn-primary btn-sm" href="{:U('Usercenter/User/process',['uid'=>$user['id']])}">历史记录</a>
+                                </td>
+                            </tr>
+                            </volist>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>

@@ -1,0 +1,240 @@
+<extend name="Base/common"/>
+
+
+
+<block name="body">
+
+
+  <div class="ar_content">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="tableWrap" >
+              {:W('Menumark/index')}
+            <form name="search_proposal" method="post">
+
+              <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:15px">
+
+                <tr>
+                  <td>
+                    <select name="type_id" class="form-control input-sm">
+                      <option disabled="" selected="" hidden="">--请选择会议状态--</option>
+
+                        <option value="会议期间" >
+                          会议期间
+                        </option>
+
+
+                      <option value="闭会期间" >
+                        闭会期间
+                      </option>
+
+                    </select>
+                  </td>
+                  <!--td> {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'jiebie'))}</td-->
+                  <td>
+                    <select name="type_id" class="form-control input-sm">
+                                                <option disabled="" selected="" hidden="">--请选择提案类型--</option>
+                                                <volist name="tree" id="top">
+                        <option value="{$top.id}" >
+                        {$top.title}
+                        </option>
+                        </volist>
+                                            </select></td>
+                  <td>
+
+                    {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'author'))}</td>
+
+
+                  <td>
+
+                    {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title'))}
+                  </td>
+                  <td> <button class="btn btn-default input-sm" onClick="document.search_proposal.action='{:U('index',array('status'=>$status))}';document.search_proposal.submit();">搜索</button></td>
+                </tr>
+              </table>
+
+            </form>
+
+            <div class="alert alert-info" style="margin-bottom:0"><if condition="$group=='提案委' && $status==2">待审核<elseif condition="$group=='提案委' && $status == '3,4,5,6,7,10'"/  >已审核<else/>{$status_config[$status]}</if>的列表
+
+             <!-- s -->
+             <if condition="$group == '提案委'">
+         <eq name="status" value="8">
+            <a class="btn btn-primary input-sm" href="{:U('Proposal/Index/setCode')}">批量生成案号</a>
+            <div class="btn btn-primary" style="margin-left:10px;padding:0" ><a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal6"  onClick="document.proposallist.status.value='18';document.proposallist.action='{:U('Proposal/Index/changeStatus18')}';$('.modal-title').html('是否批量移交')">批量移交</a></div>
+
+         </eq>
+        </if>
+
+          <if condition="$group == '政府督查室'">
+            <eq name="status" value="18">
+              <div class="btn btn-primary" style="margin-left:10px;padding:0" ><button class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#myModal6"  onClick="document.proposallist.status.value='19';document.proposallist.action='{:U('Proposal/Index/batchHandover',array('status'=>19))}';$('.modal-title').html('是否批量交办')">批量交办</button></div>
+            </eq>
+            <eq name="status" value="13">
+              <div class="btn btn-primary" style="margin-left:10px;padding:0" ><button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal6"   onClick="document.proposallist.status.value='17';document.proposallist.action='{:U('Proposal/Index/changeStatus17')}';$('.modal-title').html('是否批量移交反馈')">批量移交反馈</button></div>
+            </eq>
+
+          </if>
+             <!-- e -->
+            </div>
+            
+            <form name="proposallist" method="post">
+              <input type="hidden" name="status">
+            <table class="table table-bordered table-responsive table-condensed" >
+
+              <tbody>
+              <tr class="textc text-center">
+                <td>
+                  <label ><input type="checkbox" name=""  id="checkAll" value=""/>全选</label>
+                </td>
+                <td>
+                  <in name="status" value="1,2,3,4,5,6,7">
+                    案号
+
+                    <else/>
+                    正式案号
+                  </in>
+
+                </td>
+
+                <td>
+                  提案类型
+                </td>
+                <td class="col-sm-2">
+                  案由
+                </td>
+                <td>
+                  界别组
+                </td>
+
+                <td>
+                  提案人
+                </td>
+                <td>
+                  联系方式
+                </td>
+                <td>
+                  是否联名
+                </td><td>
+                是否并案
+              </td>
+                <in name="status" value="13,17,9">
+                <td class="col-sm-2">
+                  办理单位
+                </td>
+                </in>
+                <td>
+                  状态
+                </td>
+                <td>
+                  操作
+                </td>
+              </tr>
+
+              <volist name="contents" id="c">
+                <tr>
+                  <td class="checkboxbtn text-center">
+                    <input type="checkbox" name="ids[]" id="" value="{$c.id}" onchange="chtrue($(this))"/>
+                  </td>
+                  <td>
+                    <in name="status" value="1,2,3,4,5,6,7">
+                      {$c.ycode}
+                      <else/>
+                      {$c.code}
+                    </in>
+
+
+
+
+                  </td>
+                  <td>
+                    {$c.type.title}
+                  </td>
+                  <td>
+                    <a href="{:U('Proposal/index/detail',array('id'=>$c[id]))}" class="text_derection">{$c.title}</a>
+                  </td>
+                  <td>
+                    {$c.jiebie}
+                  </td>
+                  <td>
+                    {$c.author}
+                  </td>
+                  <td>
+                    {$c.telephone}
+                  </td>
+                  <td class="text-center">
+                    <if condition="$c[is_joint]==0">否<else/><a href="{:U('jointly',array('proposal_id'=>$c[id]))}" class="text_derection">是</a></if>
+
+                  </td>
+                  <td  class="text-center">
+                    <if condition="$c['is_merge'] == 1 || $c['is_merge'] == 2"><a href="{:U('mergeList',array('proposal_id'=>$c[merge_id]))} " class="text_derection">是</a><else/>否</if>
+
+
+                  </td>
+                  <in name="status" value="13,17,9">
+                    <php>$units = implode(',',$c['units']);</php>
+                  <td>{$units}</td>
+                    </in>
+                  <td>{$status_config[$c[status]]}</td>
+
+                  <td style="width:200px">
+
+                      <a href="{:U('Proposal/index/detail',array('id'=>$c[id]))}" class="btn btn-primary">详情</a>
+
+
+
+
+                      <in name="status" value="13,17,9,8">
+
+                    <a href="{:U('Proposal/Result/handCheck',array('proposal_id'=>$c[id]))}"  class="btn btn-primary">查办</a>
+                    </in>
+
+                    <a href="{:U('Proposal/Index/process',array('proposal_id'=>$c[id]))}"  class="btn btn-primary">流程</a>
+
+                  </td>
+                </tr>
+              </volist>
+              </tbody>
+            </table>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Small modal -->
+  <div class="modal fade bs-example-modal-sm" id="myModal6">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" style="color: #68d8ff;">是否批量提交！</h4>
+        </div>
+        <form name="proposal_put" action="" method="post">
+          <input type="hidden" name="ids"  value="{$content.id}">
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" onclick="document.proposallist.submit();" >提交</button>
+          </div>
+        </form>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+</block>
+
+
+
+
+
+
+
+
+
+

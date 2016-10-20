@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+     <include file="cssjs"/>
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>提案撰写</h1>
+
+    </header>
+    <section class="ui-container">
+        <form action="{:U('Wap/Proposal/dopost',['proposal_id'=>$content['id']])}" name="proposal" method="post">
+            <input type="hidden" name="status" />
+            <input type="hidden" name="jdllw" value="{$data['街道联络委']}" />
+            <input type="hidden" name="zwh" value="{$data['专委会']}" />
+            <input type="hidden" name="jiebie" value="{$data['界别']}" />
+        <table class="ui-table ui-border ui-table2">
+            <tbody>
+                <tr>
+                    <td>
+                        提出期间
+                    </td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'meet_type',$content['id'],1,$data['meet_type']))}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        会议次数
+                    </td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'meet',$content['id'],1,C('PROPOSAL_MEET')))}
+                    </td>
+                </tr>
+                <tr>
+                    <td>提出日期</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'create_time',$content['id'],1,NOW_TIME))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型</td>
+                    <td>
+                        <php>$group = get_group(get_uid())</php>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'leibie',$content['id'],1,$group))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数</td>
+                    <td>{:W('InputRender/InputRender',array('modelid'=>4,'name'=>'renshu',$content['id'],0,1))}</td>
+                </tr>
+                <tr>
+                    <td> 提案类型</td>
+                    <td>
+                        <select name="type_id" >
+                            <option>--请选择--</option>
+                            <volist name="tree" id="top">
+                                <option value="{$top.id}" <eq name="content.type_id" value="$top.id">selected</eq> >
+                                    {$top.title}
+                                </option>
+                            </volist>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td> 案&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'title',$content['id']))}
+                        <div class="ui-btn ui-btn-primary ui-btn-s" id="searchbtn">
+                            检索
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td> 内&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;容</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'content',$content['id']))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'fujian',$content['id']))}
+
+                    </td>
+                </tr>
+                <tr>
+                    <td> 提&nbsp;&nbsp;案&nbsp;&nbsp;人</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'author',$content['id'],'',$data['名称']))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 联&nbsp;&nbsp;系&nbsp;&nbsp;人</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'contact',$content['id'],'',$data['lxr']))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 联系方式</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'telephone',$content['id'],'',$data['sjh']))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 联系单位</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'contact_unit',$content['id'],'',$data['工作单位']))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 是否公开</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'is_public',$content['id']))}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button class="ui-btn ui-btn-primary"  onClick="document.proposal.status.value='1';">
+                            保存
+                        </button>
+                        <button class="ui-btn ui-btn-primary"  onClick="document.proposal.status.value='2';">
+                            直接提交
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+            </form>
+    </section>
+    
+    <div class="ui-dialog">
+    <div class="ui-dialog-cnt">
+      <header class="ui-dialog-hd ui-border-b">
+                  <h3>搜索结果</h3>
+                  <i class="ui-dialog-close" data-role="button" id="del"></i>
+              </header>
+        <div class="ui-dialog-bd" style="max-height: 300px;overflow-y: auto;">
+  
+           <table  class="ui-table ui-border" id="search_list">
+           	<tr><th>提出日期</th><th>案由</th></tr>
+           	<tr><td><p class="time">2016-09-05</p></td><td>
+           		<p class="searchtit">第十三届第一次会议</p>
+           		</td></tr>
+           	<tr><td><p class="time">2016-09-05</p></td><td><p class="searchtit">第十三届第一次会议</p></td></tr>
+           	<tr><td><p class="time">2016-09-05</p></td><td><p class="searchtit">第十三届第一次会议</p></td></tr>
+           	<tr><td><p class="time">2016-09-05</p></td><td><p class="searchtit">第十三届十三届十三届第一次会议</p></td></tr>
+           </table>
+        </div>
+        <div class="ui-dialog-ft">
+
+            <button type="button" data-role="button" id="yes">确定</button>
+        </div>
+    </div>        
+</div>
+
+<script class="demo-script">
+$(function(){
+	$("#searchbtn").click(function(){
+		$(".ui-dialog").show().css({"paddingTop":'150px'});
+
+        var myData = "title=" + $('input[name=title]').val();
+        jQuery.ajax({
+            type: "POST", // HTTP method POST or GET
+            url: "{:U('Wap/Proposal/check_title_ajax')}", //Where to make Ajax calls
+            dataType: "json", // Data type, HTML, json etc.
+            data: myData, //Form variables
+            success: function(response) {
+                if (response.status == 0) {
+                    $("#search_list").html('未检索到结果');
+                } else {
+                    //先清空输出框
+                    $("#search_list").html('');
+                    data = response.content;
+                    var trtd;
+                    trtd = '<tr><th>提出时间</th><th>案由</th></tr>';
+                    for (r in data) {
+                        var tit = data[r].title;
+                        var time = data[r].create_time;
+                        trtd += "<tr><td> " + time + " </td><td> " + tit + "</td></tr>";
+                    }
+
+
+                    $("#search_list").append(trtd)
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                //On error, we alert user
+                alert(thrownError);
+            }
+        });
+
+	})
+    $("#dis,#yes,#del").click(function(){
+        $(".ui-dialog").hide()
+    })
+})
+
+</script>
+
+
+    
+</body>
+
+</html>

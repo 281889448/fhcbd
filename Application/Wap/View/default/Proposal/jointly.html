@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+	<style>
+		.self_btn_f{
+			width: 170px !important;
+			margin:0 auto !important;
+			align-items:center;
+			display: block;
+		}
+	</style>
+	<include file="cssjs"/>
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>联名列表</h1>
+        <!--<button class="ui-btn">回首页</button>-->
+    </header>
+     
+    <section class="ui-container">
+        
+        <div class="searchlistwrap">
+        	<h4 class="tit">联名列表</h4>
+			<volist name="joints" id="joint" >
+        	<ul class="searchlist">
+        	<li>
+        		<p>用  户  名:{$joint[user]['nickname']}</p>
+        	</li>
+        	<li>
+        		<p>委员姓名:{$joint[user]['名称']}</p>
+        	</li>
+        	<li>
+        		<p>界  别  组:{$joint[user]['界别']}</p>
+        	</li>
+        	<li>
+        		<p>专  委  会:{$joint[user]['专委会']}</p>
+        	</li>
+        	<li>
+        		<p>街道联络委:{$joint[user]['街道联络委']}</p>
+        	</li>
+        	<li>
+        		<p>是否同意:<if condition="$joint[is_agree]==1">同意<elseif  condition="$joint[is_agree]==2"/>不同意<elseif condition="$joint[is_agree]==0"/>未操作</if></p>
+        	</li>
+        	<li>
+
+
+        		<button class="self_btn_f"  data-id="{$joint.id}">删除</button>
+        	</li>
+        </ul>
+				</volist>
+
+        
+        </div>
+        <div class="lianming">
+			<form name="proposal_joint" action="{:U('Wap/Proposal/doJoint',array('proposal_id'=>$proposal[id]))}" method="post">
+				<input type="hidden" name="status" />
+        	<textarea name="content" rows="5" cols="" placeholder="联名理由">{$proposal.joint_content}</textarea>
+        	 <!--<button class="ui-btn ui-btn-primary" onclick="document.proposal_joint.status.value='1';">-->
+                            <!--保存-->
+                        <!--</button>-->
+                        <button class="ui-btn ui-btn-primary" onclick="document.proposal_joint.status.value='2';" style="margin: 0 auto;display: block;padding: 0 40px;">
+                            提交
+                        </button>
+			</form>
+        </div>
+        
+    </section>
+
+	<script>
+
+		//移交办理处理
+		$(".searchlist").on( "click",".self_btn_f", function() {
+			var myData = 'id='+ $(this).attr('data-id'); //build a post data structure
+
+			var self=$(this);
+			jQuery.ajax({
+				type: "POST", // HTTP method POST or GET
+				url: "{:U('Wap/Proposal/del_chosen_ajax',['id'=>$pj[id]])}", //Where to make Ajax calls
+				dataType:"json", // Data type, HTML, json etc.
+				data:myData, //Form variables
+				success:function(response){
+					if(response.status == 1){
+						self.closest(".searchlist").remove();
+					}
+
+				},
+				error:function (xhr, ajaxOptions, thrownError){
+					//On error, we alert user
+					alert(thrownError);
+				}
+			});
+
+
+		});
+	</script>
+ 
+    
+    
+</body>
+
+</html>

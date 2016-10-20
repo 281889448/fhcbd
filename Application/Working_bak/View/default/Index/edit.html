@@ -1,0 +1,84 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <h4>添加工作动态</h4>
+                        <form id="frm" method="post" action="{:U('Working/Index/dopost')}" enctype="multipart/form-data">
+                        <table class="table table-bordered table-responsive table-condensed">
+                            <tbody>
+                            <tr><td class="col-sm-1">发布人</td>
+                                <td>
+                                    <input type="hidden" name="type" value="{$group}"/>
+                                    <input type="hidden" name="id" value="{$read['id']}"/>
+                                    <input type="hidden" name="status" value="{$read['status']}"/>
+                                    <input type="hidden" name="bstatus" value="{$read['bstatus']}"/>
+                                    <input type="text" class="form-control" name="author" value="{$read['author']}" readonly="readonly"/></td>
+                                <td class="col-sm-1">发布日期</td>
+                                <td> {:W('Common/InputRender/InputRender',array('modelid'=>8,'name'=>'time',$read['id']))}</td>
+                            </tr>
+                            <tr>
+                                <td>标题</td>
+                                <td colspan="3">{:W('Common/InputRender/InputRender',array('modelid'=>8,'name'=>'title',$read['id']))}</td>
+                            </tr>
+                            <tr><td>内容</td>
+                                <td colspan="3">{:W('Common/InputRender/InputRender',array('modelid'=>8,'name'=>'content',$read['id']))}</td>
+                            </tr>
+                            <tr><td>附件</td>
+                                <td colspan="3"> {:W('Common/InputRender/InputRender',array('modelid'=>8,'name'=>'upload',$read['id']))}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+                                    <a class="btn btn-primary" href="#" id="save">保存</a>
+                                    <switch name="group">
+                                        <case value="委员|集体">
+                                            <a class="btn btn-primary btn-sub-first" href="#">提交初审</a>
+                                        </case>
+                                        <case value="政协办公室">
+                                            <a class="btn btn-primary btn-sub-second" href="#" >提交终审</a>
+                                        </case>
+                                        <case value="办公室主任">
+                                            <a class="btn btn-primary btn-sub-end" href="#" >终审通过</a>
+                                        </case>
+                                    </switch>
+                                    <a class="btn btn-default" href="javascript:history.back(-1)">返回</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            $('#save').click(function(){
+                $("#frm").submit();
+            });
+            $('.btn-sub-first').click(function(){
+                $("input[name='status']").val(2);
+                $("input[name='bstatus']").val(1);
+                $("#frm").submit();
+            });
+            $('.btn-sub-second').click(function(){
+                $("input[name='status']").val(3);
+                $("input[name='bstatus']").val(1);
+                $("#frm").submit();
+            });
+            $('.btn-sub-end').click(function(){
+                $("input[name='status']").val(3);
+                $("input[name='bstatus']").val(3);
+                $("#frm").submit();
+            });
+
+
+
+
+        })
+    </script>
+</block>

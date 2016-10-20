@@ -1,0 +1,88 @@
+<extend name="Public/base"/>
+
+<block name="body">
+     <link rel="stylesheet" href="__CSS__/css/lxui.min.css">
+    <link rel="stylesheet" href="__CSS__/css/lxui-ie6.min.css">
+    <script type="text/javascript" src="__JS__/expandinfo-form.js"></script>
+    <form action="{:U('Config/edit_expandinfo')}" method="post" class="ajax-form">
+        <input type="hidden" name="profile_group_id" value="{$profile_group_id}">
+        <input type="hidden" name="uid" value="{$member.uid}">
+        <div>
+           
+                   
+           <!--委员信息start-->
+		
+ <div class="ar_content">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div id="tableWrap">
+                            <table class="table table-bordered table-responsive table-condensed table-box" style="width: 1000px;">
+                                
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            集体名称
+                                        </td>
+                                        <td>
+										
+										{:W('InputRender/inputRender',array(getExtend(TEAM,'名称'),'personal'))}
+                                            <!--input class="form-control input-sm" name="realname" type="text" /-->
+                                        </td>
+                                        <td>
+                                            联络员
+                                        </td>
+                                        <td>
+                                            {:W('InputRender/inputRender',array(getExtend(TEAM,'联络员'),'personal'))}
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            联系方式
+                                        </td>
+                                        <td>
+											
+                                            {:W('InputRender/inputRender',array(getExtend(TEAM,'联系方式'),'personal'))}
+                                        </td>
+
+                                    </tr>
+
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		 <!--委员信息end-->  
+        </div>
+      
+            <input type="submit" value="保存" id="submit_btn"
+                   class="btn btn-primary expandinfo-sumbit">
+          
+    </form>
+
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        //导航高亮
+        highlight_subnav('{:U('User/index')}');
+    </script>
+</block>

@@ -1,0 +1,79 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <div class="ar_content">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+
+          <div id="tableWrap" style="overflow-x:auto ;">
+            <h4 style="padding: 5px;">委员量化统计</h4>
+            <table border="" cellspacing="" cellpadding="" class="table table-bordered " >
+              <tr><th colspan="5" class="text-center">根据年度筛选 <select name="">
+                <option value="">2016</option>
+                <option value="">2015</option>
+              </select></th><th colspan="6" class="text-center">基础分</th><th colspan="5" class="text-center">提案统计</th><th colspan="8" class="text-center">社情民意</th><th colspan="5" class="text-center">调研报告</th><th class="text-center">文史资料</th><th colspan="2" class="text-center">其他</th></tr>
+              <tr><td>手机号</td><td style="white-space: nowrap">姓名</td><td style="white-space: nowrap">专委会</td><td style="white-space: nowrap">街道联络委</td><td>总积分</td>
+
+
+                <td>全会</td>
+                <td>区政协活动</td>
+                <td>专委会、街道联络委活动</td>
+                <td>原案数</td>
+                <td>社情民意</td>
+                <td>常委会活动</td>
+
+
+
+
+
+
+                <td>立案</td><td>重点</td><td>优秀</td><td>建议</td><td>重点，优秀</td></td><td>被区政协采用</td><td>被市委、市政协或市级新闻媒体采用</td><td>被省委、省政协或省级新闻媒体采用</td></td><td>被全国政协或国家级新闻媒体采用</td><td>被区级领导批示</td><td>被市级领导批示</td><td>被省级领导批示</td><td>被中央领导批示</td><td>全委会发言</td><td>全委会书面交流</td><td>常委会/主席会发言</td><td>常委会/主席会书面交流</td><td>参与调研报告</td></td><td>被采用</td><td>政协活动</td><td>公益活动</td></tr>
+              <volist name="data" id="member">
+                <tr><td>{$member['手机号']}</td><td>{$member['名称']}</td><td>{$member['专委会']}</td><td>{$member['街道联络委']}</td><td>{$member['score']}</td>
+
+                  <td><if condition="$member['proposal']['action18']['count']">{$member['proposal']['action18']['count']}/{$member['proposal']['action18']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action43']['count']">{$member['proposal']['action43']['count']}/{$member['proposal']['action43']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action19']['count']">{$member['proposal']['action19']['count']}/{$member['proposal']['action19']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action17']['count']">{$member['proposal']['action17']['count']}/{$member['proposal']['action17']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action20']['count']">{$member['proposal']['action20']['count']}/{$member['proposal']['action20']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action21']['count']">{$member['proposal']['action21']['count']}/{$member['proposal']['action21']['total_score']}</if></td>
+
+
+                  <td><if condition="$member['proposal']['action22']['count']">{$member['proposal']['action22']['count']}/{$member['proposal']['action22']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action23']['count']">{$member['proposal']['action23']['count']}/{$member['proposal']['action23']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action24']['count']">{$member['proposal']['action24']['count']}/{$member['proposal']['action24']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action25']['count']">{$member['proposal']['action25']['count']}/{$member['proposal']['action25']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action42']['count']">{$member['proposal']['action42']['count']}/{$member['proposal']['action42']['total_score']}</if></td>
+
+
+                  <td><if condition="$member['proposal']['action26']['count']">{$member['proposal']['action26']['count']}/{$member['proposal']['action26']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action27']['count']">{$member['proposal']['action27']['count']}/{$member['proposal']['action27']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action28']['count']">{$member['proposal']['action28']['count']}/{$member['proposal']['action28']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action29']['count']">{$member['proposal']['action29']['count']}/{$member['proposal']['action29']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action30']['count']">{$member['proposal']['action30']['count']}/{$member['proposal']['action30']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action31']['count']">{$member['proposal']['action31']['count']}/{$member['proposal']['action31']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action32']['count']">{$member['proposal']['action32']['count']}/{$member['proposal']['action32']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action33']['count']">{$member['proposal']['action33']['count']}/{$member['proposal']['action33']['total_score']}</if></td>
+
+
+                  <td><if condition="$member['proposal']['action34']['count']">{$member['proposal']['action34']['count']}/{$member['proposal']['action34']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action35']['count']">{$member['proposal']['action35']['count']}/{$member['proposal']['action35']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action36']['count']">{$member['proposal']['action36']['count']}/{$member['proposal']['action36']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action37']['count']">{$member['proposal']['action37']['count']}/{$member['proposal']['action37']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action41']['count']">{$member['proposal']['action41']['count']}/{$member['proposal']['action41']['total_score']}</if></td>
+
+                  <td><if condition="$member['proposal']['action38']['count']">{$member['proposal']['action38']['count']}/{$member['proposal']['action38']['total_score']}</if></td>
+
+                  <td><if condition="$member['proposal']['action39']['count']">{$member['proposal']['action39']['count']}/{$member['proposal']['action39']['total_score']}</if></td>
+                  <td><if condition="$member['proposal']['action40']['count']">{$member['proposal']['action40']['count']}/{$member['proposal']['action40']['total_score']}</if></td>
+                </tr>              </volist>
+            </table>
+            {:getPagination($totalPageCount,16)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</block>

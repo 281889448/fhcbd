@@ -1,0 +1,16 @@
+<extend name="Base/common"/>
+
+<block name="body">
+
+	<switch name="profile_group_id">
+		<case value="$Think.const.WEIYUAN">
+			<include file="Config/expandinfo"/>
+		</case>
+		<case value="$Think.const.UNIT">
+			<include file="Config/expandinfo_dw"/>
+		</case>
+		<case value="$Think.const.TEAM">
+			<include file="Config/expandinfo_team"/>
+		</case>
+	</switch>
+</block>

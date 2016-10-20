@@ -1,0 +1,103 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                     <div class="clearfix" style="margin-left:0px;margin-bottom:15px;">
+                        <h4 style="margin:5px;margin-left:0">工作动态列表</h4>
+
+
+                        <form name="frme" method="post" action="{:U('Polls/Index/view')}">
+                            <div class="col-sm-1" style="padding:0">
+                            {:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'title'))}
+                            </div>
+                            <div class="col-sm-1" style="padding:0">
+                                <select name="type_id" class="form-control input-sm">
+                                    <option disabled="" selected="" hidden="">--类别--</option>
+                                    <volist name="tree" id="top">
+                                        <option value="{$top.id}" >
+                                            {$top.title}
+                                        </option>
+                                    </volist>
+                                </select>
+                            </div>
+                            <div class="col-sm-2" style="padding:0">
+                                <input size="16" type="text" value="" name="stime" readonly class="form-control laydate-icon" placeholder="开始日期" required onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" />
+                            </div>
+                            <div class="col-sm-2" style="padding:0">
+                                <input size="16" type="text" value="" name="etime" readonly class="form-control laydate-icon" placeholder="结束日期" required onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" />
+                            </div>
+
+                        <div class="col-sm-1" style="padding:0;margin-left:15px">
+                            <button type="submit" class="btn btn-primary btn-sm">查询</button>
+                        </div>
+                            </form>
+                            </div>
+                        <table class="table table-bordered table-responsive table-condensed" id="table1">
+                            <thead>
+                            <tr>
+                                <th>
+                                    日期
+                                </th>
+                                <th>
+                                    类别
+                                </th>
+                                <th>
+                                    参与人员
+                                </th>
+                                <th>
+                                    标题
+                                </th>
+
+                                <th>
+                                    状态
+                                </th>
+                                <th style="width:160px">
+                                    操作
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <volist name="polls" id="v">
+                                <tr>
+                                    <td style="width:180px">
+                                       {$v.time|date='Y-m-d',###}
+                                    </td>
+
+                                    <td>
+                                        {$v.type.title}
+                                    </td>
+                                    <td>
+                                        {$v.people_view}
+                                    </td>
+                                    <td>
+                                        {$v.title}
+                                    </td>
+                                    <td>
+
+                                            审核完成
+
+                                    </td>
+                                    <td style="width:150px">
+                                        <a class="btn btn-primary btn-sm" href="{:U('Polls/Index/prepare',array('id'=>$v['id']))}">查看</a>
+
+
+                                    </td>
+                                </tr>
+                            </volist>
+                            </tbody>
+                        </table>
+                        <div>
+                            {:getPagination($totalPageCount,16)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</block>
+

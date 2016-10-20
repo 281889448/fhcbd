@@ -1,0 +1,322 @@
+<extend name="Base/common"/>
+<block name="style">
+    <link href="__CSS__/event.css" rel="stylesheet" type="text/css"/>
+    <link href="__STATIC__/datetimepickerV3/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
+</block>
+<block name="body">
+	
+	
+<div class="ar_content">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<div class="span12">
+							<div id="tableWrap">
+							<form name="proposal" method="post" >
+								<input type="hidden" name="status" value="{$content.status}">
+								<input type="hidden" name="ids" id="id" value="{$content.id}">
+								<table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+									<thead>
+										<tr>
+											<th colspan="6">
+												提案详情
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td >
+												提出期间
+											</td>
+											<td>
+												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet_type','id'=>$content['id'],1))}
+											</td>
+											<td>
+												类别
+											</td>
+											<td>
+												<php>$group = get_group($content['uid'])</php>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'leibie','id'=>$content['id'],1,$group))}
+											</td>
+											<td>
+												提出日期
+											</td>
+											<td>
+												<php>$time = date('Y-m-d H:i:s',NOW_TIME); </php>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'create_time','id'=>$content['id'],1,'defval'=>$time))}
+											</td>
+										</tr>
+										<tr>
+											<td>
+												提案类型
+											</td>
+											<td>
+												<select name="type_id" class="form-control input-sm" disabled>
+													<volist name="tree" id="top">
+														<option value="{$top.id}" >
+															{$top.title}
+														</option>
+													</volist>
+												</select>
+											</td>
+											<td>
+												会议次数
+											</td>
+											<td>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet','id'=>$content['id'],1))}
+											</td>
+											<td>
+												人数
+											</td>
+											<td>
+												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'renshu','id'=>$content['id'],1))}
+											</td>
+										</tr>
+										
+										<tr>
+											<td>
+												案由
+											</td>
+											<td colspan="3">
+												<div class="col-sm-5 span5" style="padding-left:0">
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title','id'=>$content['id'],1))}
+												</div>
+
+											</td>
+											<td>
+												是否公开
+											</td>
+											<td>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'is_public','id'=>$content['id'],1))}
+											</td>
+
+
+										</tr>
+										<tr>
+											<td>
+											内容
+											</td>
+											<td colspan="5">
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'content','id'=>$content['id'],1))}
+
+
+											</td>
+										</tr>
+										<tr>
+											<td>
+												附件
+											</td>
+											<td colspan="5">
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'fujian','id'=>$content['id'],1))}
+											</td>
+										</tr>
+
+
+										<tr>
+											
+											<td>
+												提案人
+											</td>
+											<td>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'author','id'=>$content['id'],1))}
+											</td>
+											<td>
+												联系人
+											</td>
+											<td>
+
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'contact','id'=>$content['id'],1,$member['名称']))}
+											</td>
+											<td>联系方式</td><td>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'telephone','id'=>$content['id'],1,$member['办公电话']))}</td>
+											<tr>
+											<td>
+												界别组
+											</td>
+											<td>
+												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'jiebie','id'=>$content['id'],1))}
+											</td>
+											<td>联系人单位</td><td colspan="3">
+											{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'contact_unit','id'=>$content['id'],1))}
+											</td>
+											</tr>
+										</tr>
+										<in name="content.status" value="16,9">
+
+											<tr>
+												<td>
+													预案号
+												</td>
+												<td>
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'ycode','id'=>$content['id'],1))}
+												</td>
+												<td>
+													案号
+												</td>
+												<td colspan="3">
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'code','id'=>$content['id'],1))}
+												</td>
+
+											</tr>
+
+											<tr>
+												<td>
+													推荐为
+												</td>
+												<td colspan="5">
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'recommend','id'=>$content['id'],1))}
+												</td>
+											</tr>
+											<tr>
+												<td>
+													采用情况
+												</td>
+												<td>
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'adopt','id'=>$content['id'],1))}
+
+												</td>
+												<td>
+													批示情况
+												</td>
+												<td colspan="3">
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'write','id'=>$content['id'],1))}
+												</td>
+											</tr>
+
+									<tr>
+
+										<td>已办理反馈：</td>
+										<td colspan="6">
+											{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'content','id'=>$content['id'],1))}
+
+
+										</td>
+
+									</tr>
+									</in>
+
+
+
+
+
+
+
+									</tbody>
+								</table>
+								</form>
+							</div>
+						</div>
+						</div>
+
+						<div id="tableWrap">
+							<div style="margin:5px" >联名理由</div>
+							{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'joint_content','id'=>$content['id'],$htmlstatus))}
+							<div style="margin:5px">联名列表</div>
+							<table border="" cellspacing="" cellpadding="">
+
+								<tr>
+									<th class="text-center">用户名</th>
+									<th class="text-center">委员姓名</th>
+									<th class="text-center">界别组</th>
+									<th class="text-center">专委会</th>
+									<th class="text-center">街道联络委</th>
+									<th class="text-center">状态</th>
+									<th class="text-center">操作</th>
+								</tr>
+								<volist name="joint" id="cj">
+								<tr>
+									<td class="text-center">{$cj[user][nickname]}</td>
+									<td class="text-center">{$cj[user]['名称']}</td>
+									<td class="text-center">{$cj[user]['界别']}</td>
+									<td class="text-center">{$cj[user]['专委会']}</td>
+									<td class="text-center">{$cj[user]['街道联络委']}</td>
+									<td class="text-center"><if condition="$cj[is_agree]==1">同意<elseif condition="$cj[is_agree]==2"/>不同意<else/>未操作</if></td>
+									<td class="text-center">
+										<if condition="$cj[suggest]!=''">
+										<a  class="btn btn-default btn-sm joint" data-toggle="modal" data-target="#myModal" data="{$cj[id]}">查看说明</a>
+										</if>
+									</td>
+								</tr>
+								</volist>
+							</table>
+						<form name="proposaljoint" method="post" >
+							<input type="hidden" name="id" value="{$content_joint['id']}"/>
+							<php> if($content_joint[is_agree] != 0)$htmlstatus_joint=1; </php>
+							<div style="margin:5px">说明</div>
+							{:W('Common/InputRender/InputRender',array('modelid'=>11,'name'=>'suggest','id'=>$content_joint['id'],$htmlstatus_joint))}
+							<div class="col-sm-12" style="margin-left:0;padding-left:0;padding-top:15px;padding-bottom:15px">
+								是否同意:
+								{:W('Common/InputRender/InputRender',array('modelid'=>11,'name'=>'is_agree','id'=>$content_joint['id'],$htmlstatus_joint))}
+							</div>
+							<if condition="$content_joint[is_agree] == 0">
+							<button class="btn btn-primary btn-sm"  onClick="document.proposaljoint.action='{:U('Proposal/Index/joint_agree')}';document.proposaljoint.submit()">提交</button>
+							</if>
+									<a class="btn btn-default btn-sm" href="{$back_url}">返回</a>
+
+						</form>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+
+	<!-- Small modal -->
+	<div class="modal fade bs-example-modal-sm" id="myModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" style="color: #68d8ff;">理由！</h4>
+				</div>
+				<form name="return1" action="" method="post">
+					<input type="hidden" name="ids"  value="{$content.id}">
+					<div class="modal-body">
+						<textarea name="suggest" rows="3" cols="3" class="form-control" readonly></textarea>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+	<script>
+		$(function(){
+			$(".joint").click(function() {
+				var self = $(this);
+
+				jQuery.ajax({
+					type: "POST", // HTTP method POST or GET
+					url: "{:U('Proposal/Index/get_joint_ajax')}", //Where to make Ajax calls
+					dataType:"json", // Data type, HTML, json etc.
+					data:{'joint_id':self.attr('data')}, //Form variables
+					success:function(response){
+
+						if(response.status ==0){
+							alert('失败');
+
+						}else{
+
+							$('#myModal').find('textarea').val(response.data.suggest);
+						}
+					},
+					error:function (xhr, ajaxOptions, thrownError){
+						alert(thrownError);
+					}
+				});
+
+
+
+
+
+			})
+		})
+
+	</script>
+
+</block>

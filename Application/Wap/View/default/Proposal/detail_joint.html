@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+	<include file="cssjs"/>
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>{$proposal.code}</h1>
+        <!--<button class="ui-btn">回首页</button>-->
+    </header>
+    
+    <section class="ui-container">
+		<form action="{:U('Wap/Proposal/joint_agree',['id'=>$id])}" method="post">
+    	<div class="searchlistwrap">
+    		<ul class="searchlist">
+    			<li>
+    				<p>是否同意</p>
+    			</li>
+    			<li>
+    				<p class="clear">
+						{:W('InputRender/InputRender',array('modelid'=>11,'name'=>'is_agree',$id,$htmlstatus))}
+
+    			</li>
+    			<li>
+    				<p class="clear">理由说明</p>
+					{:W('InputRender/InputRender',array('modelid'=>11,'name'=>'suggest',$id,$htmlstatus))}
+    			</li>
+    			
+    		</ul>
+			<if condition="$htmlstatus==0"><button class="self_btn_h ui-btn-primary">	确定</button></if>
+			<a class="self_btn_h ui-btn-primary" href="{$backurl}">	返回</a>
+    	</div>
+		</form>
+        
+    </section>
+</body>
+</html>

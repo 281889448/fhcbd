@@ -1,0 +1,97 @@
+<extend name="Base/common"/>
+
+<block name="body">
+     <style type="text/css">
+        .con, .people_N{
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .con label {
+            width: 100px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .people_N input {
+            vertical-align: middle;
+        }
+         .iconBtn {
+                        height: 20px;
+                        width: 20px;
+                        display: block;
+                        line-height: 20px;
+                        text-align: center;
+                        background: #eee;
+                        color: #666;
+                        cursor: pointer;
+                        margin-right: 15px;
+                        border-radius: 3px;
+                        margin-left: 14px;
+
+                    }
+
+                    .iconBtn:after {
+                        content: "+";
+                    }
+
+                    .active_on:after {
+                        content: "-";
+                    }
+                    
+    </style>
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <h4 style="padding: 5px;">添加公告</h4>
+                        <form name="frm" method="post" action="{:U('Message/Index/upload')}" enctype="multipart/form-data">
+                        <table class="table table-bordered table-responsive table-condensed">
+
+                            <tbody>
+                            <tr><td class="col-sm-1">发布日期</td>
+                                <td colspan="5">
+                                    <div class="col-sm-2" style="padding-left:0">
+                                        {:W('Common/InputRender/InputRender',array('modelid'=>12,'name'=>'stime','',0,NOW_TIME))}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr><td>标题</td><td >
+                                <input type="text" class="form-control"  name="title"/></td>
+                                <td class="text-right">类型</td><td >
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>12,'name'=>'type'))}
+                                </td>
+                            </tr>
+                            <tr><td>接收人员</td>
+                                <td colspan="5">
+                                    <input type="hidden"  name="people" id="uids" value=""/>
+                                    <div id="Groups" class="btn btn-primary" data-toggle="modal" data-target="#myModalx">
+                                        选择接收人员
+                                    </div>
+                                    <textarea name="" readonly id="contact_user" class="form-control" style="margin-top: 10px"></textarea>
+                                </td>
+                            </tr>
+                            <tr><td>内容</td><td colspan="3">
+<div class="pull-left">
+    {:W('Common/InputRender/InputRender',array('modelid'=>10,'name'=>'content',''))}
+
+</div>
+                            </td></tr>
+                            <tr><td>附件</td>
+                                <td>{:W('Common/InputRender/InputRender',array('modelid'=>12,'name'=>'file'))}</td>
+                            </tr>
+                            <tr><td colspan="4"><button class="btn btn-primary"> 提交</button>
+                                <a class="btn btn-default" href="{:U('Message/Index/index')}">返回</a></td></tr>
+
+                            </tbody>
+                        </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {:W('Common/Tongxunlu/index')}
+</block>

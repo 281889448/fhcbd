@@ -1,0 +1,111 @@
+
+<eq name="type" value="personal">
+  <link rel="stylesheet" type="text/css" href="__PUBLIC__/huploadify/Huploadify.css"/>
+
+  <script type="text/javascript" src="__PUBLIC__/huploadify/jquery.Huploadify.js"></script>
+  <style type="text/css">
+  </style>
+  <script type="text/javascript">
+    $(function(){
+      var up = $('#upload').Huploadify({
+                                         auto:false,
+                                         fileTypeExts:'*.jpg;*.png;*.exe;*.mp3;*.mp4;*.zip;*.doc;*.docx;*.ppt;*.pptx;*.xls;*.xlsx;*.pdf',
+                                         multi:true,
+                                         fileSizeLimit:99999999,
+                                         breakPoints:true,
+                                         saveInfoLocal:true,
+                                         showUploadedPercent:true,//是否实时显示上传的百分比，如20%
+                                         showUploadedSize:true,
+                                         removeTimeout:9999999,
+                                         uploader:'{:U('Home/Fileu/upload')}',
+        onUploadStart:function(){
+        record_id = {$data['id']|default=0};
+        user_id = {$data['uid']|default=get_uid()};
+        model = '{$model[name]}';
+        //up.settings('formData', {record_id :record_id,user_id:record_id,model:model});
+        up.Huploadify('settings','formData', {record_id :record_id,user_id:user_id,model:model});
+      },
+      onUploadSuccess:function(file,data){
+
+        //  alert('上传成功');
+
+
+      },
+      onUploadComplete:function(file,data){
+        var data = $.parseJSON(data);
+
+        if(data.status==0){
+          alert('上传失败');
+        }else{
+          alert('上传成功');
+        }
+        //alert('上传完成');
+      },
+      onUploadError:function(){
+        alert('上传失败');
+      }
+      /*getUploadedSize:function(file){
+       var data = {
+       data : {
+       fileName : file.name,
+       lastModifiedDate : file.lastModifiedDate.getTime()
+       }
+       };
+       var url = 'http://49.4.132.173:8080/admin/uploadfile/index/';
+       var uploadedSize = 0;
+       $.ajax({
+       url : url,
+       data : data,
+       async : false,
+       type : 'POST',
+       success : function(returnData){
+       returnData = JSON.parse(returnData);
+       uploadedSize = returnData.uploadedSize;
+       }
+       });
+       return uploadedSize;
+       }	*/
+    });
+
+
+
+    });
+  </script>
+
+  <div id="upload">
+    <php>
+      $map['user_id'] = $data['uid'] ? $data['uid']:get_uid();
+      $map['record_id'] = $data['id'] ? $data['id'] : 0;
+      $map['model'] = $model[name];
+      $files = M('Fileu')->where($map)->select();
+
+    </php>
+
+    <volist name="files" id="file">
+      <div id=fileupload_1_{$file.id}" class="uploadify-queue-item"><div class="uploadify-progress"><div class="uploadify-progress-bar" style="width: 100%;"></div></div>
+        <span class="up_filename">{$file.name}</span><span class="delfilebtn" data="{$file.id}">删除</span> <span class="downfilebtn" ><a href="{:U('Home/Fileu/download',array('id'=>$file[id]))}">下载</a></span></div>
+
+    </volist>
+
+  </div>
+
+
+  <script>
+    $(function(){
+      $(".delfilebtn").click(function(){
+        var self=$(this)
+        $.ajax({
+                 url : '{:U('Home/Fileu/delete')}',
+          data : 'id='+$(this).attr('data'),
+          async : false,
+          type : 'POST',
+          success : function(returnData){
+          self.closest(".uploadify-queue-item").remove();
+
+        }
+      });
+      })
+    })
+
+  </script>
+</eq>

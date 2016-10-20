@@ -1,0 +1,45 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <h4>添加工作动态</h4>
+                        <form name="frm" method="post" action="{:U('Working/Index/upload')}" enctype="multipart/form-data">
+                        <table class="table table-bordered table-responsive table-condensed">
+                            <tbody>
+                            <tr><td class="col-sm-1">发布人</td>
+                                <td><input type="text" class="form-control" name="uid"/></td>
+                                <td class="col-sm-1">发布日期</td>
+                                <td>
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>8,'name'=>'time',,'defval'=NOW_TIME)}
+                                </td>
+                            </tr>
+                            <tr><td>标题</td><td colspan="3">
+                                {:W('Common/InputRender/InputRender',array('modelid'=>8,'name'=>'title')}
+                            </td></tr>
+                            <tr><td>内容</td>
+                                <td colspan="3">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>8,'name'=>'content')}
+                                    {:hook('adminArticleEdit', array('name'=>$field['name'],'value'=>$data[$field['name']]))}
+                                </td></tr>
+                            <tr><td>附件</td>
+                                <td colspan="3">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>8,'name'=>'upload')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4"><button class="btn btn-primary"> 提交</button>
+                                <a class="btn btn-default" href="{:U('Working/Index/index',array('status'=>1))}">返回</a>
+                            </td></tr>
+                            </tbody>
+                        </table>
+                       </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

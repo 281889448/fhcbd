@@ -1,0 +1,77 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form name="frm" method="post" action="{:U('Meet/Index/search')}" onsubmit="return checkSearch()">
+                        <label class="span12 col-sm-12">
+                            <div class="col-sm-8"><input type="text" class="form-control" name="keyword" value="{$keyword}"/></div>
+                            <button type="submit" class="btn btn-default btn-sm">查询</button>
+                            <a class="btn btn-default" href="{:U('Meet/Index/index')}">返回</a>
+                        </label>
+
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="6">
+                                    活动列表
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="textc">活动编号</td>
+                                <td class="textc">活动类别</td>
+                                <td class="textc">活动名称</td>
+                                <td class="textc">活动地点</td>
+                                <td class="textc">活动时间</td>
+                                <td class="textc">管理操作</td>
+                            </tr>
+                            <volist name="set" id="set">
+                                <tr>
+                                    <td>{$set.id}</td>
+                                    <td>{$set.type}</td>
+                                    <td>{$set.title}</td>
+                                    <td>{$set.address}</td>
+                                    <td>{$set.sTime}--{$set.eTime}</td>
+                                    <td>
+                                        <a class="btn btn-primary  btn-sm" href="{:U('Meet/Index/detail',array('id'=>$meet[id]))}">查看详情</a><span style="margin: 10px;"></span>
+                                        <a class="btn btn-warning  btn-sm" href="{:U('Meet/Index/edit',array('id'=>$meet[id]))}">修改</a><span style="margin: 10px;"></span>
+                                        <a class="btn btn-danger  btn-sm" href="{:U('Meet/Index/doDel',array('id'=>$meet[id]))}">删除</a>
+
+                                    </td>
+                                </tr>
+                            </volist>
+                            </tbody>
+                        </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function checkSearch()
+        {
+            if(document.frm.keyword.value == "")
+            {
+                alert("搜索关键字不能为空！");
+                document.frm.keyword.focus();
+                return false;
+            }
+        }
+    </script>
+</block>
+
+
+
+
+
+
+
+
+
+

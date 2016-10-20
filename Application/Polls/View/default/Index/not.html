@@ -1,0 +1,105 @@
+<extend name="Base/common"/>
+<block name="body">
+<div class="ar_content">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <div id="tableWrap">
+                    <form action="{:U('Polls/Index/addsh',array('id'=>$pol['id']))}" method="post" name="frm" id="formId">
+                    <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                        <thead>
+                        <tr>
+                            <th colspan="6">
+                                添加社情民意
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="col-sm-1">
+                                日期
+                            </td>
+                            <td class="col-sm-3">
+                                <input class="form-control input-sm" type="text" name="time" value="{$pol.time}"/>
+                            </td>
+                            <td class="col-sm-1">
+                                作者
+                            </td>
+                            <td class="col-sm-3">
+                                <input class="form-control input-sm" type="text" name="uid" value="{$pol.uid}"/>
+                            </td>
+                            <td class="col-sm-1">
+                                类别
+                            </td>
+                            <td class="col-sm-3">
+                                <select name="type" id="" class="form-control" value="{$pol.type}">
+                                    <option value="21313">21313</option>
+                                    <option value="21313">21313</option>
+                                    <option value="21313">21313</option>
+                                    <option value="21313">21313</option>
+                                    <option value="21313">21313</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                标题
+                            </td>
+                            <td colspan="5">
+                                <input class="form-control input-sm" name="title" type="text" value="{$pol.title}"/>
+                            </td>
+
+
+                        </tr>
+                        <tr>
+                            <td>
+                                内容
+                            </td>
+                            <td colspan="5">
+                                <textarea name="content" id="" cols="" rows="" class="form-control span-sm">{$pol.content}</textarea>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>附件</td>
+                            <td colspan="5">
+                                <a href="" class="btn btn-default" name="upload">附件下载</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>采用情况</td>
+                            <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>13,'name'=>'adopt','id'=>$pol['id']))}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>批示情况</td>
+                            <td colspan="5">
+                                {:W('Common/InputRender/InputRender',array('modelid'=>13,'name'=>'make','id'=>$pol['id']))}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                退回意见
+                            </td>
+                            <td colspan="5">
+                                <textarea name="comments" rows="" cols="" placeholder="" class="form-control">{$pol.comments}</textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <button class="btn btn-primary btn-sm">提交</button>
+                                <a class="btn btn-default btn-sm" href="{:U('Polls/Index/index')}">返回</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</block>

@@ -1,0 +1,234 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap" class="clearfix">
+                    <div class="col-sm-12 clearfix" style="border-bottom:2px solid #ddd;padding-bottom:10px;margin-bottom:10px">
+                      <php>$group = get_group(get_uid());</php>
+
+
+                      <switch name="group">
+                        <case value="委员|集体">
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Proposal/Index/index',array('status'=>8))}">已立案 {$proposal_status8_count}</a></h4></div>
+                          </div>
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex2 pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Proposal/index/pleasejoint')}">参与联名 {$proposal_joint_count}</a></h4></div>
+                          </div>
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex3 pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Proposal/Index/index',array('status'=>3))}">退回 {$proposal_status3_count}</a></h4></div>
+                          </div>
+
+
+
+                        </case>
+                        <case value="提案委">
+
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Proposal/Index/index',array('status'=>2))}">待审核 {$proposal_review_count}</a></h4></div>
+                          </div>
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex2 pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Proposal/Index/index',array('status'=>8))}">已立案 {$proposal_status8_count_2}</a></h4></div>
+                          </div>
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex3 pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Proposal/Index/index',array('status'=>17))}">办理已反馈 {$proposal_status17_count}</a></h4></div>
+                          </div>
+
+
+
+                        </case>
+                        <case value="政府督查室">
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Proposal/Index/index',array('status'=>18))}">待交办 {$proposal_status18_count}</a></h4></div>
+                          </div>
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex2 pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Proposal/Index/index',array('status'=>13))}">已办理 {$proposal_status13_count_2}</a></h4></div>
+                          </div>
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex3 pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Proposal/Index/index',array('status'=>193))}">申请移交办理 {$proposal_status193_count}</a></h4></div>
+                          </div>
+
+
+
+                        </case>
+                        <case value="办理单位">
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Proposal/Index/result',array('status'=>19))}">待办理 {$proposal_status19_count}</a></h4></div>
+                          </div>
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex2 pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Proposal/Index/result',array('status'=>14))}">退回重办 {$proposal_status14_count}</a></h4></div>
+                          </div>
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex3 pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Proposal/Index/result',array('status'=>13))}">已办理 {$proposal_status13_count}</a></h4></div>
+                          </div>
+
+
+
+                        </case>
+                        <case value="政协办公室">
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex3 pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Working/Index/index',array('status'=>2,'bstatus'=>1))}">工作动态 {$working_review_count_2}</a></h4></div>
+                          </div>
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex4 pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Polls/Index/index',array('status'=>2))}">社情民意 {$polls_review_count_2}</a></h4></div>
+                          </div>
+
+                        </case>
+
+                        <case value="办公室主任">
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex3 pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Working/Index/index',array('status'=>3,'bstatus'=>1))}">工作动态 {$working_review_count_3}</a></h4></div>
+                          </div>
+                          <div class="col-sm-4 clearfix" >
+                            <div class="iconindex4 pull-left"></div>
+                            <div class="pull-left" style="padding-left:15px;"><h4 style="line-height:53px"><a href="{:U('Polls/Index/index',array('status'=>3))}">社情民意 {$polls_review_count_3}</a></h4></div>
+                          </div>
+
+                        </case>
+
+                      </switch>
+
+                    </div>
+                   
+                    <br/>
+                     <hr/>
+                     <div class="col-sm-12">
+                       <div class="col-sm-6">
+                           <h4 class="pull-left">公告</h4>
+                           <small class="fr" style="line-height: 30px;"><a href="{:U('Home/Index/message')}">更多》</a></small>
+                            <table class="table table-hover table-bordered">
+                                <tr><th class="text-center">标题</th><th>类型</th><th class="text-center" style="width:100px">发布日期</th><th class="text-center">发布人</th></tr>
+                              <volist name="msgs" id="msg">
+
+                                <tr><td><a href="{:U('Message/Index/detail',array('id'=>$msg[id]))}" class="text_derection_hover">{$msg.title}</a></td><td>{$msg.type}</td><td>{$msg.stime|date='Y-m-d',###}</td><td>{$msg.author}</td> </tr>
+                              </volist>
+
+                            </table>
+                        </div>
+                        <div class="col-sm-6">
+                        <h4 class="pull-left">工作动态</h4>
+                             <small class="fr" style="line-height: 30px;"><a href="{:U('Home/Index/working')}">更多》</a></small>
+                            <table class="table table-hover table-bordered">
+                                <tr><th class="text-center">标题</th><th class="text-center" style="width:100px">发布日期</th><th class="text-center">发布人</th></tr>
+                              <volist name="works" id="w">
+                                <tr><td><a href="{:U('Working/Index/prepare',array('id'=>$w['id']))}" class="text_derection_hover">{$w.title}</a></td><td>{$w.time|date='Y-m-d',###}</td><td>{$w['user']['名称']}</td></tr>
+                              </volist>
+
+                            </table>
+                        </div>
+                     </div>
+                        
+                        <div class="col-sm-12">
+                           <div class="col-sm-3">
+                        <h4 class="pull-left">待审核列表</h4>
+                            <small class="fr" style="line-height: 30px;"><a href="">&nbsp;</a></small>
+                            <table class="table table-hover table-bordered">
+
+                                <tr><th class="text-center">审核类型</th><th class="text-center">待办数量</th></tr>
+                              <php>$group=get_group(get_uid());</php>
+                              <switch name="group">
+                                <case  value="委员|集体">
+                                  <tr><td>已立案的提案</td><td><a href="{:U('Proposal/Index/index',array('status'=>8))}" class="text_derection_num">{$proposal_status8_count}</a></td></tr>
+
+                                  <tr><td>参与联名的提案</td><td><a href="{:U('Proposal/index/pleasejoint')}" class="text_derection_num">{$proposal_joint_count}</a></td></tr>
+                                  <tr><td>退回的提案</td><td><a href="{:U('Proposal/Index/index',array('status'=>3))}" class="text_derection_num">{$proposal_status3_count}</a></td></tr>
+                                  </case>
+                                <case  value="提案委">
+                                  <tr><td>待审核的提案</td><td><a href="{:U('Proposal/Index/index',array('status'=>2))}" class="text_derection_num">{$proposal_review_count}</a></td></tr>
+                                  <tr><td>已立案的提案</td><td><a href="{:U('Proposal/Index/index',array('status'=>8))}" class="text_derection_num">{$proposal_status8_count_2}</a></td></tr>
+                                  <tr><td>办理已反馈的提案</td><td><a href="{:U('Proposal/Index/index',array('status'=>17))}" class="text_derection_num">{$proposal_status17_count}</a></td></tr>
+                                </case>
+                                <case  value="政府督查室">
+
+                                  <tr><td>待交办的提案</td><td><a href="{:U('Proposal/Index/index',array('status'=>18))}" class="text_derection_num">{$proposal_status18_count}</a></td></tr>
+                                  <tr><td>已办理的提案</td><td><a href="{:U('Proposal/Index/index',array('status'=>13))}" class="text_derection_num">{$proposal_status13_count_2}</a></td></tr>
+                                  <tr><td>申请移交办理的提案</td><td><a href="{:U('Proposal/Index/index',array('status'=>193))}" class="text_derection_num">{$proposal_status193_count}</a></td></tr>
+
+                                </case>
+                                <case  value="办理单位">
+                                <tr><td>待办理的提案</td><td><a href="{:U('Proposal/Index/index',array('status'=>19))}" class="text_derection_num">{$proposal_status19_count}</a></td></tr>
+                                <tr><td>退回重办的提案</td><td><a href="{:U('Proposal/Index/index',array('status'=>14))}" class="text_derection_num">{$proposal_status14_count}</a></td></tr>
+
+                                <tr><td>已办理的提案</td><td><a href="{:U('Proposal/Index/index',array('status'=>13))}" class="text_derection_num">{$proposal_status13_count}</a></td></tr>
+
+                                </case>
+
+                                <case value="政协办公室">
+                                  <tr><td>待审核的工作动态</td><td><a href="{:U('Working/Index/index',array('status'=>2,'bstatus'=>1))}" class="text_derection_num">{$working_review_count_2}</a></td></tr>
+                                  <tr><td>待审核的社情民意</td><td><a href="{:U('Polls/Index/index',array('status'=>2))}" class="text_derection_num">{$polls_review_count_2}</a></td></tr>
+
+
+                                </case>
+                                <case value="办公室主任">
+                                  <tr><td>待审核的工作动态</td><td><a href="{:U('Working/Index/index',array('status'=>3,'bstatus'=>1))}" class="text_derection_num">{$working_review_count_3}</a></td></tr>
+                                  <tr><td>待审核的社情民意</td><td><a href="{:U('Polls/Index/index',array('status'=>3))}" class="text_derection_num">{$polls_review_count_3}</a></td></tr>
+
+                                </case>
+                                </switch>
+
+
+
+
+
+
+
+
+
+
+
+                            </table>
+                        </div>
+                      <div class="col-sm-9">
+                      <h4 class="pull-left">社情民意</h4>
+                              <small class="fr" style="line-height: 30px;"><a href="{:U('Home/Index/polls')}">更多》</a></small>
+                            <table class="table table-hover table-bordered">
+                                <tr><th class="text-center">类型</th><th class="text-center">标题</th><th class="text-center" style="width:100px">创建日期</th><th class="text-center">发布人</th> </tr>
+                               <volist name="polls" id="p">
+                                <tr><td>{$p.type.title}</td><td><a href="{:U('Polls/Index/prepare',array('id'=>$p['id']))}" class="text_derection_hover">{$p.title}</a></td><td>{$p.time|date='Y-m-d',###}</td><td>{$p.author}</td> </tr>
+                               </volist>
+
+
+                            </table>
+                        </div>
+                        </div>
+
+                       
+
+
+                        <!--div class="col-sm-9">
+                            <a href="javascript:;" class="btn btn-default btn-primary">系统通知</a>  <small class="fr" style="line-height: 30px;"><a href="">更多》</a></small>
+                            <table class="table table-hover table-bordered">
+                                <tr><th class="text-center">类型</th><th class="text-center">标题</th><th class="text-center">开始日期</th><th class="text-center">结束日期</th><th class="text-center">发布人</th> </tr>
+                                <tr><td>会议</td><td><a href="" class="text_derection_hover">标题标题标题标题标题标题标题标题标题标题</a></td><td>1020-20-2</td><td>1020-20-2</td><td>weq</td> </tr>
+                                <tr><td>活动</td><td><a href="" class="text_derection_hover">标题标题标题标题标题标题标题标题标题标题</a></td><td>1020-20-2</td><td>1020-20-2</td><td>weq</td> </tr>
+                                <tr><td>提案</td><td><a href="" class="text_derection_hover">标题标题标题标题标题标题标题标题标题标题</a></td><td>1020-20-2</td><td>1020-20-2</td><td>weq</td> </tr>
+
+
+
+                            </table>
+                        </div-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>

@@ -1,0 +1,96 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form name="frm" method="post" action="{:U('Meet/Index/index')}">
+                        <table style="margin-bottom:15px">
+                            <tr>
+                                <td style="width:85px"><a href="{:U('Meet/Index/add')}" class="btn btn-primary btn-sm">添加会议</a></td>
+                                <td style="width:300px"><input type="search" name="keyword" class="form-control input-sm " placeholder="输入会议名称"/></td>
+                                <td><button type="button" class="btn btn-default btn-sm " onclick="checkSearch()" style="margin-left:5px">查询</button></td>
+                            </tr>
+                        </table>
+                            
+                            <input type="submit" id="submit" style="display: none"/>
+                         </form>
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="6">
+                                    会议列表
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="textc">会议类别</td>
+                                <td class="textc">会议名称</td>
+                                <td class="textc">会议地点</td>
+                                <td class="textc">会议时间</td>
+                                <td class="textc">管理操作</td>
+                            </tr>
+                            <volist name="meet" id="meet">
+                            <tr>
+                                <td>{$meet.meet_type}</td>
+                                <td>{$meet.title}</td>
+                                <td>{$meet.address}</td>
+                                <td>{$meet.sTime|date="Y-m-d H:i:s",###}--{$meet.eTime|date="Y-m-d H:i:s",###}</td>
+                                <td style="width:435px">
+                                    <a class="btn btn-primary  btn-sm" href="{:U('Meet/Index/detail',array('id'=>$meet[id]))}">会议详情</a><span ></span>
+                                    <a class="btn btn-primary  btn-sm" href="{:U('Meet/Index/jion',array('id'=>$meet[id]))}">参会详情</a><span ></span>
+                                    <a class="btn btn-primary  btn-sm" href="{:U('Meet/Index/mark',array('id'=>$meet[id]))}">签到详情</a><span ></span>
+                                    <a class="btn btn-success  btn-sm" href="#" onclick="sendmsg({$meet.id})">发送通知</a><span ></span>
+                                    <a class="btn btn-warning  btn-sm" href="{:U('Meet/Index/edit',array('id'=>$meet[id]))}">修改</a><span ></span>
+                                    <a class="btn btn-danger  btn-sm" href="{:U('Meet/Index/doDel',array('id'=>$meet[id]))}">删除</a>
+
+                                </td>
+                            </tr>
+                            </volist>
+                            </tbody>
+                        </table>
+                        <if condition="$lockback eq 1">
+                                    <a href="javascript:history.back(-1);" class="btn btn-danger ">返回</a>
+                                </if>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function checkSearch()
+        {
+            if(document.frm.keyword.value == '')
+            {
+                alert("搜索关键字不能为空！");
+                document.frm.keyword.focus();
+                return false;
+            }else{
+                $("#submit").click();
+            }
+        }
+        function sendmsg(id){
+           $.ajax({
+                type: "POST",
+                url: "{:U('Meet/Index/sendtemplateMsg')}",
+                data:{'id':id},
+                success: function(data) {
+                    data = $.parseJSON(data);
+                    alert('成功通知'+data.time+'位人员');
+                }
+            })
+        }
+    </script>
+</block>
+
+
+
+
+
+
+
+
+
+

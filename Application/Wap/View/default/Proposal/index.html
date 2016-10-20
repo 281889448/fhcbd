@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+    <style>
+        .self_btn_f{
+            display: inline-block !important;
+            width: 45% !important;
+            
+        }
+    </style>
+
+     <include file="cssjs"/>
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>{$status_config[$status_view]}</h1>
+       <!-- <button class="ui-btn">回首页</button>-->
+    </header>
+    <section class="ui-container">
+        <table class="editTable">
+            <tbody>
+                {:W('Proposal/menumark')}
+
+                {:W('Proposal/search')}
+            </tbody>
+        </table>
+        <div class="searchlistwrap">
+            <h4 class="tit"><present  name="status">{$status_config[$status_view]}<else/>{$statusname}</present>列表</h4>
+            <volist name="contents" id="content">
+            <ul class="searchlist">
+                <li>
+                    <p>案号:{$content.ycode}</p>
+                </li>
+                <li>
+                    <p>提案类型：{$content.type.title}</p>
+                </li>
+                <li>
+                    <p>案由：{$content.title}</p>
+                </li>
+                <li>
+                    <p>提案人：{$content.author} &nbsp;&nbsp;&nbsp;&nbsp;联系方式：{$content.telephone}</p>
+                </li>
+
+                <li>
+                    <p><!--是否联名： <if condition="$content[is_joint]==0">否<else/>是</if>&nbsp;&nbsp;&nbsp;&nbsp;是否并案： <if condition="$content['is_merge'] == 1 || $content['is_merge'] == 2">是<else/>否</if> &nbsp;&nbsp;&nbsp;&nbsp;-->状态：{$status_config[$content[status]]}</p>
+                </li>
+                <li class="btnwrap" style="text-align: center;">
+                    <a class="self_btn_f" href="{:U('Wap/Proposal/detail',array('proposal_id'=>$content[id]))}">详情</a>
+                    <in name="status" value="1">
+                    <a class="self_btn_f" href="{:U('Wap/Proposal/edit',array('proposal_id'=>$content[id]))}">修改</a>
+                    </in>
+                    <a class="self_btn_f" href="{:U('Wap/Proposal/process',array('proposal_id'=>$content[id]))}">流程</a>
+                    <in name="status_view" value="13,17,9,8">
+                    <a class="self_btn_f" href="{:U('Wap/Proposal/handcheck',array('proposal_id'=>$content[id]))}">查办</a>
+                    </in>
+                    <if condition="$statusname == '被邀联名'">
+
+                    <a class="self_btn_f" href="{:U('Wap/Proposal/detail_joint',array('id'=>$content[pjid]))}">联名详情</a>
+
+                    </if>
+                    <in name="status" value="1">
+                    <a class="self_btn_f" href="{:U('Wap/Proposal/jointly_chosen',array('proposal_id'=>$content[id]))}">选择联名</a>
+                     </in>
+                </li>
+            </ul>
+            </volist>
+
+
+        </div>
+        <div class="btn_more">点击加载更多...</div>
+    </section>
+
+
+
+
+    <script class="demo-script">
+        $(function(){
+
+            $("#searchbtn").click(function(){
+                $(".ui-dialog").dialog("show");
+
+
+            });
+            var page=1;
+            $(".btn_more").click(function() {
+
+                var status=$("#status").val();
+                var meet_type=$("select[name=meet_type] option:selected").val();
+                var jiebie=$("select[name=jiebie] option:selected").val();
+                var type_id=$("select[name=type_id] option:selected").val();
+                var author=$("input[name=author]").val();
+                var title=$("input[name=title]").val();
+
+                $(".btn_more").text("加载中...");
+                $.ajax({
+                    type: "post",
+                    url: "<if condition="ACTION_NAME == 'index'">{:U('Wap/Proposal/get_proposals_ajax')}<elseif condition="ACTION_NAME=='pleasejoint'"/>{:U('Wap/Proposal/get_pleasejoint_ajax')}<elseif condition="ACTION_NAME=='pleasemerge'"/>{:U('Wap/Proposal/get_pleasemerge_ajax')}</if>",
+
+                    data: {page:page,status:status,meet_type:meet_type,jiebie:jiebie,type_id:type_id,author:author,title:title},
+                    success: function(res) {
+                        if(res.status == 1){
+                            var list='';
+                            for (var i=0;i<res.content.length;i++){
+                                list+='<ul class="searchlist"><li><p>案号:'+res.content[i].ycode+'</p></li><li><p>提案类型：'+res.content[i].type+'</p></li><li><p>案由：'+res.content[i].title+'</p></li><li><p>提案人：'+res.content[i].author+'&nbsp;&nbsp;&nbsp;&nbsp;联系方式：'+res.content[i].telephone+'</p></li><li><p>是否联名： '+res.content[i].is_joint+' &nbsp;&nbsp;&nbsp;&nbsp;状态：'+res.content[i].status+'</p></li><li><a class="self_btn_f" href="'+res.content[i].url+'">详情</a><a class="self_btn_f" href="'+res.content[i].url_process+'">流程</a></li></ul>'
+                            }
+                            $(".searchlistwrap").append(list);
+                            $(".btn_more").text("点击加载更多...");
+                            page = res.page;
+                            console.log(res.content)
+                        }else{
+                            $(".btn_more").text("没有更多了");
+                        }
+                    }
+                });
+            })
+        })
+
+    </script>
+
+    
+</body>
+
+</html>

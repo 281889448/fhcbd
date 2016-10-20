@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>{$message.title}</title>
+    <include file="cssjs"/>
+   
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>公示公告</h1>
+       
+    </header>
+     
+    <section class="ui-container">
+
+
+<div class="search-box">
+    <input type="text" name="USER_AGE" id="USER_AGE" readonly class="input" value="时间：<if condition="$message['stime']">{$message.stime|date='Y-m-d',###}</if>" />
+    <input type="text" class="input" value="标题：{$message.title}" readonly />
+
+
+	
+</div>
+        	
+       
+        
+     <div class="content">
+
+         {:W('InputRender/InputRender',array('modelid'=>12,'name'=>'content',$message[id],1))}
+     </div>
+       
+        <div class="fujian">
+            {:W('InputRender/InputRender',array('modelid'=>12,'name'=>'file',$message[id],1))}
+
+        </div>
+        
+    </section>
+
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+</body>
+
+</html>

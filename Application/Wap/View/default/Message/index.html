@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+	<include file="cssjs"/>
+	<style>
+		.self_btn_f{
+			display: block;
+			margin: 0 auto;
+			padding:5px 12px;
+		}
+	</style>
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>公示公告</h1>
+       
+    </header>
+     
+    <section class="ui-container">
+
+        	
+
+        <div class="search-box">
+			<form action="{:U('Wap/Message/index')}" method="post">
+			{:W('InputRender/InputRender',array('modelid'=>12,'name'=>'title','','',$map['title']))}
+        	
+        	 
+<button class="self_btn_h ui-btn-primary">查询</button>
+			</form>
+        </div>
+     
+        <div class="searchlistwrap">
+        	<h4 class="tit">公告列表</h4>
+			<volist name="message" id="m">
+        	<ul class="searchlist">
+        	<li>
+        		<p>标题：{$m.title}</p>
+        	</li>
+        	<li>
+        		<p class="clear"><span class="fl">类别：{$m.type}</span><span class="fr">发布人：{$m['user']['名称']}</span></p>
+        	</li>
+        	<li>
+        		<p>日期：{$m.stime|date='Y-m-d',###}</p>
+        	</li>
+        	
+        	<li>
+        		<a href="{:U('Wap/Message/detail',['id'=>$m['id']])}" class="self_btn_f">查看</a>
+        	</li>
+        </ul>
+			</volist>
+
+        
+        </div>
+        
+        
+    </section>
+ 
+    
+    <script src="js/jquery.min.js"></script> 
+<script src="js/mobiscroll_date.js" charset="gb2312"></script> 
+<script src="js/mobiscroll.js"></script> 
+<script type="text/javascript">
+$(function () {
+	var currYear = (new Date()).getFullYear();	
+	var opt={};
+	opt.date = {preset : 'date'};
+	opt.datetime = {preset : 'datetime'};
+	opt.time = {preset : 'time'};
+	opt.default = {
+		theme: 'android-ics light', //皮肤样式
+		display: 'modal', //显示方式 
+		mode: 'scroller', //日期选择模式
+		dateFormat: 'yyyy-mm-dd',
+		lang: 'zh',
+		showNow: true,
+		nowText: "今天",
+		startYear: currYear - 50, //开始年份
+		endYear: currYear + 10 //结束年份
+	};
+
+	$("#USER_AGE").mobiscroll($.extend(opt['date'], opt['default']));
+	$("#USER_AGE2").mobiscroll($.extend(opt['date'], opt['default']));
+
+});
+</script>
+</body>
+
+</html>

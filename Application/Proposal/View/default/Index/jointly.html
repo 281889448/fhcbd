@@ -1,0 +1,273 @@
+<extend name="Base/common"/>
+<block name="body">
+<div class="ar_content">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
+
+	                    <if condition="$proposal['status'] == 1 && $proposal['uid']==get_uid()">
+
+                        <div id="tableWrap" style="margin-bottom:0">
+                          <form name="" action="{:U('Proposal/Index/jointly',array('proposal_id'=>$proposal[id]))}" method="post">
+                        	<div style="margin-bottom: 10px;padding-left:0;magin-left:0" class="col-sm-12">
+                                <div class="col-sm-3" style="padding-left:0;margin-left:0;margin-right:0;padding-left:0">
+								<input type="search" name="nickname"  value="" class="form-control  input-sm" placeholder="--用户名--" />
+								</div>
+								<div class="col-sm-3" style="padding-left:0">
+								<input type="search" name="名称"   value="" class="form-control  input-sm" placeholder="--委员姓名--" />
+								</div>
+                                
+                                
+                               
+                                <button type="submit" class="btn btn-default btn-sm">搜索</button>
+                            </div>
+                          </form>
+                            <h4 style="padding:5px;padding-left:0">查询列表</h4>
+                            <input type="hidden" name="proposal_id" id="proposal_id" value="{$proposal[id]}" />
+                            <table class="table table-bordered table-responsive table-condensed" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th >
+                                            用户名
+                                        </th>
+                                         <th >
+                                          委员姓名 
+                                        </th>
+                                         <th >
+                                           界别组   
+                                        </th>
+                                         <th >
+                                       专委会    
+                                        </th>
+                                         <th >
+                                     街道联络委      
+                                        </th>
+                                      <if condition="$proposal['is_joint']!=2">
+                                         <th >
+                                     操作      
+                                        </th>
+                                        </if>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                  <volist name="users" id="user">
+                                    <tr>
+                                        <td>
+                                            {$user['nickname']}
+                                        </td>
+                                        <td>
+                                          {$user['名称']}
+                                        </td>
+                                        <td>
+                                          {$user['界别']}
+                                        </td>
+                                        <td>
+                                            <a href="">{$user['专委会']}</a>
+                                        </td>
+                                        <td>
+                                          {$user['街道联络委']}
+                                        </td>
+                                      <if condition="$proposal['is_joint']!=2">
+                                        <td class="add_btnbox">
+                                            <a href="#" class="btn btn-primary btn-add" data="{$user[id]}">添加</a>
+                                        </td>
+                                        </if>
+                                    </tr>
+                                  </volist>
+
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <script type="text/javascript">
+                        	$(function(){
+                        		//添加
+                        	$("#table1").delegate("td .btn-add",'click',function(){
+                        			var self=$(this);
+                              var val=self.closest("tr").find("td").not(".add_btnbox");
+                             var myData = 'user_id='+ $(this).attr('data')+'&proposal_id=' + $('#proposal_id').val();
+                              jQuery.ajax({
+                                type: "POST", // HTTP method POST or GET
+                                url: "{:U('Proposal/Index/add_joint_ajax')}", //Where to make Ajax calls
+                                dataType:"json", // Data type, HTML, json etc.
+                                data:myData, //Form variables
+                                success:function(response){
+                                	if(response.status == 1){
+                                  var arr=[];
+                                  for (var i=0 ;i<val.length;i++) {
+                                    arr.push(val.eq(i).text())
+                                  }
+                                  self.closest("tr").remove();
+                                  $("#table2 tbody").append('<tr><td>'+arr[0]+'</td><td>'+arr[1]+'</td><td>'+arr[2]+'</td><td>'+arr[3]+'</td><td>'+arr[4]+'</td><td>未操作</td><td class="btn-rem"><div class="btn btn-default btn-sm btn-remove" data="'+response.content.id+'">移除</div></td></tr>')
+	                                }else{
+	                                	alert(response.content);
+	                                }
+                                },
+                                error:function (xhr, ajaxOptions, thrownError){
+                                  //On error, we alert user
+                                  alert(thrownError);
+                                }
+                              });
+
+                        		});
+                        		//删除
+                        		$("#table2").delegate("td .btn-remove",'click',function(){
+                              var self=$(this)
+                        			var val2=$(this).closest("tr").find("td").not(".btn-rem")
+                              var myData = 'id='+ $(this).attr('data');
+                              jQuery.ajax({
+                                type: "POST", // HTTP method POST or GET
+                                url: "{:U('Proposal/Index/del_joint_ajax')}", //Where to make Ajax calls
+                                dataType:"json", // Data type, HTML, json etc.
+                                data:myData, //Form variables
+                                success:function(response){
+                                  var arr2=[];
+                                  for (var i=0 ;i<val2.length;i++) {
+                                    arr2.push(val2.eq(i).text())
+                                  };
+                                  self.closest("tr").remove();
+                              //    $("#table1 tbody").append('<tr><td>'+arr2[0]+'</td><td>'+arr2[1]+'</td><td>'+arr2[2]+'</td><td>'+arr2[3]+'</td><td>'+arr2[4]+'</td><td class="add_btnbox"><div class="btn btn-primary btn-add">添加</div></td></tr>')
+
+                                },
+                                error:function (xhr, ajaxOptions, thrownError){
+                                  //On error, we alert user
+                                  alert(thrownError);
+                                }
+                              });
+
+                        			})
+                        		
+                        		
+
+                        		
+                        	})
+                        </script>
+	                    </if>
+                        <div id="tableWrap">
+                        	<input type="hidden" name="tableval" id="tableval" value="" />
+                        	 <h4 style="padding:5px;padding-left:0">联名列表</h4>
+                            <table class="table table-bordered table-responsive table-condensed" id="table2" >
+                                <thead>
+                                     <tr >
+                                        <th>
+                                          用户名
+                                        </th>
+                                        <th>
+                                           委员姓名
+                                        </th>
+                                        
+                                        <th>
+                                            界别组
+                                        </th>
+                                        <th>
+                                            专委会
+                                        </th>
+                                        <th>
+                                           街道联络委
+                                        </th>
+	                                     <th>
+		                                     是否同意
+	                                     </th>
+
+                                         <th>
+                                          操作
+                                        </th>
+
+                                    </tr>
+                                     <volist name="joint" id="joint" >
+                                <tr>
+
+                                  <td>{$joint[user]['nickname']}</td><td>{$joint[user]['名称']}</td><td>{$joint[user]['界别']}</td>
+	                                <td>{$joint[user]['专委会']}</td><td>{$joint[user]['街道联络委']}</td>
+	                                <td><if condition="$joint[is_agree]==1">同意<elseif  condition="$joint[is_agree]==2"/>不同意<elseif condition="$joint[is_agree]==0"/>未操作</if></td>
+	                                <td>
+	                                <if condition="$proposal['is_joint']!=2 && $proposal['status'] == 1 && $joint[is_agree]==0"><div class="btn btn-default btn-sm btn-remove" data="{$joint.id}">移除</div></if>
+		                              <if condition="$joint[suggest]!=''"><div class="btn btn-primary btn-sm jointmsg" data-toggle="modal" data-target="#myModal2" data="{$joint['id']}">查看意见</div></if>
+	                                </td>
+
+
+                                </tr>
+                                     </volist>
+                                </thead>
+                                <tbody>
+                                   
+                                    
+                                    
+                                    	
+                                    
+                                    
+                                </tbody>
+                            </table>
+                            <div style="margin-top:15px">
+                              <form name="proposal_joint" method="post">
+                                <input type="hidden" name="status" />
+                                    		<td colspan="12">
+
+                                    			<textarea name="content" rows="" cols="" class="form-control" placeholder="联名理由：" style="margin-bottom:15px">{$proposal.joint_content}</textarea>
+			                                    <if condition="$proposal['status'] == 1 && $proposal['uid']==get_uid()">
+                                          <button class="btn btn-primary" onclick="document.proposal_joint.status.value='1';document.proposal_joint.action='{:U('Proposal/Index/doJoint',array('proposal_id'=>$proposal[id]))}'">保存</button>
+                                          <button class="btn btn-primary" onclick="document.proposal_joint.status.value='2';document.proposal_joint.action='{:U('Proposal/Index/doJoint',array('proposal_id'=>$proposal[id]))}'">提交</button>
+                                          </if>
+                                            <a  href="{$back_url}" class="btn btn-default">返回</a>
+                                    		</td>
+                              </form>
+                                    	</div>
+                        </div>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+<script>
+	//添加办理单位
+	$(function() {
+		//删除
+		$("#table2").delegate("td .jointmsg" , "click" , function () {
+			var myData = 'joint_id=' + $(this).attr('data'); //build a post data structure
+			var self = $(this);
+			jQuery.ajax({
+				type : "POST" , // HTTP method POST or GET
+				url : "{:U('Proposal/Index/get_joint_ajax')}" , //Where to make Ajax calls
+				dataType : "json" , // Data type, HTML, json etc.
+				data : myData , //Form variables
+				success : function (response) {
+						$("#myModal2").find("textarea").val(response.data.suggest);
+				} ,
+				error : function (xhr , ajaxOptions , thrownError) {
+					//On error, we alert user
+					alert(thrownError);
+				}
+			});
+
+
+		});
+	})
+</script>
+	<!-- Small modal -->
+	<div class="modal fade bs-example-modal-sm" id="myModal2">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" style="color: #68d8ff;">理由！</h4>
+				</div>
+				<form name="return1" action="" method="post">
+					<input type="hidden" name="ids"  value="{$content.id}">
+					<div class="modal-body">
+						<textarea name="suggest" rows="3" cols="3" class="form-control" readonly></textarea>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+</block>

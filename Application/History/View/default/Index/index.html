@@ -1,0 +1,133 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+
+                        <form name="frme" method="post" action="{:U('History/Index/index')}">
+                            <div class="col-sm-1">
+                                <input type="text" placeholder="作者" class="form-control" name="uid" value=""/>
+                            </div>
+                            <div class="col-sm-1">
+                                <select name="type" class="form-control">
+                                    <option value="新闻报告">新闻报告</option>
+                                    <option value="奥运会">奥运会</option>
+                                    <option value="明星绯闻">明星绯闻</option>
+                                    <option value="宋吉吉">宋吉吉</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <input size="16" type="text" value="" name="stime" readonly class="form_datetime_day form-control" required placeholder="起始日期">
+                            </div>
+                            <div class="col-sm-2">
+                                <input size="16" type="text" value="" name="etime" readonly class="form_datetime_day form-control" required placeholder="截止日期">
+                            </div>
+
+                            <div class="col-sm-1">
+                                <button type="submit" class="btn btn-default btn-sm">查询</button>
+                            </div>
+                        </form>
+                        <table class="table table-bordered table-responsive table-condensed">
+                            <thead>
+                            <tr>
+                                <th>
+                                    日期
+                                </th>
+                                <th>
+                                    类别
+                                </th>
+                                <th>
+                                    作者
+                                </th>
+                                <th>
+                                    标题
+                                </th>
+
+                                <th>
+                                    操作
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <volist name="content" id="v">
+                            <tr>
+                                <td>
+                                    {$v.time}
+                                </td>
+                                <td>
+                                    {$v.type}
+                                </td>
+
+                                <td>
+                                    {$v.author}
+                                </td>
+                                <td>
+                                    {$v.title}
+                                </td>
+                                <td>
+                                        <a class="btn btn-primary btn-sm" href="{:U('History/Index/detail',array('id'=>$v['id']))}">查看</a>
+                                        <a class="btn btn-primary btn-sm" href="{:U('History/Index/edit',array('id'=>$v['id']))}">修改</a>
+                                    <a class="btn btn-danger  btn-sm btn-del" href="javascript:;" >删除</a>
+                                </td>
+                            </tr>
+                                <!-- Small modal -->
+                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel"><font color="red">警告</font></h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                您确定要删除此条信息吗？
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                                <a type="button" class="btn btn-primary btn-del-on" href="{:U('History/Index/remove',array('id'=>$v['id']))}">确定</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.modal -->
+                                </volist>
+
+                            </tbody>
+
+                        </table>
+                        <script type="text/javascript">
+                            $(function() {
+                                var deldate;
+                                //模态关闭的回调
+                                $('#myModal').on('hide.bs.modal', function() {
+                                    // 执行一些动作...
+                                });
+                                //点击删除按钮
+                                $(".btn-del").click(function(e) {
+                                    //e.preventDefault();
+                                    $('#myModal').modal('show');
+                                    deldate = $(this).closest("tr");
+
+                                });
+                            })
+                        </script>
+                    <div>{$page}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+
+
+
+
+
+
+
+
+
+
+

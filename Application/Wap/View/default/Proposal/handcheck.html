@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+	<include file="cssjs"/>
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>办理情况列表</h1>
+        <!--<button class="ui-btn">回首页</button>-->
+    </header>
+     
+    <section class="ui-container">
+        
+        <div class="searchlistwrap">
+        	<volist name="result" id="r">
+        	<ul class="searchlist">
+        	<li>
+        		<p>交办单位：{$r[unit]}</p>
+        	</li>
+        	<li>
+        		<p>督办领导：{$r.duban_leader}</p>
+        	</li>
+        	<li>
+        		<p class="clear"><span>分管负责人：{$r[leader]}</span> <span class="fr">电话：{$r[leaderphone]}</span></p>
+        	</li>
+        	<li>
+        		<p class="clear"><span>经  办  人：{$r[contact]}</span><span class="fr">电话：{$r[telephone]}</span></p>
+        	</li>
+        	<li>
+        		<p>办理时间： <if condition="!empty($r[end_time])">
+					{$r[end_time]|date='Y-m-d',###}
+				</if></p>
+        	</li>
+        	<li>
+        		<p>办理状态：<if condition="$r[status]==1">未处理<elseif condition="$r[status]==2"/>已处理<elseif condition="$r[status]==3"/>移交办理申请中<elseif condition="$r[status]==4"/>移交办理已处理<elseif condition="$r[status]==5"/>退回重办<elseif condition="$r[status]==6"/>已接收</if></p>
+        	</li>
+        	<li>
+        		<a class="self_btn_f" href="{:U('Wap/Proposal/handreply',array('result_id'=>$r['id']))}">查看办理</a>
+        	</li>
+        </ul>
+			</volist>
+        </div>
+        
+        
+    </section>
+ 
+    
+    
+</body>
+
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+		<meta name="" content="" id="pixclPatio" />
+		<script>
+			function setSize() {
+				var pixclPatio = 1 / window.devicePixelRatio;
+				var htmlPixclPatio = document.getElementById('pixclPatio');
+				htmlPixclPatio.innerHTML = '<meta name="viewport" content="width=device-width,initial-scale=' + pixclPatio + ',minimum-scale=' + pixclPatio + ',maximum-scale=' + pixclPatio + ',user-scalable=no" />'
+				pixclPatio = 1 / window.devicePixelRatio;
+				var html = document.getElementsByTagName('html')[0];
+				var pageWidth = html.getBoundingClientRect().width;
+				html.style.fontSize = pageWidth / 16 + 'px';
+				if(parseInt(html.style.fontSize) > 96) {
+					html.style.fontSize = 96 + 'px'
+				}
+			}
+			setSize()
+			window.addEventListener("resize", setSize, false);
+		</script>
+		<script src="js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/swipe.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/iscroll.js"></script>
+		<script src="js/index.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var myScroll;
+			function loaded() {
+				myScroll = new IScroll('#wrapper', {
+					mouseWheel: true,
+					click:true
+				});
+			}
+			document.addEventListener('touchmove', function(e) {
+				e.preventDefault();
+			}, false);
+		</script>
+		<!--调用滚动-->
+		<script>
+			$(function() {
+				loaded()
+			})
+		</script>
+		
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<div id="scroller">
+				
+
+				<div class="mark">
+					<div class="login_box">
+						<h3>账户绑定</h3>
+						<input type="text" />
+						<input type="password" class="pw" />
+						<a href="#" class="btn">绑定</a>
+					</div>
+				</div>
+			
+
+				
+			</div>
+		</div>
+		
+	</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

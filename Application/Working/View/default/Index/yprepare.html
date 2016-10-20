@@ -1,0 +1,96 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form action="{:U('Polls/Index/yprepare',array('id'=>$trim['id']))}" method="post" name="frm">
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="6">
+                                    社情民意
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="col-sm-1">
+                                    日期
+                                </td>
+                                <td class="col-sm-3">
+                                    <input size="16" type="text" value="{:date('Y-m-d H:i:s',$content['time'])}" name="time" readonly="readonly" class="form_datetime form-control" required>
+                                </td>
+                                <td class="col-sm-1">
+                                    作者
+                                </td>
+                                <td class="col-sm-3">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'author','id'=>$content['id'],1))}
+                                </td>
+                                <td class="col-sm-1">
+                                    类别
+                                </td>
+                                <td class="col-sm-3">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'type','id'=>$content['id'],1))}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    参与人员
+                                </td>
+                                <td colspan="5">
+                                    <textarea name="author" readonly id="contact_user" class="form-control" style="margin-top: 10px">{$polls.people}</textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    标题
+                                </td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'title','id'=>$content['id'],1))}
+                                </td>
+
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    内容
+                                </td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'content','id'=>$content['id'],1))}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>附件</td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'upload','id'=>$content['id'],1))}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>采用情况</td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'adopt','id'=>$content['id'],1))}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>批示情况</td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'make','id'=>$content['id'],1))}
+                                </td>
+                            </tr>
+                            <td colspan="6">
+                                <a class="btn btn-default btn-sm" href="{:U('Polls/Index/index',array('status'=>6))}">返回</a>
+                            </td>
+                            </tbody>
+                        </table>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

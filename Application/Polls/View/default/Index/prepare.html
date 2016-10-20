@@ -1,0 +1,267 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form action="{:U('Polls/Index/out',array('id'=>$polls['id']))}" method="post" name="form_polls" id="form_polls">
+
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="6">
+                                    社情民意
+                                </th>
+                            </tr>
+                            </thead>
+                            <php>
+                                $htmlstatus_polls = 1;
+                                switch($group){
+                                    case '政协办公室':
+                                        if($polls['status']==2)$htmlstatus_polls = 0;
+
+                                    break;
+                                    case '办公室主任':
+                                       if($polls['status']==3)$htmlstatus_polls = 0;
+                                    break;
+                                }
+                            </php>
+                            <tbody>
+                            <tr>
+                                <td style="width: 120px">
+                                    日期
+                                </td>
+                                <td >
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'time','id'=>$polls['id'],1))}
+                                </td>
+
+                                <td class="text-right" >
+                                    类别
+                                </td>
+                                <td>
+                                    <select name="type_id" class="form-control input-sm" <if condition="$htmlstatus_polls==1">disabled</if> >
+                                        <volist name="tree" id="top">
+                                            <option value="{$top.id}" <if condition="$polls['type_id']==$top['id']">selected</if> >
+                                                {$top.title}
+                                            </option>
+                                        </volist>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    作者
+                                </td>
+                                <td colspan="5">
+                             <if condition="$htmlstatus_polls ==0">
+                                    <input type="hidden"  name="people" id="uids" value="{$polls.people}"/>
+                                    <div id="Groups" class="btn btn-primary" data-toggle="modal" data-target="#myModalx">
+                                        选择作者
+                                    </div>
+                              </if>
+                                    <textarea name="people_view" readonly id="contact_user" class="form-control" style="margin-top: 10px">{$polls.people_view}</textarea>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    标题
+                                </td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'title','id'=>$polls['id'],$htmlstatus_polls))}
+                                </td>
+
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    内容
+                                </td>
+                                <td colspan="5">
+                                   <div class="pull-left">
+                                       {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'content','id'=>$polls['id'],$htmlstatus_polls))}
+                                   </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>附件</td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'upload','id'=>$polls['id'],1))}
+                                </td>
+                            </tr>
+                            <switch name="group">
+                                <case value="委员|集体">
+                                    <tr>
+                                        <td colspan="6">
+                                            <in name="polls.status" value="6">
+                                                <a class="btn btn-default btn-sm" href="{$back_url}">返回</a>
+                                                <else/>
+                                                <a class="btn btn-default btn-sm" href="{:U('Polls/Index/index',array('status'=>$polls['status']))}">返回</a>
+                                            </in>
+
+                                        </td>
+                                    </tr>
+                                </case>
+                                <case value="政协办公室|办公室主任">
+                                    <input type="hidden" name="status"/>
+
+                                    <php>
+                                        switch($group){
+                                            case '政协办公室':
+                                            if($polls[status]!=2)$htmlstatus_polls = 1;
+                                        break;
+                                        case '办公室主任':
+                                        if($polls[status]!=3)$htmlstatus_polls = 1;
+                                        break;
+                                        }
+                                    </php>
+                            <tr>
+                                <td>采用情况</td>
+                                <td colspan="5">
+
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'adopt','id'=>$polls['id'],$htmlstatus_polls))}
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>批示情况</td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'make','id'=>$polls['id'],$htmlstatus_polls))}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="6">
+
+                                    <if condition="$group=='政协办公室' && $polls[status] == 2">
+                                    <a class="btn btn-primary btn-sm btn-de" href="javascript:;" data-toggle="modal" data-target="#myModal3"  onclick="document.form_back.status.value=4;">退回</a>
+                                    <a class="btn btn-primary btn-sm btn-del" href="javascript:;"  data-toggle="modal" data-target="#myModal1"  onclick="document.form_polls.status.value=3;" >审核通过</a>
+                                        <elseif condition="$group=='办公室主任' && $polls[status] == 3"/>
+                                    <a class="btn btn-primary btn-sm btn-de" href="javascript:;" data-toggle="modal" data-target="#myModal3" onclick="document.form_back.status.value=5;">二审退回</a>
+                                    <a class="btn btn-primary btn-sm btn-del" href="javascript:;"  data-toggle="modal" data-target="#myModal1" onclick="document.form_polls.status.value=6;" >终审通过</a>
+                                   </if>
+
+
+                                    <a class="btn btn-default btn-sm" href="{:U('Polls/Index/index',array('status'=>$polls['status']))}">返回</a>
+
+                                </td>
+                            </tr>
+                                    </case>
+                                </switch>
+                            </tbody>
+                            <!-- Small modal 通过审核-->
+                            <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel"><font color="red">提示</font></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            您确定此条民意通过审核吗？
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                            <a type="button" class="btn btn-primary btn-del-on" onclick="document.form_polls.submit();">确定</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Small modal 通过审核-->
+
+                        </table>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ <!--   <script>
+        $('#add').click(function(){
+            var data = {
+                'id':"{$polls.id}",
+                'time' : $('input[name=time]').val(),
+                'author' : $('input[name=author]').val(),
+                'type' : $('input[name=type]').val(),
+                'title' : $('input[name=title]').val(),
+                'content' : $('textarea[name=content]').val(),
+                'adopt' : $('input[name=adopt]').val(),
+                'upload': $('a[name=upload]').val(),
+                'make' : $('input[name=make]').val(),
+                'status' : 4
+            };
+
+            $.post('<?php echo U("Index/tj");?>',data,function(msg){
+               if(msg == 1 ){
+                   alert('退回成功');
+                   window.location.href ="{:U('Index/Index',array('status'=>2))}";
+                    }else{
+                   alert('退回失败');
+               }
+            });
+        });
+
+    </script>-->
+    <script type="text/javascript">
+        $(function() {
+            var deldate;
+            //模态关闭的回调
+            $('#myModal').on('hide.bs.modal', function() {
+                // 执行一些动作...
+            });
+            $(".btn-del").click(function(e) {
+                //e.preventDefault();
+                $('#myModal').modal('show');
+                deldate = $(this).closest("tr");
+
+            });
+        })
+    </script>
+    <script type="text/javascript">
+        $(function() {
+            var deldate;
+            //模态关闭的回调
+            $('#myModall').on('hide.bs.modal', function() {
+                // 执行一些动作...
+            });
+            $(".btn-de").click(function(e) {
+                //e.preventDefault();
+                $('#myModall').modal('show');
+                deldate = $(this).closest("tr");
+
+            });
+        })
+    </script>
+
+    <!-- Small modal -->
+    <div class="modal fade bs-example-modal-sm" id="myModal3">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" style="color: #68d8ff;">理由！</h4>
+                </div>
+                <form name="form_back" action="{:U('Polls/Index/tj')}" method="post">
+                    <input type="hidden" name="polls_id"  value="{$polls['id']}">
+                    <input type="hidden" name="status" >
+                    <div class="modal-body">
+                        <textarea name="suggest" rows="3" cols="3" class="form-control"></textarea>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" onclick="document.form_back.submit(); ">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    {:W('Common/Tongxunlu/index')}
+    </block>

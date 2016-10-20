@@ -1,0 +1,265 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form action="{:U('Polls/Index/alter',array('id'=>$poll['id']))}" method="post" name="frm">
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="6">
+                                    修改社情民意
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="col-sm-1">
+                                    日期
+                                </td>
+                                <td class="col-sm-3">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'time','id'=>$polls['id'],1))}
+                                </td>
+                                <td>
+                                    作者
+                                </td>
+                                <td colspan="1" >
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'author','id'=>$polls['id'],1,$name))}
+                                </td>
+                                <td class="col-sm-1">
+                                    类别
+                                </td>
+                                <td colspan="1">
+                                    <select name="type_id" class="form-control input-sm" disabled>
+                                        <volist name="tree" id="top">
+                                            <option value="{$top.id}"  >
+                                                {$top.title}
+                                            </option>
+                                        </volist>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    作者
+                                </td>
+                                <td colspan="5">
+                                    <input type="hidden"  name="people" id="uids" value=""/>
+                                    <div id="Groups" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                                        选择作者
+                                    </div>
+                                    <textarea name="partake" readonly id="contact_user" class="form-control" style="margin-top: 10px"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    标题
+                                </td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'title','id'=>$poll['id'],1))}
+                                </td>
+
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    内容
+                                </td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'content','id'=>$poll['id'],1))}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>附件上传</td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'upload','id'=>$poll['id'],1))}
+                                </td>
+                            </tr>
+
+                            <if condition="$group=='政协办公室' || $group=='办公室主任'" >
+                            <tr>
+                                <td>采用情况</td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'adopt','id'=>$content['id']))}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>批示情况</td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'make','id'=>$content['id']))}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    退回意见
+                                </td>
+                                <td colspan="5">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'comments','id'=>$content['id']))}
+                                </td>
+                            </tr>
+                            </if>
+
+                            <tr>
+                                <td colspan="6">
+                                    <button class="btn btn-default btn-sm">保存</button>
+                                    <a class="btn btn-default btn-sm" href="#" id="add">提交</a>
+                                    <a class="btn btn-default btn-sm" href="{:U('Polls/Index/index',array('status'=>1))}">返回</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#add').click(function(){
+            var data = {
+                'id':"{$poll.id}",
+                'time' : $('input[name=time]').val(),
+                'author' : $('input[name=author]').val(),
+                'type' : $('select[name=type]').val(),
+                'title' : $('input[name=title]').val(),
+                'content' : $('textarea[name=content]').val(),
+                'upload' : $('input[name=upload]').val(),
+                'status' : 2
+            };
+            $.post('<?php echo U("Index/addition");?>',data,function(msg){
+                if(msg == 1 ){
+                    alert('提交成功');
+                    window.location.href ="{:U('Index/Index',array('status'=>1))}";
+                }else{
+                    alert('提交失败');
+                }
+            });
+        });
+
+    </script>
+    <script>
+        $('#add').click(function(){
+            var data = {
+                'time' : $('input[name=time]').val(),
+                'author' : $('input[name=author]').val(),
+                'type' : $('select[name=type]').val(),
+                'title' : $('input[name=title]').val(),
+                'content' : $('textarea[name=content]').val(),
+                'upload' : $('input[name=upload]').val(),
+                'status' : 2
+            };
+            $.post('<?php echo U("Index/add");?>',data,function(msg){
+                if(msg == 1 ){
+                    alert('提交成功');
+                    window.location.href ="{:U('Index/Index',array('status'=>1))}";
+                }else{
+                    alert('提交失败');
+                }
+            });
+        });
+    </script>
+
+    <!--Ms-->
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title" id="myModalLabel">搜索您要添加的作者</h4>
+                </div>
+                <div class="modal-body">
+                    您已经添加的作者
+                    <table class="table table-bordered table-condensed" style="margin-top: 15px;" id="choise_table">
+                        <tr>
+                            <th>操作</th>
+                            <th>姓名</th>
+                            <th>联系方式</th>
+                        </tr>
+                        <tr>
+                            <td><button class="btn btn-primary btn-sm">移除</botton></td><td>嘿嘿</td><td>123123123</td></tr>
+                    </table>
+                    <div class="col-sm-8 clearfix"><input type="search" placeholder="请搜索" class="form-control" name="nickname"/></div><button class="btn btn-primary" id="search_uid">搜索</button>
+                    <hr style="margin-bottom: 0;" /> 搜索列表
+                    <table class="table table-bordered table-condensed" style="margin-top: 15px;" id="search_table">
+                        <tr>
+                            <th>操作</th>
+                            <th>姓名</th>
+                            <th>联系方式</th>
+                        </tr>
+                        <tr>
+                            <volist name="data" id="v">
+                                <td><button class="btn btn-primary btn-sm ">选择</botton></td><td id="uid"></td><td id="nickname"></td>
+                            </volist>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="uid_ok">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Me-->
+
+    <script type="text/javascript">
+        $(function() {
+
+            /////////////
+
+            $("#search_uid").click(function() {
+                /*搜索ajax*/
+                var aj = $.ajax({
+                    url: "{:U(Polls/Index/searchuser)}", // 跳转到 action
+                    data: "nickname="+nickname,
+                    type: 'post',
+                    cache: false,
+                    dataType: 'json',
+                    success: function(data) {
+                        var uid= data.uid;
+                        var nckname=data.nickname;
+                        $("#uid").html=uid;
+                        $("#nickname").html=nickname;
+                    },
+                    error: function() {
+                        alert("异常！");
+                    }
+                });
+            });
+            //////
+            $("#uid_ok").click(function(){
+                /*确定ajax*/
+                var aj = $.ajax({
+                    url: "{:U(Polls/Index/searchuser)}", // 跳转到 action
+                    data: "nickname="+nickname,
+                    type: 'post',
+                    cache: false,
+                    dataType: 'json',
+                    success: function(data) {
+                        alert("成功！");
+                        //成功后关闭对话框
+                        $('#myModal').modal('hide')
+                    },
+                    error: function() {
+                        alert("异常！");
+                    }
+                });
+            })
+            $("#search_table").find(".btn").click(function() {
+                $(this).text("移除")
+                var trItem = $(this).closest("tr");
+                $("#choise_table").append(trItem)
+            });
+
+            $("#choise_table").on("click", ".btn", function() {
+                $(this).closest("tr").remove();
+            })
+        })
+    </script>
+</block>

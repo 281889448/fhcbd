@@ -1,0 +1,154 @@
+<extend name="Base/common"/>
+<block name="body">
+	<div class="ar_content">
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span12">
+					<div id="tableWrap">
+						<form name="frme" method="post" action="{:U('Polls/Index/doEdit',array('id'=>$content[id]))}" enctype="multipart/form-data">
+							<input type="hidden" name="status" />
+							<table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+								<thead>
+								<tr>
+									<th colspan="6">
+										修改社情民意
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<td style="width: 120px">
+										日期
+									</td>
+									<td >
+										{:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'time',$content['id'],1,NOW_TIME))}
+									</td>
+
+									<td class="text-right">
+										类别
+									</td>
+									<td >
+										<select name="type_id" class="form-control input-sm">
+											<option disabled="" selected="" hidden="">--请选择--</option>
+											<volist name="tree" id="top">
+												<option value="{$top.id}" <if condition="$top[id]==$content['type_id']">selected</if> >
+													{$top.title}
+												</option>
+											</volist>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										作者
+									</td>
+									<td colspan="5">
+										<input type="hidden"  name="people" id="uids" value=""/>
+										<div id="Groups" class="btn btn-primary" data-toggle="modal" data-target="#myModalx">
+											选择作者
+										</div>
+										<textarea name="people_view" readonly id="contact_user" class="form-control" style="margin-top: 10px">{$content.people_view}</textarea>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										标题
+									</td>
+									<td colspan="5">
+										{:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'title',$content['id']))}
+									</td>
+
+
+								</tr>
+								<tr>
+									<td>
+										内容
+									</td>
+									<td colspan="5">
+										<div class="pull-left">
+											{:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'content',$content['id']))}
+										</div>
+									</td>
+								</tr>
+
+								<tr>
+									<td>附件上传</td>
+									<td colspan="5">
+										{:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'upload',$content['id']))}
+									</td>
+								</tr>
+								<tr>
+
+									<td colspan="6">
+										<if condition="$content[status]==1"><button class="btn btn-primary btn-sm" onclick="document.frme.status.value=1">保存</button></if>
+
+										<button class="btn btn-primary btn-sm" onclick="document.frme.status.value={$to_status}">提交</button>
+										<a class="btn btn-default btn-sm" href="{:U('Polls/Index/index',array('status'=>$content['status']))}">返回</a>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$(function() {
+
+			/////////////
+
+			$("#search_uid").click(function() {
+				/*搜索ajax*/
+				var aj = $.ajax({
+					url: "{:U(Polls/Index/searchuser)}", // 跳转到 action
+					data: "nickname="+nickname,
+					type: 'post',
+					cache: false,
+					dataType: 'json',
+					success: function(data) {
+						var uid= data.uid;
+						var nckname=data.nickname;
+						$("#uid").html=uid;
+						$("#nickname").html=nickname;
+					},
+					error: function() {
+						alert("异常！");
+					}
+				});
+			});
+			//////
+			$("#uid_ok").click(function(){
+				/*确定ajax*/
+				var aj = $.ajax({
+					url: "{:U(Polls/Index/searchuser)}", // 跳转到 action
+					data: "nickname="+nickname,
+					type: 'post',
+					cache: false,
+					dataType: 'json',
+					success: function(data) {
+						alert("成功！");
+						//成功后关闭对话框
+						$('#myModal').modal('hide')
+					},
+					error: function() {
+						alert("异常！");
+					}
+				});
+			})
+			$("#search_table").find(".btn").click(function() {
+				$(this).text("移除")
+				var trItem = $(this).closest("tr");
+				$("#choise_table").append(trItem)
+			});
+
+			$("#choise_table").on("click", ".btn", function() {
+				$(this).closest("tr").remove();
+			})
+		})
+	</script>
+	{:W('Common/Tongxunlu/index')}
+</block>

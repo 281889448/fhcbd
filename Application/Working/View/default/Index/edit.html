@@ -1,0 +1,131 @@
+<extend name="Base/common"/>
+<block name="body">
+	<div class="ar_content">
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span12">
+					<div id="tableWrap">
+						<form name="frme" method="post" action="{:U('Working/Index/doEdit',array('id'=>$content[id]))}" enctype="multipart/form-data">
+							<input type="hidden" name="status" />
+							<table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+								<thead>
+								<tr>
+									<th colspan="6">
+										修改工作动态
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<td >
+										日期
+									</td>
+									<td >
+										{:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'time',$content['id'],1,NOW_TIME))}
+									</td>
+
+
+								</tr>
+
+								<tr>
+									<td >
+										标题
+									</td>
+									<td colspan="5">
+										{:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'title',$content['id']))}
+									</td>
+
+
+								</tr>
+								<tr>
+									<td >
+										内容
+									</td>
+									<td colspan="5">
+										<div class="pull-left">
+											{:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'content',$content['id']))}
+										</div>
+									</td>
+								</tr>
+
+								<tr>
+									<td  style="width: 100px !important;">附件上传</td>
+									<td colspan="5">
+										{:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'upload',$content['id']))}
+									</td>
+								</tr>
+								<tr>
+
+									<td colspan="6">
+										<if condition="$content[status]==1"><button class="btn btn-primary btn-sm" onclick="document.frme.status.value=1">保存</button></if>
+
+										<button class="btn btn-primary btn-sm" onclick="document.frme.status.value={$to_status}">提交</button>
+										<a class="btn btn-default btn-sm" href="{:U('Working/Index/index',array('status'=>$content['status']))}">返回</a>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$(function() {
+
+			/////////////
+
+			$("#search_uid").click(function() {
+				/*搜索ajax*/
+				var aj = $.ajax({
+					url: "{:U(Working/Index/searchuser)}", // 跳转到 action
+					data: "nickname="+nickname,
+					type: 'post',
+					cache: false,
+					dataType: 'json',
+					success: function(data) {
+						var uid= data.uid;
+						var nckname=data.nickname;
+						$("#uid").html=uid;
+						$("#nickname").html=nickname;
+					},
+					error: function() {
+						alert("异常！");
+					}
+				});
+			});
+			//////
+			$("#uid_ok").click(function(){
+				/*确定ajax*/
+				var aj = $.ajax({
+					url: "{:U(Working/Index/searchuser)}", // 跳转到 action
+					data: "nickname="+nickname,
+					type: 'post',
+					cache: false,
+					dataType: 'json',
+					success: function(data) {
+						alert("成功！");
+						//成功后关闭对话框
+						$('#myModal').modal('hide')
+					},
+					error: function() {
+						alert("异常！");
+					}
+				});
+			})
+			$("#search_table").find(".btn").click(function() {
+				$(this).text("移除")
+				var trItem = $(this).closest("tr");
+				$("#choise_table").append(trItem)
+			});
+
+			$("#choise_table").on("click", ".btn", function() {
+				$(this).closest("tr").remove();
+			})
+		})
+	</script>
+	{:W('Common/Tongxunlu/index')}
+</block>

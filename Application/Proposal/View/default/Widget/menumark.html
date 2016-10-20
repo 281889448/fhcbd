@@ -1,0 +1,50 @@
+<php>$group=get_group(get_uid());</php>
+<if condition="$group=='委员' || $group=='集体'">
+    <div class="col-sm-12 clearfix" style="padding-bottom: 10px;margin-left:0;padding-left: 0 ">
+        <div class="btn btn-default  ">
+            <a href="{:U('Proposal/Index/add')}">
+                撰写提案
+            </a>
+        </div>
+
+<a  class='btn btn-default  <if condition="empty(array_diff($menu_mark,array('Proposal','Index','index','1')))">btn-primary </if>' href="{:U('Proposal/Index/index',array('status'=>'1'))}">
+    未提交
+</a>
+
+
+<a  class='btn btn-default  <if condition="empty(array_diff($menu_mark,array('Proposal','Index','index','2')))">btn-primary </if>' href="{:U('Proposal/Index/index',array('status'=>'2'))}">
+    已提交
+</a>
+
+<a  class='btn btn-default  <if condition="empty(array_diff($menu_mark,array('Proposal','Index','index','3')))">btn-primary </if>' href="{:U('Proposal/Index/index',array('status'=>'3'))}">
+    退回
+</a>
+
+<a  class='btn btn-default  <if condition="empty(array_diff($menu_mark,array('Proposal','Index','index','4','5','6','7')))">btn-primary </if>' href="{:U('Proposal/Index/index',array('status'=>'4,5,6,7'))}">
+    未立案
+</a>
+
+<a  class='btn btn-default  <if condition="empty(array_diff($menu_mark,array('Proposal','Index','index','8','11','13','14','17','18','19')))">btn-primary </if>' href="{:U('Proposal/Index/index',array('status'=>'8,11,13,14,17,18,19'))}">
+    已立案
+</a>
+
+<a  class='btn btn-default  <if condition="empty(array_diff($menu_mark,array('Proposal','Index','index','9')))">btn-primary </if>' href="{:U('Proposal/Index/index',array('status'=>'9'))}">
+    已结案
+</a>
+
+
+<a  class='btn btn-default  <if condition="empty(array_diff($menu_mark,array('Proposal','Index','pleasejoint')))">btn-primary </if>' href="{:U('Proposal/Index/pleasejoint')}">
+    参与联名
+</a>
+
+
+<a href="{:U('Proposal/Index/pleasemerge')}" class='btn btn-default  <if condition="empty(array_diff($menu_mark,array('Proposal','Index','pleasemerge')))">btn-primary </if>'>
+    被并案
+</a>
+
+
+</div>
+
+<br>
+<hr style="margin-top: 0">
+</if>

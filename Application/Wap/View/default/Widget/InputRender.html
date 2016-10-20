@@ -1,0 +1,419 @@
+                <if condition="$field['is_show'] == 1 || $field['is_show'] == 3">
+                    <if condition="$field['htmlstatus']==0">
+
+                        <switch name="field.type">
+                            <case value="num">
+                                <input type="text" class="T_input" name="{$field.name}" value="{$data[$field['name']]|default=$field['value']}"  placeholder="{$field.remark}"   />
+                            </case>
+                            <case value="string">
+								 <input type="text" name="{$field.name}" class="T_input"  value="{$data[$field['name']]|default=$field['value']}" placeholder="{$field.remark}" />
+
+
+                            </case>
+                            <case value="textarea">
+
+                                <textarea name="{$field.name}"  cols="10" rows="10">{$data[$field['name']]}</textarea>
+
+                            </case>
+                            <case value="datetime">
+
+								<input type="text" name="USER_AGE" id="USER_AGE" readonly class="input" placeholder="开始时间" />
+
+
+
+
+
+                            </case>
+	                        <case value="datetimejq">
+		                        <input size="16" type="text" value="{$data[$field['name']]|default=$field['value']|date='Y-m-d H:i:s',###}" name="{$field.name}" id="USER_AGE" readonly class="input"  placeholder="请选择时间"  />
+
+
+	                        </case>
+                            <case value="bool">
+	                            <div class="col-sm-2">
+                                <select name="{$field.name}">
+                                    <volist name=":parse_field_attr($field['extra'])" id="vo">
+                                        <option value="{$key}" <eq name="data[$field['name']]" value="$key">selected</eq>>{$vo}</option>
+                                    </volist>
+                                </select>
+		                            </div>
+                            </case>
+                            <case value="select">
+	                            <div class="col-sm-2">
+                                <select name="{$field.name}" class="self_select_h">
+                                    <volist name=":parse_field_attr($field['extra'])" id="vo">
+                                        <option value="{$key}" <eq name="data[$field['name']]" value="$key">selected</eq>>{$vo}</option>
+                                    </volist>
+                                </select>
+	                            </div>
+                            </case>
+	                        <case value="selectzh">
+
+
+		                        <select name="{$field.name}" class="self_select_h" >
+			                          <option  disabled selected hidden value="">{$field.remark}</option>
+			                        <volist name=":parse_field_attr($field['extra'])" id="vo">
+				                        <option value="{$vo}" <eq name="data[$field['name']]" value="$vo">selected</eq>>{$vo}</option>
+			                        </volist>
+		                        </select>
+
+	                        </case>
+                            <case value="radio">
+
+                                <volist name=":parse_field_attr($field['extra'])" id="vo">
+
+									<p style="width: 50%;display: inline;">
+									<label class="ui-radio" for="radio">
+                                    <input type="radio" value="{$key+1}" name="{$field.name}" <eq name="data[$field['name']]" value="$key+1">checked="checked"</eq> >{$vo}
+                                	</label>
+									</p>
+                                </volist>
+                            </case>
+                            <case value="checkbox">
+                                <volist name=":parse_field_attr($field['extra'])" id="vo">
+
+	                                <div class="col-sm-3">
+                                	<label>
+                                    <input type="checkbox" value="{$key+1}" name="{$field.name}[]" <in name="key+1" value="$data[$field['name']]" >checked="checked"</in>>{$vo}
+                                	</label>
+	                                </div>
+                                </volist>
+                            </case>
+                            <case value="editor">
+
+
+
+								<link href="__STATIC__/ueditormini/themes/default/css/umeditor.min.css" type="text/css" rel="stylesheet">
+
+
+								<script type="text/javascript" charset="utf-8" src="__STATIC__/umeditor/umeditor.config.js"></script>
+								<script type="text/javascript" charset="utf-8" src="__STATIC__/umeditor/umeditor.min.js"></script>
+
+								<script type="text/javascript" src="__STATIC__/umeditor/lang/zh-cn/zh-cn.js"></script>
+								<script type="text/plain" name="{$field.name}" id="myEditor" style="width:100%;height:200px">
+   {$data[$field['name']]}
+</script>
+
+
+
+
+								<script>
+									var um = UM.getEditor('myEditor');
+
+
+
+
+
+								</script>
+                               
+                                
+                            </case>
+                            <case value="picture">
+                                <div class="controls">
+									<input type="file" id="upload_picture_{$field.name}">
+									<input type="hidden" name="{$field.name}" id="cover_id_{$field.name}" value="{$data[$field['name']]}"/>
+									<div class="upload-img-box">
+									<notempty name="data[$field['name']]">
+										<div class="upload-pre-item"><img src="__ROOT__{$data[$field['name']]|get_cover='path'}"/></div>
+									</notempty>
+									</div>
+								</div>
+								<script type="text/javascript">
+								//上传图片
+							    /* 初始化上传插件 */
+								$("#upload_picture_{$field.name}").uploadify({
+							        "height"          : 30,
+							        "swf"             : "__STATIC__/uploadify/uploadify.swf",
+							        "fileObjName"     : "download",
+							        "buttonText"      : "上传图片",
+							        "uploader"        : "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+							        "width"           : 120,
+							        'removeTimeout'	  : 1,
+							        'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
+							        "onUploadSuccess" : uploadPicture{$field.name},
+                                    'onFallback' : function() {
+                                        alert('未检测到兼容版本的Flash.');
+                                    }
+							    });
+								function uploadPicture{$field.name}(file, data){
+							    	var data = $.parseJSON(data);
+							    	var src = '';
+							        if(data.status){
+							        	$("#cover_id_{$field.name}").val(data.id);
+							        	src = data.url || '__ROOT__' + data.path;
+							        	$("#cover_id_{$field.name}").parent().find('.upload-img-box').html(
+							        		'<div class="upload-pre-item"><img src="' + src + '"/></div>'
+							        	);
+							        } else {
+							        	updateAlert(data.info);
+							        	setTimeout(function(){
+							                $('#top-alert').find('button').click();
+							                $(that).removeClass('disabled').prop('disabled',false);
+							            },1500);
+							        }
+							    }
+								</script>
+                            </case>
+                            <case value="file">
+
+
+	                            <link rel="stylesheet" type="text/css" href="__PUBLIC__/huploadify/Huploadify_wap.css"/>
+
+	                            <script type="text/javascript" src="__PUBLIC__/huploadify/jquery.Huploadify.js"></script>
+	                            <style type="text/css">
+	                            </style>
+	                            <script type="text/javascript">
+		                            $(function(){
+			                            var up = $('#upload').Huploadify({
+				                            auto:false,
+				                            fileTypeExts:'*.jpg;*.jpeg;*.png;*.exe;*.mp3;*.mp4;*.zip;*.doc;*.docx;*.ppt;*.pptx;*.xls;*.xlsx;*.pdf',
+				                            multi:true,
+				                            fileSizeLimit:99999999,
+				                            breakPoints:true,
+				                            saveInfoLocal:true,
+				                            showUploadedPercent:true,//是否实时显示上传的百分比，如20%
+				                            showUploadedSize:true,
+				                            removeTimeout:9999999,
+				                            uploader:'{:U('Home/Fileu/upload')}',
+				                            onUploadStart:function(){
+				                            	record_id = {$data['id']|default=0};
+				                            	user_id = {$data['uid']|default=get_uid()};
+				                            	model = '{$model[name]}';
+					                            //up.settings('formData', {record_id :record_id,user_id:record_id,model:model});
+					                            up.Huploadify('settings','formData', {record_id :record_id,user_id:user_id,model:model});
+				                            },
+				                            onUploadSuccess:function(file,data){
+
+					                          //  alert('上传成功');
+
+
+				                            },
+				                            onUploadComplete:function(file,data){
+					                            var data = $.parseJSON(data);
+
+				                            	if(data.status==0){
+				                            		alert('上传失败');
+					                            }else{
+					                            	alert('上传成功');
+					                            }
+					                            //alert('上传完成');
+				                            },
+			                              onUploadError:function(){
+				                            	alert('上传失败');
+			                              }
+				                            /*getUploadedSize:function(file){
+				                             var data = {
+				                             data : {
+				                             fileName : file.name,
+				                             lastModifiedDate : file.lastModifiedDate.getTime()
+				                             }
+				                             };
+				                             var url = 'http://49.4.132.173:8080/admin/uploadfile/index/';
+				                             var uploadedSize = 0;
+				                             $.ajax({
+				                             url : url,
+				                             data : data,
+				                             async : false,
+				                             type : 'POST',
+				                             success : function(returnData){
+				                             returnData = JSON.parse(returnData);
+				                             uploadedSize = returnData.uploadedSize;
+				                             }
+				                             });
+				                             return uploadedSize;
+				                             }	*/
+			                            });
+
+
+
+		                            });
+	                            </script>
+
+	                            <div id="upload">
+		                            <php>
+			                            $map['user_id'] = $data['uid'] ? $data['uid']:get_uid();
+			                            $map['record_id'] = $data['id'] ? $data['id'] : 0;
+			                            $map['model'] = $model['name'];
+			                            $files = M('Fileu')->where($map)->select();
+
+	                          </php>
+									<style>
+										.up_filename{
+											display: block;
+
+										}
+										.uploadify-progress{
+											height:2px ;
+											width: 98% !important;
+										}
+										#upload{
+											width: 100% !important;
+										}
+										.downfilebtn{
+											border:none !important;
+										}
+										.downfilebtn a{
+											padding:8px 20px !important;
+											background: #00a2d4;
+											color: #fff;
+											border-radius: 5px;
+										}
+										.delfilebtn{
+											padding:3px 20px !important;
+											border-radius: 5px;
+										}
+										#file_upload_1-button{
+											margin-top:10px;
+											margin-left: 10px;
+										}
+										.uploadbtn{
+											padding:3px 20px !important;
+											border-radius: 5px;
+										}
+									</style>
+		                            <volist name="files" id="file">
+			                            <div id=fileupload_1_{$file.id}" class="uploadify-queue-item"><div class="uploadify-progress"><div class="uploadify-progress-bar" style="width: 100%;"></div></div>
+				                            <span class="up_filename">{$file.name}</span><span class="delfilebtn" data="{$file.id}">删除</span> <span class="downfilebtn" ><a href="{:U('Home/Fileu/download',array('id'=>$file[id]))}">下载</a></span></div>
+
+		                            </volist>
+
+	                            </div>
+
+
+	                            <script>
+		                            $(function(){
+		                            	$(".delfilebtn").click(function(){
+		                            		var self=$(this)
+				                            $.ajax({
+					                            url : '{:U('Home/Fileu/delete')}',
+					                            data : 'id='+$(this).attr('data'),
+					                            async : false,
+					                            type : 'POST',
+					                            success : function(returnData){
+					                               self.closest(".uploadify-queue-item").remove();
+
+					                            }
+				                            });
+			                            })
+		                            })
+
+	                            </script>
+
+
+                            </case>
+                            <default/>
+                            <input type="text" class="T_input" name="{$field.name}" value="{$data[$field['name']]}"  placeholder="{$field.remark}"  >
+                        </switch>
+	                    <else/>
+
+	                    <switch name="field.type">
+		                    <case value="num|string">
+								{$data[$field['name']]||default=$field['value']}
+								<input type="hidden" name="{$field['name']}" value="{$data[$field['name']]||default=$field['value']}"/>
+		                    </case>
+		                    <case value="datetime">
+								{$data[$field['name']]|default=$field['value']|date='Y-m-d',###}
+								<input type="hidden" name="{$field['name']}" value="{$data[$field['name']]|default=$field['value']|date='Y-m-d',###}"/>
+								</case>
+							<case value="datetimejq">
+								{$data[$field['name']]|default=$field['value']|date='Y-m-d H:i:s',###}
+								<input type="hidden" name="{$field['name']}" value="{$data[$field['name']]|default=$field['value']|date='Y-m-d H:i:s',###}"/>
+							</case>
+
+		                      <case value="file">
+			                    <php>
+				                    $map['user_id'] = $data['uid'] ;
+				                    $map['record_id'] = $data['id'] ? $data['id'] : 0;
+				                    $map['model'] = $model['name'];
+				                    $files = M('Fileu')->where($map)->select();
+
+			                    </php>
+			                    <volist name="files" id="file">
+														<div>
+					                    <span class="up_filename">{$file.name}</span> <span class="downfilebtn" ><a href="{:U('Home/Fileu/download',array('id'=>$file[id]))}">下载</a></span>
+														</div>
+			                    </volist>
+
+		                    </case>
+		                    <case value="select">
+
+				                    <select name="{$field.name}" class="self_select_h" disabled>
+					                    <volist name=":parse_field_attr($field['extra'])" id="vo">
+						                    <option value="{$key}" <eq name="data[$field['name']]" value="$key">selected</eq>>{$vo}</option>
+					                    </volist>
+				                    </select>
+
+		                    </case>
+		                    <case value="selectzh">
+
+				                    <select name="{$field.name}" class="self_select_h" disabled>
+					                    <option  disabled selected hidden value="">--请选择--</option>
+					                    <volist name=":parse_field_attr($field['extra'])" id="vo">
+						                    <option value="{$vo}" <eq name="data[$field['name']]" value="$vo">selected</eq>>{$vo}</option>
+					                    </volist>
+				                    </select>
+
+		                    </case>
+		                    <case value="radio">
+
+			                    <volist name=":parse_field_attr($field['extra'])" id="vo">
+
+									<p style="width: 50%;display: inline;">
+										<label class="ui-radio" for="radio">
+						                    <input type="radio" value="{$key+1}" name="{$field.name}" <eq name="data[$field['name']]" value="$key+1">checked="checked"</eq> disabled>{$vo}
+					                    </label>
+									</p>
+			                    </volist>
+		                    </case>
+		                    <case value="textarea">
+
+			                   {$data[$field['name']]}
+
+		                    </case>
+		                    <case value="checkbox">
+			                    <volist name=":parse_field_attr($field['extra'])" id="vo">
+
+				                    <div class="col-sm-3">
+					                    <label>
+						                    <input type="checkbox" value="{$key+1}" name="{$field.name}[]" <in name="key+1" value="$data[$field['name']]" >checked="checked"</in> disabled>{$vo}
+					                    </label>
+				                    </div>
+			                    </volist>
+
+		                    </case>
+							<case value="editor">
+							<link href="__STATIC__/ueditormini/themes/default/css/umeditor.min.css" type="text/css" rel="stylesheet">
+
+
+							<script type="text/javascript" charset="utf-8" src="__STATIC__/umeditor/umeditor.config.js"></script>
+							<script type="text/javascript" charset="utf-8" src="__STATIC__/umeditor/umeditor.min.js"></script>
+
+							<script type="text/javascript" src="__STATIC__/umeditor/lang/zh-cn/zh-cn.js"></script>
+							<script type="text/plain" name="{$field.name}" id="myEditor"   style="width:100%;height:200px">
+   {$data[$field['name']]}
+</script>
+
+
+
+
+							<script>
+								$opt={toolbar:[
+									''
+								]};
+								var um = UM.getEditor('myEditor',$opt);
+
+
+
+								UM.getEditor('myEditor').setHeight(200);
+								UM.getEditor('myEditor').setDisabled('fullscreen')
+
+							</script>
+						</case>
+	                    </switch>
+
+
+
+                    </if>
+                </if>
+
+

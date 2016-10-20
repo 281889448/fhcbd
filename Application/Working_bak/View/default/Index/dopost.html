@@ -1,0 +1,186 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form id="frm" method="post" action="{:U('Working/Index/dopost')}" >
+                        <table class="table table-bordered table-responsive table-condensed">
+                            <tbody>
+                            <tr><td class="col-sm-1">发布人</td>
+                                <td>
+                                    <input type="hidden" name="type" value="{$group}"/>
+                                    <input type="hidden" name="id" value="{$read['id']}"/>
+                                    <input type="hidden" name="status" id="status" value="{$read['status']}"/>
+                                    <input type="hidden" name="bstatus" value="{$read['bstatus']}"/>
+                                    <input type="text" class="form-control" name="author" value="{$name|default=$read['author']}" readonly="readonly"/>
+                                </td>
+                                <td class="col-sm-1 text-right">发布日期</td>
+                                <td>
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>8,'name'=>'time',$read['id'],0,'defval'=>NOW_TIME))}
+                                </td>
+                            </tr>
+                            <tr><td>标题</td><td colspan="3">
+                                {:W('Common/InputRender/InputRender',array('modelid'=>8,'name'=>'title',$read['id']))}
+                            </td></tr>
+                            <tr>
+                                <td>内容</td>
+                                <td colspan="3">
+                                <div class="pull-left">
+                                   {:W('Common/InputRender/InputRender',array('modelid'=>8,'name'=>'content',$read['id']))}
+                                </div>
+                                    
+                                </td>
+                            </tr>
+                            <tr><td>附件</td><td colspan="3">
+                                {:W('Common/InputRender/InputRender',array('modelid'=>8,'name'=>'upload',$read['id']))}
+                            </td></tr>
+                            <tr>
+                                <td colspan="6">
+                                    <a class="btn btn-default" href="javascript:history.back(-1);">返回</a>
+                                    <switch name="group">
+                                        <case value="集体||委员">
+                                            <if condition="$read['status'] eq ''">
+                                                <a class="btn btn-default btn-sub-first" id="save" href="#">保存</a>
+                                                <a data-toggle="modal" data-target="#myModal" class="btn btn-default btn-sub-first" id="save_sub" href="#">提交初审</a>
+                                            </if>
+                                            <if condition="($read['bstatus'] neq 1) AND ($read['status'] neq '')">
+                                                <a data-toggle="modal" data-target="#myModal" class="btn btn-default btn-sub-first" delid="{$read['id']}" href="#">提交初审</a>
+                                            </if>
+                                        </case>
+                                        <case value="政协办公室">
+                                            <if condition="($read['bstatus'] eq 1) AND ($read['status'] eq 2)">
+                                                <a data-toggle="modal" data-target="#myModal" class="btn btn-primary btn-sm btn-back-second" delid="{$read['id']}" href="javascript:;" >退回</a>
+                                                <a data-toggle="modal" data-target="#myModal" class="btn btn-primary btn-sm btn-sub-second" delid="{$read['id']}" href="javascript:;" >初审通过</a>
+                                            </if>
+                                        </case>
+                                        <case value="办公室主任">
+                                            <if condition="($read['bstatus'] eq 1) AND ($read['status'] eq 3)">
+                                                <a data-toggle="modal" data-target="#myModal" class="btn btn-primary btn-sm btn-back-end"  delid="{$read['id']}" href="javascript:;" >退回</a>
+                                                <a data-toggle="modal" data-target="#myModal" class="btn btn-primary btn-sm btn-sub-end"  delid="{$read['id']}" href="javascript:;" >终审通过</a>
+                                            </if>
+                                        </case>
+                                    </switch>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                       </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var delid='';
+        var url='';
+        var data='';
+        var lock_ajax=true;
+        $(function() {
+            //保存
+            $('#save').click(function() {
+               $('#frm').submit();
+            });
+            //添加提交初审
+            $('#save_sub').click(function() {
+                $('input[name="status"]').val(2);
+                $('input[name="bstatus"]').val(1);
+                $("#sure").attr('onclick','save_sub()');
+                $('#myModal').show();
+            });
+            //提交初审
+           $(".btn-sub-first").click(function() {
+                $('#confrim').text('提交初审将不能撤回，确定提交吗？');
+                delid=$(this).attr('delid');
+                url="{:U('Working/Index/sub_work_status')}";
+                data={'id': delid,'status':2,'bstatus':1};
+            });
+            //提交终审
+    /*        $(".btn-sub-second").click(function() {
+                delid=$(this).attr('delid');
+                $('#confrim').text('提交初审将不能撤回，确定提交吗？');
+                url="{:U('Working/Index/sub_work_status')}";
+                data={'id': delid,'status':3,'bstatus':1};
+            });
+    */        //终审通过
+            $(".btn-sub-end").click(function() {
+                delid=$(this).attr('delid');
+                $('#confrim').text('提交终审将不能撤回，确定提交吗？');
+                url="{:U('Working/Index/sub_work_status')}";
+                data={'id': delid,'status':3,'bstatus':3};
+            });
+            //初审退回
+            $(".btn-back-second").click(function() {
+                delid=$(this).attr('delid');
+                $('#confrim').html('<textarea name="back" placeholder="请填写退回意见" class="form-control"></textarea>');
+                url="{:U('Working/Index/sub_work_status')}";
+                data = {'id': delid, 'status': 2, 'bstatus': 2};
+            });
+            //终审退回
+            $(".btn-back-end").click(function() {
+                delid=$(this).attr('delid');
+                $('#confrim').html('<textarea name="back" placeholder="请填写退回意见"  class="form-control"></textarea>');
+                url="{:U('Working/Index/sub_work_status')}";
+                data={'id': delid,'status':3,'bstatus':2};
+            });
+        })
+
+        function save_sub(){
+            $('#frm').submit();
+        }
+        function ajax_sub(url,data) {
+            if (data.bstatus == 2) {
+                var back = $("textarea[name='back']").val();
+                data = {'id': delid, 'status': $('#status').val(), 'bstatus': 2, 'back': back};
+                if (data.back == '') {
+                    $("textarea[name='back']").css('border', '1px solid red');
+                    lock_ajax = false;
+                }else{
+                    lock_ajax = true;
+                }
+            }
+            if (lock_ajax) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: data,
+                    success: function (data) {
+                        data = $.parseJSON(data);
+                        if (data.code == 1) {
+                            $("#myModal").hide();
+                            window.location.href='{$url}';
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                })
+            }
+        }
+    </script>
+    <!-- Small modal -->
+    <div class="modal fade bs-example-modal-sm" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" style="color: #68d8ff;">提醒</h4>
+                </div>
+
+                <input type="hidden" id="return_status" />
+                <div class="modal-body" id="confrim">
+                   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" >关闭</button>
+                    <button id="sure" type="button" class="btn btn-primary"  onclick="ajax_sub(url,data)">确定</button>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</block>

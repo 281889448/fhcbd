@@ -1,0 +1,99 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                                <thead>
+                                <tr>
+                                    <th colspan="6">
+                                        文史
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        日期
+                                    </td>
+                                    <td class="col-sm-3">
+                                        <input size="16" type="text" value="{$content.time}" name="time" class="form-control" readonly="readonly" required>
+                                    </td>
+
+                                    <td>
+                                        类别
+                                    </td>
+                                    <td class="col-sm-3">
+                                        <select name="type" class="form-control input-sm" >
+                                            <volist name="tree" id="top">
+                                                <option value="{$top.id}">{$top.title}</option>
+                                            </volist>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                <td>
+                                    作者
+                                </td>
+                                <td class="col-sm-3">
+                                    <input type="text" class="form-control" name="author" value="{$content.author}"/>
+                                </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        发言或报告题目
+                                    </td>
+                                    <td colspan="5">
+                                        <input type="text" class="form-control" name="title" value="{$content.title}"/>
+                                    </td>
+                                </tr>
+
+                                </tr>
+                                <tr>
+
+                                <tr>
+                                    <td>
+                                        内容
+                                    </td>
+                                    <td colspan="5">
+                                        <textarea name="remake" id="" cols="" rows="" class="form-control span-sm">{$content.title}</textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>附件</td>
+                                    <td colspan="5">
+                                        <input type="file" name="upload" value="{$content.opload}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        采用情况<font color="red"></font>
+                                    </td>
+                                    <td colspan="5">
+                                        <div class="col-sm-6">
+                                            <if condition="$content['adopt']=='被采用'">
+                                            <label><input type="radio" name="adopt" value="被采用" checked="checked"/>被采用</label>
+                                                <else/>
+                                                <label><input type="radio" name="adopt" value="1"/>被采用</label>
+                                                </if>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <a class="btn btn-default" href="{:U('History/Index/index')}">返回</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

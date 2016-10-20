@@ -1,0 +1,393 @@
+<php>$group=get_group(get_uid());</php>
+<if condition="$uid == is_login() || $group=='政协办公室'">
+    <script type="text/javascript" src="__JS__/expandinfo-form.js"></script>
+    <form action="{:U('Config/edit_expandinfo')}" method="post" class="ajax-form">
+        <input type="hidden" name="profile_group_id" value="{$profile_group_id}">
+
+        <div>
+           
+                   
+           <!--委员信息start-->
+
+ <div class="ar_content">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div id="tableWrap">
+                            <table class="table table-bordered table-responsive table-condensed table-box" style="width: 1000px;">
+                                
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            姓名
+                                        </td>
+                                        <td>
+
+										{:W('InputRender/inputRender',array(getExtend(13,'名称',$uid),'personal'))}
+                                            <!--input class="form-control input-sm" name="realname" type="text" /-->
+                                        </td>
+                                       <td>
+                                            手机号码
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'手机号',$uid),'personal'))}
+                                        </td>
+                                        <td rowspan="4">
+                                            照片
+                                        </td>
+                                        <td rowspan="4" class="up_pic">
+
+                                          {:hook('weiyuanAvatar')}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            曾用名
+                                        </td>
+                                        <td>
+                                            {:W('InputRender/inputRender',array(getExtend(13,'曾用名',$uid),'personal'))}
+                                        </td>
+                                     <td>
+                                            婚姻
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'婚否',$uid),'personal'))}
+                                        </td>
+                                        
+                                        
+                                       
+                                    </tr>
+                                    <tr>
+                                       <td>
+                                            电子邮箱
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'email',$uid),'personal'))}
+                                        </td>
+                                          <td>
+                                            邮编
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'邮政编码',$uid),'personal'))}
+                                        </td>
+                                    </tr>
+                                     <tr>
+                                          <td>
+                                            职称
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'职称',$uid),'personal'))}
+                                        </td>
+                                         <td>
+                                            现任职务
+                                        </td>
+                                        <td >
+                                             {:W('InputRender/inputRender',array(getExtend(13,'现任职称',$uid),'personal'))}
+                                        </td>
+                                     </tr>
+                                   <tr>
+                                        <td>
+                                            工作单位
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'工作单位',$uid),'personal'))}
+                                        </td>
+                                        <td>
+                                            单位地址
+                                        </td>
+                                        <td colspan="3">
+                                             {:W('InputRender/inputRender',array(getExtend(13,'单位地址',$uid),'personal'))}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            家庭电话
+                                        </td>
+                                        <td>
+                                           {:W('InputRender/inputRender',array(getExtend(13,'家庭电话',$uid),'personal'))}
+                                        </td>
+                                        <td >
+                                           家庭住址
+                                        </td>
+                                        <td colspan="3">
+                                             {:W('InputRender/inputRender',array(getExtend(13,'家庭地址',$uid),'personal'))}
+                                        </td>
+                                       
+                                    </tr>
+                                   
+                                    <tr>
+                                        <td>
+                                            办公电话
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'办公电话',$uid),'personal'))}
+                                        </td>
+                                         <td>
+                                            QQ号码
+                                        </td>
+                                        <td>
+                                           {:W('InputRender/inputRender',array(getExtend(13,'qq',$uid),'personal'))}
+                                        </td>
+                                        <td >
+                                           是否港澳台关系及联系
+                                        </td>
+                                        <td >
+                                           {:W('InputRender/inputRender',array(getExtend(13,'是否华侨',$uid),'personal'))}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            兴趣爱好及特长
+                                        </td>
+                                        <td colspan="5">
+                                             {:W('InputRender/inputRender',array(getExtend(13,'兴趣爱好',$uid),'personal'))}
+                                        </td>
+                                    </tr>
+                                     <tr>
+                                        <td>
+                                            简历附件
+                                        </td>
+                                        <td colspan="5">
+                                          {:W('InputRender/inputRender',array(getExtend(13,'简历',$uid),'personal'))}
+                                        </td>
+                                         
+                                       
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            出生日期
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'生日',$uid),'personal'))}
+                                        </td>
+                                        <td>
+                                            性别
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'性别',$uid),'personal'))}
+                                        </td>
+                                        <td>
+                                            身份证号
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'身份证号',$uid),'personal'))}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            民族
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'民族',$uid),'personal'))}
+                                        </td>
+                                        <td>
+                                            籍贯
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'籍贯',$uid),'personal'))}
+                                        </td>
+                                        <td>
+                                            参加工作时间
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'入职时间',$uid),'personal'))}
+                                        </td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            文化程度
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'文化程度',$uid),'personal'))}
+                                        </td>
+                                         <td>
+                                            社会阶级
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'社会身份',$uid),'personal'))}
+                                        </td>
+                                        
+                                        <td>
+                                            属地
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'属地',$uid),'personal'))}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            政治面貌
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'政治面貌',$uid),'personal'))}
+                                        </td>
+                                        <td>
+                                            党派职务
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'党派职务',$uid),'personal'))}
+                                        </td>
+                                         <td>
+                                            宗教
+                                        </td>
+                                        <td>
+                                            {:W('InputRender/inputRender',array(getExtend(13,'宗教',$uid),'personal'))}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            加入党派日期
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'入党时间',$uid),'personal'))}
+                                        </td>
+                                        <td>
+                                            加入政协日期
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'加入政协日期',$uid),'personal'))}
+                                        </td>
+                                        <td>
+                                            退出政协日期
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'退出政协日期',$uid),'personal'))}
+                                        </td>
+                                        
+                                    </tr>
+                                    
+                                    <tr>
+                                       
+                                        <td>
+                                            委员状态
+                                        </td>
+                                        <td>
+                                            {:W('InputRender/inputRender',array(getExtend(13,'委员状态',$uid),'personal'))}
+                                        </td>
+                                       <td>
+                                            界别
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'界别',$uid),'personal'))}
+                                        </td>
+                                        <td >
+                                           推荐单位
+                                        </td>
+                                        <td >
+                                             {:W('InputRender/inputRender',array(getExtend(13,'推荐单位',$uid),'personal'))}
+                                        </td>
+                                    </tr>
+                                    
+                                   
+
+                                     <tr>
+                                        <td>
+                                            专委会
+                                        </td>
+                                        <td>
+                                             {:W('InputRender/inputRender',array(getExtend(13,'专委会',$uid),'personal'))}
+                                        </td>
+                                         <td>专委会组</td><td>{:W('InputRender/inputRender',array(getExtend(13,'专委会组',$uid),'personal'))}</td>
+                                        <td>
+                                            街道联络委
+                                        </td>
+                                        <td >
+                                            {:W('InputRender/inputRender',array(getExtend(13,'街道联络委',$uid),'personal'))}
+                                        </td>
+                                         
+                                        
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            是否省委员
+                                        </td>
+                                        <td>
+                                            {:W('InputRender/inputRender',array(getExtend(13,'是否省委员',$uid),'personal'))}
+                                        </td>
+                                        <td>
+                                            是否区委员
+                                        </td>
+                                        <td >
+                                            {:W('InputRender/inputRender',array(getExtend(13,'是否区委员',$uid),'personal'))}
+                                        </td>
+                                      <td>
+                                        	是否常委
+                                        </td>
+                                        <td>
+                                        	 {:W('InputRender/inputRender',array(getExtend(13,'是否常委',$uid),'personal'))}
+                                        </td>
+                                    </tr>
+
+                                   
+                                    <tr>
+                                    <td>届别</td>
+                                        <td>{:W('InputRender/inputRender',array(getExtend(13,'届别',$uid),'personal'))}</td>
+                                        <td>调整、变动时间</td>
+                                        <td> {:W('InputRender/inputRender',array(getExtend(13,'调整变动时间',$uid),'personal'))}</td>
+                                        <td>调整、变动原因</td>
+                                        <td>{:W('InputRender/inputRender',array(getExtend(13,'调整变动原因',$uid),'personal'))}</td>
+                                    </tr>
+                                   
+                                    <tr>
+                                        <td>
+                                            其他
+                                        </td>
+                                        <td colspan="5">
+                                             {:W('InputRender/inputRender',array(getExtend(13,'备注',$uid),'personal'))}
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                     
+                                        
+                                       
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                          <if condition="$info_list neq null && $review!=1">
+
+                            <input type="submit" value="保存" id="submit_btn"
+                                   class="btn btn-primary expandinfo-sumbit">
+
+                            <else/>
+                            <span class="expandinfo-noticeinfo"></span>
+                          </if>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		 <!--委员信息end-->  
+        </div>
+
+    </form>
+    <else/>
+    <div>
+        <volist name="info_list" id="vll">
+            <dl>
+                {:W('InputRender/inputRender',array($vll,'other'))}
+            </dl>
+        </volist>
+        <if condition="$info_list eq null">
+            <span class="expandinfo-noticeinfo">该扩展信息分组没有信息！</span>
+        </if>
+    </div>
+</if>

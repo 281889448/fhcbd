@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+	<include file="cssjs"/>
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>查看办理情况</h1>
+        <!--<button class="ui-btn">回首页</button>-->
+    </header>
+     
+    <section class="ui-container">
+        
+        <div class="searchlistwrap">
+        	
+        	<ul class="searchlist">
+        	<li>
+        		<p class="clear"><span class="fl">办理日期： {:W('InputRender/InputRender',array('modelid'=>6,'name'=>'end_time','id'=>$result['id'],1))}</span> </p>
+        	</li>
+				<li>
+					<p class="clear"><span class="fl"> 文号：{:W('InputRender/InputRender',array('modelid'=>6,'name'=>'wenhao','id'=>$result['id'],1))}</span></p>
+				</li>
+        	<li>
+        		<p>案号：{:W('InputRender/InputRender',array('modelid'=>4,'name'=>'code','id'=>$result['proposal_id'],1))}</p>
+        	</li>
+        	<li>
+        		<p>案由：{:W('InputRender/InputRender',array('modelid'=>4,'name'=>'title','id'=>$result['proposal_id'],1))}</p>
+        	</li>
+        	<li>
+        		<p>内容：{:W('InputRender/InputRender',array('modelid'=>4,'name'=>'content','id'=>$result['proposal_id'],1))}</p>
+        	</li>
+        	<li>
+        		<p>办理单位: {:W('InputRender/InputRender',array('modelid'=>6,'name'=>'unit','id'=>$result['id'],1))}</p>
+        	</li>
+        	<li>
+        		<p class="clear"><span class="fl">分管负责人：{:W('InputRender/InputRender',array('modelid'=>6,'name'=>'leader','id'=>$result['id'],1))}</span> <span class="fr">电话：{:W('InputRender/InputRender',array('modelid'=>6,'name'=>'leaderphone','id'=>$result['id'],1))}</span></p>
+        	</li>
+        	<li>
+        		<p class="clear"><span class="fl">经  办  人：{:W('InputRender/InputRender',array('modelid'=>6,'name'=>'contact','id'=>$result['id'],1))}</span> <span class="fr">电话：{:W('InputRender/InputRender',array('modelid'=>6,'name'=>'telephone','id'=>$result['id'],1))}</span></p>
+        	</li>
+        	<li>
+        		<p>办理理由：{:W('InputRender/InputRender',array('modelid'=>6,'name'=>'suggest','id'=>$result['id'],1))}</p>
+        	</li>
+        	<li class="clear">
+        		<p style="width: 80px" class="fl"> 提案附件:  </p>
+				<div style="width: 200px" class="fl">
+				{:W('InputRender/InputRender',array('modelid'=>4,'name'=>'fujian','id'=>$result['proposal_id'],1))}
+				</div>
+        	</li>
+        	<li class="clear">
+        		<p style="width: 80px;line-height: 40px;" class="fl">沟通形式：</p>
+				<div class="fl" style="width:200px;">
+					{:W('InputRender/InputRender',array('modelid'=>6,'name'=>'link_type','id'=>$result['id'],1))}
+				</div>
+        	</li>
+        	<li>
+        		<p>沟通时间：{:W('InputRender/InputRender',array('modelid'=>6,'name'=>'link_time','id'=>$result['id'],1))}</p>
+        	</li>
+        	<li>
+        		<p>评定意见： {:W('InputRender/InputRender',array('modelid'=>6,'name'=>'comment','id'=>$result['id'],1))}</p>
+        	</li>
+        	<li>
+        		<p> 征询意见表附件 {:W('InputRender/InputRender',array('modelid'=>6,'name'=>'fujian','id'=>$result['id'],1))} </p>
+        	</li>
+        	
+        </ul>
+        	
+        </div>
+        
+        
+    </section>
+ 
+    
+    
+</body>
+
+</html>

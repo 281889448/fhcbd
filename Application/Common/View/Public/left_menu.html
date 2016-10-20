@@ -1,0 +1,225 @@
+<div style="position: relative;width: 250px;" id="ar_sidebar_box">
+    		<div id="sider_btn" style="height: 100px;width: 20px;background: #999;color: #fff;position: absolute;top: 100px;right: -20px;z-index: 99999;line-height: 50px;text-align: center;border-bottom-right-radius: 5px;border-top-right-radius: 5px;">隐藏</div>
+
+<div class="ar_sidebar">
+           <div class="sideMenu" style="margin:0 auto">
+                <h3 <if condition="$module == 'Usercenter'">class="on"</if>><em></em>个人中心</h3>
+
+                <ul>
+                    <li class="active"><a href="{:U('Usercenter/Config/index')}">修改个人资料</a></li>
+                    <li><a href="{:U('Home/User/profile')}">修改登录密码</a></li>
+                </ul>
+                <php>$module = $Think.MODULE_NAME;
+	                  $controller = $Think.CONTROLLER_NAME;
+                    $action = $Think.ACTION_NAME
+                </php>
+
+                <h3 <if condition="$current == 'proposal'">class="on"</if>><em></em>提案管理</h3>
+                <ul>
+				<!--政府督查室1 委员5 集体6 提案委7-->
+				<php>$group = get_group(get_uid());</php>
+				<switch name="group">
+					 <case value="委员|集体">
+						 <li><a href="{:U('Proposal/Index/index',array('status'=>'1'))}">委员提案及办理</a></li>
+
+
+					  </case>
+
+					   <case value="提案委">
+					   <li><a href="{:U('Proposal/Index/index',array('status'=>'2'))}">待审核列表</a></li>
+						   <li><a href="{:U('Proposal/Index/index',array('status'=>'3,4,5,6,7,10'))}">已审核列表</a></li>
+						  <li><a href="{:U('Proposal/Index/index',array('status'=>'8'))}">已立案列表</a></li>
+
+						   <li><a href="{:U('Proposal/Index/index',array('status'=>'17'))}">办理已反馈列表</a></li>
+						   <li><a href="{:U('Proposal/Index/index',array('status'=>'9'))}">已结案的提案</a></li>
+					   </case>
+
+					<case value="政府督查室">
+
+						<li><a href="{:U('Proposal/Index/index',array('status'=>'18'))}">待交办列表</a></li>
+						<li><a href="{:U('Proposal/Index/index',array('status'=>'19'))}">已交办列表</a></li>
+						<li><a href="{:U('Proposal/Index/index',array('status'=>'193'))}">申请移交办理</a></li>
+						<li><a href="{:U('Proposal/Index/index',array('status'=>'13'))}">已办理列表</a></li>
+						<li><a href="{:U('Proposal/Index/index',array('status'=>'17'))}">办理已反馈列表</a></li>
+						<li><a href="{:U('Proposal/Index/index',array('status'=>'9'))}">已结案的提案</a></li>
+
+
+
+					</case>
+
+            <case value="办理单位">
+					   <li><a href="{:U('Proposal/Index/result',array('status'=>'19'))}">待办理列表</a></li>
+                        	<li><a href="{:U('Proposal/Index/result',array('status'=>'13'))}">已办理列表</a></li>
+                        	<li><a href="{:U('Proposal/Index/result',array('status'=>'14'))}">已退回列表</a></li>
+					   </case>
+
+
+
+
+
+                   </switch>
+
+                </ul>
+	           <h3 <if condition="$module == 'Meet'">class="on"</if>>会议管理</h3>
+	           <ul>
+		            <li><a href="{:U('Meet/Index/index')}">会议列表</a></li>
+				   <php>$show_meet=get_user_type('meet',get_uid());</php>
+				  	<if condition="$show_meet">
+				    <li><a href="{:U('Meet/Index/leave')}">会议请假列表</a></li>
+				   </if>
+
+	           </ul>
+	           <h3 <if condition="$module == 'Event'">class="on"</if>>活动管理</h3>
+	           <ul>
+		           <li><a href="{:U('Event/Index/index')}">活动列表</a></li>
+				   <php>$show_event=get_user_type('event',get_uid());</php>
+				   <if condition="$show_event">
+				   <li><a href="{:U('Event/Index/leave')}">活动请假列表</a></li>
+				   </if>
+	           </ul>
+	           <h3 <if condition="$module == 'Polls'">class="on"</if>><em></em>社情民意</h3>
+	           <ul>
+				   <switch name="group">
+					   <case value="委员|集体">
+
+						   <li><a href="{:U('Polls/Index/index',array('status'=>1))}">未提交列表</a></li>
+						   <li><a href="{:U('Polls/Index/index',array('status'=>4))}">初审退回列表</a></li>
+						   <li><a href="{:U('Polls/Index/index',array('status'=>'2,6'))}">已提交列表</a></li>
+
+					   </case>
+					   <case value="政协办公室">
+						   <li><a href="{:U('Polls/Index/index',array('status'=>2))}">初审列表</a></li>
+						   <li><a href="{:U('Polls/Index/index',array('status'=>3))}">初审通过列表</a></li>
+						   <li><a href="{:U('Polls/Index/index',array('status'=>5))}">终审退回列表</a></li>
+					   </case>
+					   <case value="办公室主任">
+						   <li><a href="{:U('Polls/Index/index',array('status'=>3))}">终审列表</a></li>
+						   <li><a href="{:U('Polls/Index/index',array('status'=>6))}">终审通过列表</a></li>
+					   </case>
+				   </switch>
+	           </ul>
+	           <h3 <if condition="$module == 'Historical'">class="on"</if>><em></em>文史资料</h3>
+	           <ul>
+		           <li><a href="{:U('historical/Index/index')}">文史资料列表</a></li>
+
+	           </ul>
+	           <h3 <if condition="$module == 'Survey'">class="on"</if>><em></em>调研报告</h3>
+	           <ul>
+		           <li><a href="{:U('Survey/Index/index')}">调研报告列表</a></li>
+
+	           </ul>
+	           <h3 <if condition="$module == 'Message'">class="on"</if>><em></em>公示公告</h3>
+	           <ul>
+		           <li><a href="{:U('Message/Index/index')}">公示公告列表</a></li>
+
+	           </ul>
+	           <in name="group" value="委员,集体,政协办公室,办公室主任">
+	           <h3 <if condition="$module == 'Working'">class="on"</if>><em></em>工作动态</h3>
+	           </in>
+			   <ul>
+				   <switch name="group">
+					   <case value="委员|集体">
+
+						   <li><a href="{:U('Working/Index/index',array('status'=>1))}">未提交列表</a></li>
+						   <li><a href="{:U('Working/Index/index',array('status'=>4))}">初审退回列表</a></li>
+						   <li><a href="{:U('Working/Index/index',array('status'=>'2,6'))}">已提交列表</a></li>
+
+					   </case>
+					   <case value="政协办公室">
+						   <li><a href="{:U('Working/Index/index',array('status'=>2))}">初审列表</a></li>
+						   <li><a href="{:U('Working/Index/index',array('status'=>3))}">初审通过列表</a></li>
+						   <li><a href="{:U('Working/Index/index',array('status'=>5))}">终审退回列表</a></li>
+					   </case>
+					   <case value="办公室主任">
+						   <li><a href="{:U('Working/Index/index',array('status'=>3))}">终审列表</a></li>
+						   <li><a href="{:U('Working/Index/index',array('status'=>6))}">终审通过列表</a></li>
+					   </case>
+				   </switch>
+			   </ul>
+
+	           <php>
+		           $group = get_group(get_uid());
+		           if($group=='委员'){
+		           $mu = D('User/User');
+
+		           $mu->setModel(WEIYUAN);
+		           $user = $mu->getUser(get_uid());
+
+		           $roler = $user['主任'];
+
+		           $jdllw_str = D('FieldSetting')->where(array('profile_group_id'=>13,'field_name'=>'街道联络委'))->getField('form_default_value');
+		           $jdllw_arr = explode('|',$jdllw_str);
+
+		           $zwh_str = D('FieldSetting')->where(array('profile_group_id'=>13,'field_name'=>'专委会'))->getField('form_default_value');
+		           $zwh_arr = explode('|',$zwh_str);
+		           if(in_array($roler,$zwh_arr)){
+		           $search_flag = 2;
+		           }elseif(in_array($roler,$jdllw_arr)){
+		           $search_flag = 3;
+		           }
+
+		           }elseif($group=='政协办公室'){
+		           $search_flag = 1;
+		           }
+
+		           </php>
+                <h3 <if condition="$current=='statistics'">class="on"</if>><em></em>统计分析</h3>
+                <ul>
+	                <li><a href="{:U('Usercenter/Index/search')}">委员统计</a></li>
+                    <li><a href="{:U('Home/Statistics/index')}">提案统计</a></li>
+                    <li><a href="<if condition="$group=='委员'">{:U('Home/Statistics/weiyuan')}<else/>{:U('Home/Statistics/weiyuans')} </if>"  >委员量化统计</a></li>
+
+
+                </ul>
+							<if condition="$search_flag != 0">
+	           <h3 <if condition="$current=='search'">class="on"</if> ><em></em>统计查询</h3>
+							</if>
+	           <ul>
+		           <switch name="search_flag">
+			           <case value="1"><li><a href="{:U('Home/Search/index')}">提案查询</a></li></case>
+			           <case value="2"><li><a href="{:U('Home/Search/index')}">提案查询(按专委会)</a></li></case>
+			           <case value="3"><li><a href="{:U('Home/Search/index')}">提案查询(按街道联络委)</a></li></case>
+
+
+		           </switch>
+
+
+	           </ul>
+
+			   <in name="group" value="政协办公室">
+
+				   <h3 <if condition="$current=='user'">class="on"</if> ><em></em>委员管理</h3>
+				   </if>
+				   <ul>
+
+						   <li><a href="{:U('UserCenter/User/index')}">委员列表</a></li>
+						   <li><a href="{:U('UserCenter/User/review')}">委员审核</a></li>
+
+
+
+
+				   </ul>
+
+			   </in>
+
+			   <h3><em></em><a href="{:U('Home/Index/help')}">帮助中心</a></h3>
+
+
+            </div>
+            <!-- sideMenu End -->
+        </div>
+        <script type="text/javascript">
+        jQuery(".sideMenu").slide({
+            titCell: "h3", //鼠标触发对象
+            targetCell: "ul", //与titCell一一对应，第n个titCell控制第n个targetCell的显示隐藏
+            effect: "slideDown", //targetCell下拉效果
+            delayTime: 300, //效果时间
+            triggerTime: 150, //鼠标延迟触发时间（默认150）
+            defaultPlay: true, //默认是否执行效果（默认true）
+            returnDefault: false, //鼠标从.sideMen移走后返回默认状态（默认false）
+            trigger: "click"
+
+        });
+
+        </script>
+		</div>

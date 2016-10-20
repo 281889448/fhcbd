@@ -1,0 +1,302 @@
+<extend name="Base/common"/>
+
+
+
+<block name="body">
+
+
+  <div class="ar_content">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="tableWrap" >
+
+         <eq name="status" value="8">
+            <div class="btn btn-default" ><button class="btn btn-primary btn-sm" onClick="document.proposallist.status.value='11';document.proposallist.action='{:U('Proposal/Index/changeStatus11')}';document.proposallist.submit();">批量移交</button></div>
+         </eq>
+
+
+
+            <eq name="status" value="18">
+              <div class="btn btn-default" ><button class="btn btn-primary btn-sm" onClick="document.proposallist.status.value='19';document.proposallist.action='{:U('Proposal/Index/batchHandover')}';document.proposallist.submit();">批量交办</button></div>
+            </eq>
+            <form name="search_proposal" method="post">
+
+
+
+              <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:15px">
+
+                <tr>
+                  <td> {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet_type'))}</td>
+                  <td> {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'jiebie'))}</td>
+                  <td>
+                     <select name="type_id" class="form-control input-sm">
+                                                <option disabled="" selected="" hidden="">--请选择提案类型--</option>
+                                                <volist name="tree" id="top">
+                        <option value="{$top.id}" >
+                        {$top.title}
+                        </option>
+                        </volist>
+                                            </select></td>
+                  <td>
+
+                    {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'author'))}</td>
+
+
+                  <td>
+
+                    {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title'))}
+                  </td>
+                  <td> <button class="btn btn-default input-sm" onClick="document.search_proposal.action='{:U('result',array('status'=>$status))}';document.search_proposal.submit();">搜索</button></td>
+                </tr>
+              </table>
+
+          </form>
+
+            <div class="alert alert-info" style="margin-bottom:0">{$status_config[$status]}的列表</div>
+            <form name="proposallist" method="post">
+              <input type="hidden" name="status">
+            <table class="table table-bordered table-responsive table-condensed" >
+
+              <tbody>
+              <tr class="textc">
+                <td>
+                  <label ><input type="checkbox" name=""  id="checkAll" value=""/>全选</label>
+                </td>
+                <td>
+                  正式案号
+                </td>
+
+                <td>
+                  提案类型
+                </td>
+                <td >
+                  案由
+                </td>
+                <td>
+                  界别组
+                </td>
+
+                <td>
+                  提案人
+                </td>
+                <td>
+                  联系方式
+                </td>
+                <td>
+                  是否联名
+                </td><td>
+                是否并案
+              </td>
+
+                <td>
+                  状态
+                </td>
+                <td>
+                  操作
+                </td>
+              </tr>
+
+              <volist name="contents" id="c">
+                <tr>
+                  <td class="checkboxbtn text-center">
+                    <input type="checkbox" name="ids[]" id="" value="{$c.result_id}" onchange="chtrue($(this))"/>
+                  </td>
+                  <td>
+                    {$c.code}
+                  </td>
+                  <td>
+                    {$c.type.title}
+                  </td>
+                  <td>
+                    <a href="{:U('Proposal/index/detail',array('id'=>$c[proposal_id]))}" class="text_derection">{$c.proposal_title}</a>
+                  </td>
+                  <td>
+                    <a href="">{$c.jiebie}</a>
+                  </td>
+                  <td>
+                    {$c.author}
+                  </td>
+                  <td>
+                    {$c.telephone}
+                  </td>
+                  <td class="text-center">
+                    <if condition="$c[is_joint]==0">否<else/><a href="{:U('jointly',array('proposal_id'=>$c[proposal_id]))}" class="text_derection">是</a></if>
+
+                  </td>
+                  <td  class="text-center">
+                    <if condition="$c['is_merge'] == 1 || $c['is_merge'] == 2"><a href="{:U('mergeList',array('proposal_id'=>$c[proposal_id]))} " class="text_derection">是</a><else/>否</if>
+
+
+                  </td>
+
+                  <td><if condition="$c[rstatus]==1">待接收<elseif  condition="$c[rstatus]==2"/>已填办<elseif  condition="$c[rstatus]==3"/>移交办理申请中<elseif  condition="$c[rstatus]==5"/>退回重办<elseif  condition="$c[rstatus]==6"/>待办理</if></td>
+
+                  <td style="width:200px">
+                    <a href="{:U('Proposal/index/detail_result',array('result_id'=>$c[result_id]))}" class="btn btn-primary btn-sm">详情</a>
+                    <in name="status" value="13">
+
+                      <a href="{:U('Proposal/Result/handCheck',array('proposal_id'=>$c[proposal_id]))}"  class="btn btn-primary btn-sm">查办</a>
+                    </in>
+                    <php>$group = get_group(get_uid());</php>
+                    <in name="status" value="19,14">
+
+                    <if condition="$group=='办理单位'">
+
+                      <if condition="$c[rstatus] == 1">
+                        <a   data-toggle="modal" data-target="#myModal6"   class="btn btn-primary btn-sm" onClick="document.proposalresult_6.id.value={$c[result_id]}">签收</a>
+
+
+                        <if condition="$c['backflag'] == 1">
+                          <a  class="btn btn-primary btn-sm denyback" data-toggle="modal" data-target="#myModal"  data="{$c[result_id]}">退回意见</a>
+                        </if>
+
+                        <elseif condition="$c[rstatus] == 6 || $c[rstatus] == 5"/>
+                        <a href="{:U('Proposal/Result/handReply',array('result_id'=>$c[result_id]))}" class="btn btn-primary btn-sm">答复</a>
+
+
+                      </if>
+
+
+
+                    </if>
+                    </in>
+                    <in name="status" value="14">
+                    <a  class="btn btn-primary btn-sm back" data-toggle="modal" data-target="#myModal"  data="{$c[result_id]}">退回意见</a>
+                    </in>
+                  </td>
+                </tr>
+              </volist>
+              </tbody>
+            </table>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Small modal -->
+  <div class="modal fade bs-example-modal-sm" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" style="color: #68d8ff;">理由！</h4>
+        </div>
+        <form name="return1" action="" method="post">
+          <input type="hidden" name="ids"  value="{$content.id}">
+          <div class="modal-body">
+            <textarea name="suggest" rows="3" cols="3" class="form-control" readonly></textarea>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </form>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+  <!-- Small modal -->
+  <div class="modal fade bs-example-modal-sm" id="myModal6">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" style="color: #68d8ff;">请填写签收信息！</h4>
+        </div>
+        <form name="proposalresult_6" action="{:U('Proposal/Result/acceptHand')}" method="post">
+          <input type="hidden" name="id">
+          <input type="text" name="leader" placeholder="分管负责人" class="form-control input-sm"  style="margin: 5px auto;width: 500px" />
+          <input type="text" name="leaderphone" placeholder="分管负责人电话" class="form-control input-sm"   style="margin: 5px auto;width: 500px"/>
+          <input type="text" name="contact" placeholder="经办人" class="form-control input-sm"  style="margin: 5px auto;width: 500px" />
+          <input type="text" name="telephone" placeholder="经办人电话" class="form-control input-sm"   style="margin: 5px auto;width: 500px"/>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" onclick="document.proposalresult_6.submit();" >提交</button>
+          </div>
+        </form>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+
+  <script>
+    $(function(){
+      $(".back").click(function() {
+        var self = $(this);
+
+        jQuery.ajax({
+          type: "POST", // HTTP method POST or GET
+          url: "{:U('Proposal/Index/get_back_ajax')}", //Where to make Ajax calls
+          dataType:"json", // Data type, HTML, json etc.
+          data:{'result_id':self.attr('data')}, //Form variables
+          success:function(response){
+            if(response.status != 0){
+
+                $('#myModal').find('textarea').val(response.data.suggest);
+
+
+            }else{
+              $('#myModal').find('textarea').val('无反馈意见');
+            }
+          },
+          error:function (xhr, ajaxOptions, thrownError){
+            alert(thrownError);
+          }
+        });
+
+
+
+
+
+      }),
+              $(".denyback").click(function() {
+                var self = $(this);
+
+                jQuery.ajax({
+                  type: "POST", // HTTP method POST or GET
+                  url: "{:U('Proposal/Index/get_denyback_ajax')}", //Where to make Ajax calls
+                  dataType:"json", // Data type, HTML, json etc.
+                  data:{'result_id':self.attr('data')}, //Form variables
+                  success:function(response){
+                    if(response.status != 0){
+
+                      $('#myModal').find('textarea').val(response.data.suggest);
+
+
+                    }else{
+                      $('#myModal').find('textarea').val('无反馈意见');
+                    }
+                  },
+                  error:function (xhr, ajaxOptions, thrownError){
+                    alert(thrownError);
+                  }
+                });
+
+
+
+
+
+              })
+    })
+
+  </script>
+</block>
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,94 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form name="frme" method="post" action="">
+                            <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                                <thead>
+                                <tr>
+                                    <th colspan="6">
+                                        文史
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        日期
+                                    </td>
+                                    <td class="col-sm-3">
+                                        <input class="form-control input-sm" type="text" name="time" value="{$fou.time}"/>
+                                    </td>
+                                    <td>
+                                        作者
+                                    </td>
+                                    <td class="col-sm-3">
+                                        <input type="text" class="form-control" name="uid" value="{$fou.uid}"/>
+                                    </td>
+                                    <td>
+                                        类别
+                                    </td>
+                                    <td class="col-sm-3">
+                                        <select name="type" class="form-control" value="{$fou.time}">
+                                            <option value="新闻报告">新闻报告</option>
+                                            <option value="奥运会">奥运会</option>
+                                            <option value="明星绯闻">明星绯闻</option>
+                                            <option value="宋吉吉">宋吉吉</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        发言或报告题目
+                                    </td>
+                                    <td colspan="5">
+                                        <input type="text" class="form-control" name="title" value="{$fou.title}"/>
+                                    </td>
+                                </tr>
+
+                                </tr>
+                                <tr>
+
+                                <tr>
+                                    <td>
+                                        备注
+                                    </td>
+                                    <td colspan="5">
+                                        <textarea name="remake" rows="" cols="" class="form-control">{$fou.remake}</textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>附件</td>
+                                    <td colspan="5">
+                                        <input type="file" name="upload" value="{$tw.uopload}"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        采用情况<font color="red"></font>
+                                    </td>
+                                    <td colspan="5">
+                                        <label><input type="radio" name="adopt" value="0" checked />被采用</label>
+                                        <label><input type="radio" name="adopt" value="1"/>退回</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <a class="btn btn-default" href="{:U('History/Index/index')}">返回</a>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+    <include file="cssjs"/>
+   
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>添加社情民意</h1>
+       
+    </header>
+     
+    <section class="ui-container">
+
+<form action="{:U('Wap/Polls/doPost')}" method="post">
+    <input type="hidden" name="status" value="2">
+<div class="search-box">
+    <input type="text" name="time" id="USER_AGE" value="{$Think.NOW_TIME|date='Y-m-d',###}" readonly class="input" placeholder="开始时间"  />
+    <select name="type_id" >
+        <option value="">--请选择--</option>
+        <volist name="tree" id="top">
+            <option value="{$top.id}">
+                {$top.title}
+            </option>
+        </volist>
+    </select>
+        	<div class="add_btn" id="J_author">选择参与人员</div>
+</div>
+        	
+        <h4 class="tit">参与人员列表</h4>
+        <div class="textwrap">
+        	<textarea name="author" rows="3" cols="" id="text-author" readonly></textarea>
+            <input type="hidden" name="author_id" id="s_id"/>
+        </div>
+        
+     <div class="content">
+         <input type="text" name="title" placeholder="标题" />
+
+         <textarea name="content" rows="10" cols="" placeholder="内容"></textarea>
+         {:W('InputRender/InputRender',array('modelid'=>7,'name'=>'upload'))}
+       <button class="self_btn_h ui-btn-primary">提交</button>
+     </div>
+
+</form>
+        
+    </section>
+ 
+ <div class="ui-dialog">
+    <div class="ui-dialog-cnt">
+      <header class="ui-dialog-hd ui-border-b">
+                  <h3>搜索参与人员</h3>
+                  <i class="ui-dialog-close" data-role="button"></i>
+              </header>
+        <div class="ui-dialog-bd">
+        	<div class="s_bar">
+        		<span class="c777">参与人员：</span>
+        		<div class="textarea clear">
+        			
+        		</div>
+        	</div>
+        	<div class="s_bar">
+        		<input type="text" name="author"  id="author"/> <button class="ui-btn" id="search">搜索</button>
+        	</div>
+
+            <div style="overflow-y:auto ;max-height:200px;">
+                <table  class="ui-table ui-border" id="searchtable" >
+
+
+
+                </table>
+            </div>
+
+        </div>
+        <div class="ui-dialog-ft">
+            <button type="button" data-role="button" id="dis">取消</button>
+            <button type="button" data-role="button" id="yes">确定</button>
+        </div>
+    </div>        
+</div>
+
+    
+    
+    
+    
+    
+    
+    
+    
+
+<script src="__PUBLIC__/Wap/js/mobiscroll_date.js" charset="gb2312"></script>
+<script src="__PUBLIC__/Wap/js/mobiscroll.js"></script>
+<script type="text/javascript">
+$(function () {
+	var currYear = (new Date()).getFullYear();	
+	var opt={};
+	opt.date = {preset : 'date'};
+	opt.datetime = {preset : 'datetime'};
+	opt.time = {preset : 'time'};
+	opt.default = {
+		theme: 'android-ics light', //皮肤样式
+		display: 'modal', //显示方式 
+		mode: 'scroller', //日期选择模式
+		dateFormat: 'yyyy-mm-dd',
+		lang: 'zh',
+		showNow: true,
+		nowText: "今天",
+		startYear: currYear - 50, //开始年份
+		endYear: currYear + 10 //结束年份
+	};
+
+	$("#USER_AGE").mobiscroll($.extend(opt['date'], opt['default']));
+	$("#USER_AGE2").mobiscroll($.extend(opt['date'], opt['default']));
+
+});
+</script>
+<script >
+$(function(){
+	$("#J_author").click(function(){
+		$(".ui-dialog").show();
+		
+	})
+	$("#dis").click(function(){
+		$(".ui-dialog").hide();
+	});
+	$("#yes").click(function(){
+		var arr=[];
+        var s_id = [];
+		$(".textarea").find("span").each(function(i,el){
+			arr.push($(el).text())
+            s_id.push($(el).attr('data'))
+		})
+		$("#text-author").val(arr)
+        $("#s_id").val(s_id)
+		$(".ui-dialog").hide();
+	});
+	$("#searchtable").on("click",".author_btn",function(){
+		var author = $(this).text();
+        var s_id = $(this).attr('data');
+        console.log(author)
+		$(".textarea").append("<span class='author_del' data="+s_id+">"+author+"</span>")
+	});
+	$(".textarea").on("click",".author_del",function(){
+		$(this).remove();
+	})
+    //添加
+    $("#search").on("click",function() {
+
+
+        jQuery.ajax({
+            type: "POST", // HTTP method POST or GET
+            url: "{:U('Wap/Polls/search_user_ajax')}", //Where to make Ajax calls
+            dataType:"json", // Data type, HTML, json etc.
+            data:{'author':$("#author").val()}, //Form variables
+            success:function(response){
+                $("#searchtable").html('');
+                if(response.status !=0){
+                    var trel ;
+
+                    for(var i=0;i<response.content.length;i++){
+                        trel += "<tr><td>"+response.content[i]['nickname']+"</td><td><span class='author_btn' data='"+response.content[i]['uid']+"'>"+response.content[i]['名称']+"</span></td></tr>"
+
+                    }
+                    $("#searchtable").append(trel)
+
+
+
+                }else{
+                    alert('非法访问');
+                }
+            },
+            error:function (xhr, ajaxOptions, thrownError){
+                alert(thrownError);
+            }
+        });
+
+    })
+})
+
+</script>   
+    
+
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<extend name="Base/common"/>
+
+
+
+<block name="body">
+<style>
+	.history_item .dot_now {
+		position: absolute;
+		top: -8px;
+		left: -8px;
+		height: 16px;
+		width: 16px;
+		background: #FF480E;
+		border-radius: 50% ;
+	}
+
+</style>
+
+	<div class="ar_content">
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span12">
+					<div id="tableWrap">
+					<volist name="process" id="r">
+						<div class="history_item">
+							<if condition="$key==0"><span class="dot_now"></span><else/><span class="dot"></span></if>
+							
+							<div class="info">
+								<p>时间：<b>{$r.create_time|date='Y-m-d H:i:s',###}</b></p>
+
+								<table class="table table-bordered">
+									<tr><td class="text-center">属性</td><td  class="text-center">修改前</td><td  class="text-center">修改后</td></tr>
+									<volist name="r.compare" id="p">
+									<tr><td>{$p.property}</td><td>{$p.new}</td><td>{$p.old}</td></tr>
+									</volist>
+								</table>
+							</div>
+						</div>
+					</volist>
+
+
+					</div>
+				</div>
+			</div>
+			<div>
+				<a  href="{$back_url}" class="btn btn-default">返回</a>
+				</div>
+		</div>
+	</div>
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,204 @@
+<extend name="Base/common"/>
+<block name="body">
+
+	<div class="ar_content">
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span12">
+					<div id="tableWrap" class="clearfix">
+						<style type="text/css">
+							#one {
+								width: 200px;
+								height: 180px;
+								float: left
+							}
+
+							#two {
+								width: 50px;
+								height: 180px;
+								float: left
+							}
+
+							#three {
+								width: 200px;
+								height: 180px;
+								float: left
+							}
+
+							.btn {
+								width: 50px;
+								height: 30px;
+								margin-top: 10px;
+								cursor: pointer;
+							}
+						</style>
+						<h4 style="padding:5px;border-bottom:1px solid #ddd;margin-bottom:15px" class="col-sm-12">委员统计</h4>
+						<table width="500" align="center" border="0" cellpadding="0" cellspacing="0" class="newContTab">
+							<tr>
+								<th>&nbsp;</th>
+								<td>
+									<div>
+										<div>
+											<select multiple="multiple" id="select1"
+											        style="width:150px;height:200px; float:left; border:1px #A0A0A4 outset; padding:4px; ">
+												<option value="zwh">专委会</option>
+												<option value="zwhz">专委会组</option>
+												<option value="jdllw">街道联络委</option>
+												<option value="jiebie">界别小组</option>
+												<option value="wenhua">文化程度</option>
+												<option value="zhicheng">职称</option>
+												<option value="jieji">社会阶级</option>
+												<option value="dpzhiwu">党派职务</option>
+												<option value="froms">属地</option>
+												<option value="xrzhiwu">现任职务</option>
+												<option value="shenwy">省委员</option>
+												<option value="shiwy">市委员</option>
+												<option value="quwy">区委员</option>
+												<option value="cw">常委</option>
+												<option value="status1">委员状态</option>
+												<option value="mizu">民族</option>
+												<option value="sex">性别</option>
+											</select>
+										</div>
+										<div style="float:left"> <span id="add">
+                                              <input type="button" class="btn" value=">"/>
+                                              </span><br/>
+											<span id="add_all">
+                                              <input type="button" class="btn" value=">>"/>
+                                              </span> <br/>
+											<span id="remove">
+                                              <input type="button" class="btn" value="<"/>
+                                              </span><br/>
+											<span id="remove_all">
+                                              <input type="button" class="btn" value="<<"/>
+                                              </span>
+										</div>
+										<div>
+											<select multiple="multiple" id="select2"
+											        style="width: 150px;height:200px; float:lfet;border:1px #A0A0A4 outset; padding:4px;">
+											</select>
+
+										</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+						<table border="0" cellspacing="" cellpadding="">
+							<tr><td  style="width: 200px;"><input size="16" type="text" value="" id="s_time"  readonly="" class="form-control laydate-icon" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" placeholder="起始时间"></td><td style="width: 200px;"><input size="16" type="text" value="" id="e_time" name="expand_41" readonly="" class="form-control laydate-icon" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" placeholder="截止时间"></td><td style="width: 200px;"><input type="text" class="form-control jiebieclass" ></td>
+								<td><a  class="btn btn-primary"  style="margin-bottom:10px;margin-left: 30px" id="stat">统计</a></td></tr>
+						</table>
+						<table class="table table-bordered" id="stat-table">
+
+						</table>
+
+						<script type="text/javascript">
+							//下拉框交换JQuery
+							$(function () {
+								//移到右边
+								$('#add').click(function () {
+									//获取选中的选项，删除并追加给对方
+									$('#select1 option:selected').appendTo('#select2');
+								});
+								//移到左边
+								$('#remove').click(function () {
+									$('#select2 option:selected').appendTo('#select1');
+								});
+								//全部移到右边
+								$('#add_all').click(function () {
+									//获取全部的选项,删除并追加给对方
+									$('#select1 option').appendTo('#select2');
+								});
+								//全部移到左边
+								$('#remove_all').click(function () {
+									$('#select2 option').appendTo('#select1');
+								});
+								//双击选项
+								$('#select1').dblclick(function () { //绑定双击事件
+									//获取全部的选项,删除并追加给对方
+									$("option:selected", this).appendTo('#select2'); //追加给对方
+								});
+								//双击选项
+								$('#select2').dblclick(function () {
+									$("option:selected", this).appendTo('#select1');
+								});
+							});
+							//点击统计创建统计表
+										$(function () {
+								//获取选择的数据
+								$("#stat").click(function () {
+									var dataArr = [];
+									var dataArr2=[];
+									$("#select2  option").each(function (i, e) {
+										dataArr.push($(e).val());
+										dataArr2.push($(e).html());
+									});
+									//console.log(dataArr)
+									//遍历数据
+									var thEle;
+									for (var i = 0; i < dataArr.length; i++) {
+										thEle += "<th>" + dataArr2[i] + "</th>";
+									}
+									thEle +="<th>统计结果</th>"
+									//添加到表
+									$("#stat-table").html('');
+									$("#stat-table").append("<tr>" + thEle + "</tr>")
+
+									var sTime=$("#s_time").val();
+									var eTime=$("#e_time").val();
+									var gaibie = $(".jiebieclass").val();
+									//var gaibie= $(".jiebieclass option:selected").val();
+									//ajax
+									jQuery.ajax({
+										type: "POST", // HTTP method POST or GET
+										url: "{:U('Usercenter/Index/search_ajax')}", //Where to make Ajax calls
+										dataType:"json", // Data type, HTML, json etc.
+										data:{'gaibie':gaibie,'stime':sTime,'etime':eTime,'param':dataArr}, //Form variables
+										success:function(response){
+											if(response.status !=0){
+
+												///dom
+												var tdEle;
+												var alltr;
+												var Data=response.content;
+												var url="/index.php/Usercenter/Index/index/";
+
+												for(var i=0;i<response.content.length;i++){
+													var param = [];
+													for(var j=0;j<dataArr.length;j++){
+														var jindex=dataArr[j];
+														tdEle += "<td>" + Data[i][jindex] + "</td>";
+														subparam = jindex +'/'+ Data[i][jindex];
+														param.push(subparam);
+
+													}
+
+													alltr += "<tr>" + tdEle + "<td><a class='text_derection' target='_blank' href="+url+param.join('/')+">"+Data[i].counts+"</a></td></tr>"
+													tdEle = '';
+												}
+												console.log(response)
+												$("#stat-table").append(alltr)
+
+
+
+											}else{
+												alert(response.content);
+											}
+										},
+										error:function (xhr, ajaxOptions, thrownError){
+											alert(thrownError);
+										}
+									});
+
+								});
+
+
+							})
+							 			</script>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</block>

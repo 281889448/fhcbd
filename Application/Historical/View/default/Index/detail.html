@@ -1,0 +1,97 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                                <thead>
+                                <tr>
+                                    <th colspan="6">
+                                        文史资料
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td style="width:120px;">
+                                        日期
+                                    </td>
+                                    <td>
+                                      {:W('Common/InputRender/InputRender',array('modelid'=>10,'name'=>'time',$content[id],1,NOW_TIME))}                                   </td>
+
+                                    <td class="text-right">
+                                        类别
+                                    </td>
+                                    <td >
+                                      <select name="type_id" class="form-control input-sm" disabled>
+                                        <option disabled="" selected="" hidden="">--请选择--</option>
+                                        <volist name="tree" id="top">
+                                          <option value="{$top.id}" <if condition="$top[id]==$content['type_id']">selected</if> >
+                                          {$top.title}
+                                          </option>
+                                        </volist>
+                                      </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        作者
+                                    </td>
+                                    <td colspan="5">
+                                      <input type="text" value="{$content.people_view}" class="form-control input-sm" disabled/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        标题
+                                    </td>
+                                    <td colspan="5">
+                                      {:W('Common/InputRender/InputRender',array('modelid'=>10,'name'=>'title',$content[id],1))}
+                                    </td>
+                                </tr>
+
+                                </tr>
+                                <tr>
+
+                                <tr>
+                                    <td>
+                                        内容
+                                    </td>
+                                    <td colspan="5">
+                                      {:W('Common/InputRender/InputRender',array('modelid'=>10,'name'=>'content',$content[id],1))}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>附件</td>
+                                    <td colspan="5">
+                                      {:W('Common/InputRender/InputRender',array('modelid'=>10,'name'=>'upload',$content[id],1))}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        采用情况<font color="red"></font>
+                                    </td>
+                                    <td colspan="5">
+                                        <div class="col-sm-6">
+                                          {:W('Common/InputRender/InputRender',array('modelid'=>10,'name'=>'adopt',$content[id],1))}
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <a class="btn btn-default" href="{:U('Historical/Index/index')}">返回</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

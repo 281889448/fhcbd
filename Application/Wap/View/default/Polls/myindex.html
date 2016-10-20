@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+	<style>
+		.self_btn_f{
+			display: block !important;
+			padding:5px 12px !important;
+			margin:0 auto;
+		}
+	</style>
+	<include file="cssjs"/>
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>我的社情民意</h1>
+       <!-- <button class="ui-btn">回首页</button>-->
+    </header>
+    <section class="ui-container">
+        
+        <div class="searchlistwrap">
+        	<volist name="contents" id="content">
+        	<ul class="searchlist">
+        	<li>
+        		<p>标题：{$content.title}</p>
+        	</li>
+        	<li>
+        		<p class="clear"><span class="fl">类别：{$content.type.title}</span><span class="fr">状态：{$polls_status[$content['status']]}</span></p>
+        	</li>
+        	<li>
+        		<p>日期：{$content.time|date='Y-m-d',###}</p>
+        	</li>
+        	<li>
+        		<p>参与人员：{$content.people_view}</p>
+        	</li>
+        	
+        	
+        	<li>
+				<in name="content.status" value="2,3,5,6">
+					<a class="self_btn_f" href="{:U('Wap/Polls/detail',['polls_id'=>$content['id']])}">查看</a>
+					<else/>
+					<a class="self_btn_f" href="{:U('Wap/Polls/edit',['polls_id'=>$content['id']])}">查看并修改</a>
+				</in>
+
+
+        	</li>
+        </ul>
+			</volist>
+
+        
+        </div>
+        
+    </section>
+    
+    
+
+</body>
+
+</html>

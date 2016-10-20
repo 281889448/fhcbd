@@ -1,0 +1,96 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form name="frm" method="post" action="{:U('Event/Index/index')}">
+                           
+                            <table border="0" style="margin-bottom:15px">
+                                <tr>
+                                    <td style="width:82px"><a href="{:U('Event/Index/add')}" class="btn btn-primary btn-sm ">添加活动</a></td>
+                                    <td style="width:300px"><input type="search" name="keyword" class="form-control input-sm " placeholder="输入活动名称"/></td>
+                                    <td> <button type="button" class="btn btn-default btn-sm " onclick="checkSearch()" style="margin-left:5px">查询</button></td>
+                                </tr>
+                            </table>
+                            <input type="submit" id="submit" style="display: none"/>
+                         </form>
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="6">
+                                    活动列表
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="textc">活动类别</td>
+                                <td class="textc">活动名称</td>
+                                <td class="textc">活动地点</td>
+                                <td class="textc">活动时间</td>
+                                <td class="textc">管理操作</td>
+                            </tr>
+                            <volist name="event" id="event">
+                            <tr>
+                                <td>{$event.event_type}</td>
+                                <td>{$event.title}</td>
+                                <td>{$event.address}</td>
+                                <td>{$event.sTime|date="Y-m-d H:i:s",###}--{$event.eTime|date="Y-m-d H:i:s",###}</td>
+                                <td style="width:435px">
+
+                                    <a class="btn btn-primary  btn-sm" href="{:U('Event/Index/detail',array('id'=>$event[id]))}">活动详情</a><span ></span>
+                                    <a class="btn btn-primary  btn-sm" href="{:U('Event/Index/jion',array('id'=>$event[id]))}">参会详情</a><span ></span>       <a class="btn btn-primary  btn-sm" href="{:U('Event/Index/mark',array('id'=>$event[id]))}">签到详情</a><span ></span>
+                                    <a class="btn btn-success  btn-sm" href="#" onclick="sendmsg({$event.id})">发送通知</a><span ></span>
+                                    <a class="btn btn-warning  btn-sm" href="{:U('Event/Index/edit',array('id'=>$event[id]))}">修改</a><span ></span>
+                                    <a class="btn btn-danger  btn-sm" href="{:U('Event/Index/doDel',array('id'=>$event[id]))}">删除</a>
+
+                                </td>
+                            </tr>
+                            </volist>
+                            </tbody>
+                        </table>
+                         <if condition="$lockback eq 1">
+                                    <a href="javascript:history.back(-1);" class="btn btn-danger ">返回</a>
+                                </if>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function checkSearch()
+        {
+            if(document.frm.keyword.value == '')
+            {
+                alert("搜索关键字不能为空！");
+                document.frm.keyword.focus();
+                return false;
+            }else{
+                $("#submit").click();
+            }
+        }
+        function sendmsg(id){
+           $.ajax({
+                type: "POST",
+                url: "{:U('Event/Index/sendtemplateMsg')}",
+                data:{'id':id},
+                success: function(data) {
+                    data = $.parseJSON(data);
+                    alert('成功通知'+data.time+'位人员');
+                }
+            })
+        }
+    </script>
+</block>
+
+
+
+
+
+
+
+
+
+
