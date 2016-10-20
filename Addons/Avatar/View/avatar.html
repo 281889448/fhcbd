@@ -1,0 +1,49 @@
+<div class="controls">
+
+  <input type="file" id="upload_picture_{$field_id}">
+
+
+  <input type="hidden" name="{$field.name}" id="cover_id_{$field_id}" value="{$data[$field['name']]}"/>
+  <div class="upload-img-box">
+    <notempty name="data[$field['name']]">
+      <div class="upload-pre-item"><img src="__ROOT__{$data[$field['name']]|get_cover='path'}"/></div>
+    </notempty>
+  </div>
+</div>
+<script type="text/javascript" src="/Public/static/uploadify/jquery.uploadify.min.js"></script>
+
+<script type="text/javascript">
+  //上传图片
+  /* 初始化上传插件 */
+  $("#upload_picture_{$field_id}").uploadify({
+    "height"          : 30,
+    "swf"             : "__STATIC__/uploadify/uploadify.swf",
+    "fileObjName"     : "download",
+    "buttonText"      : "上传图片",
+    "uploader"        : "{:U('Usercenter/File/uploadAvatar',array('uid'=>get_uid()))}",
+    "width"           : 120,
+    'removeTimeout'	  : 1,
+    'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
+    "onUploadSuccess" : uploadPicture{$field_id},
+  'onFallback' : function() {
+    alert('未检测到兼容版本的Flash.');
+  }
+  });
+  function uploadPicture{$field_id}(file, data){
+    var data = $.parseJSON(data);
+    var src = '';
+    if(data.status){
+      $("#cover_id_{$field_id}").val(data.id);
+      src = data.url || '__ROOT__' + data.path;
+      $("#cover_id_{$field_id}").parent().find('.upload-img-box').html(
+        '<div class="upload-pre-item"><img src="' + src + '" height="100" height="100"/></div>'
+      );
+    } else {
+      updateAlert(data.info);
+      setTimeout(function(){
+        $('#top-alert').find('button').click();
+        $(that).removeClass('disabled').prop('disabled',false);
+      },1500);
+    }
+  }
+</script>

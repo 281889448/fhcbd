@@ -1,0 +1,2 @@
+http://www.thinkox.com/index.php?s=/home/user/login.html    用户登陆
+http://www.thinkox.com/index.php?s=/usercenter/config/index.html  用户资料展示
