@@ -569,7 +569,21 @@ class IndexController extends BaseController
             //默认第一次签到
             $attend = D('Meet_marknum')->where(array('meet_id' => $id, 'mark_sort' => 1))->select();
         }
-        $markset = D('Meet_markset')->where(array('meet_id' => $id))->select();
+        $markset = D('MeetMarkset')->where(array('meet_id' => $id))->select();
+
+
+        $where['status']=array('in','1,2,4');
+        $where['meet_id']=$id;
+        if(empty($where['mark_sort']) && IS_POST){
+            $total_count =D('MeetMarknum')->where(array('meet_id'=>$id))->count();
+            $checkin_count = D('MeetMarknum')->where($where)->count();
+        }else{
+            $where['mark_sort']=$data['mark_sort']?$data['mark_sort']:1;
+            $total_count =count($attend);
+            $checkin_count = D('MeetMarknum')->where($where)->count();
+        }
+        $this->assign('checkin_count',$checkin_count);
+        $this->assign('total_count',$total_count);
         $this->assign('markset', $markset);
         $this->assign('meet_id', $id);
         $this->assign('data', $attend);
@@ -636,7 +650,7 @@ class IndexController extends BaseController
         $meetdb=D('Meet')->where($mapp)->getField('id',true);
 
         $map['status']=2;
-        $map['meet_id']=array('in',$meetdb);
+     //   $map['meet_id']=array('in',$meetdb);
         //是否需要查看管理成员
         if($meet_type['findmembers']){
             $members=return_director_members(get_uid());

@@ -561,6 +561,13 @@ class IndexController extends BaseController
             $attend = D('Event_marknum')->where(array('event_id' => $id, 'mark_sort' => 1))->select();
         }
         $markset = D('Event_markset')->where(array('event_id' => $id))->select();
+        $where['status']=array('in','1,2,4');
+        $where['event_id']=$id;
+        $checkin_count = D('EventMarknum')->where($where)->count();
+        $total_count =count($attend);
+
+        $this->assign('checkin_count',$checkin_count);
+        $this->assign('total_count',$total_count);
         $this->assign('markset', $markset);
         $this->assign('event_id', $id);
         $this->assign('data', $attend);
