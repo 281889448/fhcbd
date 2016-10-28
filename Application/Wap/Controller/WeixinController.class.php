@@ -12,13 +12,16 @@ class WeixinController extends BaseController {
         $this->uid=get_uid();
     }
     public function binding(){
+        $id=D('Ucenter_member')->where(array('openid'=>$this->openid))->find();
+        if($id){
+            $this->assign('id','ok');
+        }
         $this->display();
     }
 
     public function savebind(){
         $password=think_ucenter_md5(I('post.pwd'),UC_AUTH_KEY);
         $username = I('post.mobile');
-
         $map['_string'] = "(username='{$username}' or mobile='{$username}')";
         $map['password'] = $password;
         $userdb=D('Ucenter_member')->where($map)->find();
@@ -30,12 +33,11 @@ class WeixinController extends BaseController {
             if($id){
                 $exit=json_encode(array('code'=>1,'msg'=>'绑定成功！'));
             }else{
-                $exit=json_encode(array('code'=>0,'msg'=>'已经绑定，不需要重新绑定!'));
+                $exit=json_encode(array('code'=>0,'msg'=>'绑定失败，请重新再试！'));
             }
         }else{
             $exit=json_encode(array('code'=>0,'msg'=>'密码错误，或者您的账户不存在，请联系管理员!'));
         }
-
         echo $exit;
     }
     public function jion(){
@@ -84,11 +86,11 @@ class WeixinController extends BaseController {
         }
         if($data['type']=='event'){
             $data['event_id']=$data['e_m_id'];
-            $id=D('Event_attend')->add($data);
+            $id=D('Event_attend')->where(array('uid'=>$data['uid'],'event_id'=>$data['event_id']))->save($data);
             $map_f['model'] = 'event_attend';
         }else{
             $data['meet_id']=$data['e_m_id'];
-            $id=D('Meet_attend')->add($data);
+            $id=D('Meet_attend')->where(array('uid'=>$data['uid'],'meet_id'=>$data['meet_id']))->save($data);
             $map_f['model'] = 'meet_attend';
         }
         if($id){
@@ -124,10 +126,20 @@ class WeixinController extends BaseController {
                 if ($eventdb['eTime'] < $nowtime) $showtype = 1;
                 if ($eventdb['sTime'] > ($nowtime + 60 * 60)) $showtype = 2;
                 $max_mark_id = D('Event_marknum')->where(array('uid' => $this->uid, 'event_id' => $id))->max('id');
-                $data_mark_time=D('Event_marknum')->where(array('id'=>$max_mark_id))->find();
-                if ($data_mark_time['mark_time']+60 * 60 > time()&& $data_mark_time['mark_time']<time() && $data_mark_time['status']>0) $showtype = 3;
+                $max_mark_time=D('Event_marknum')->where(array('id'=>$max_mark_id))->find();
                 //读取签到数据
                 $markset = D('Event_markset')->where(array('event_id' => $id))->order('id')->select();
+                $max=count($markset)-1;
+                //求签到时间最小差值
+                $dirt=365*24*60*60;
+                for($i=0;$i<$max;$i++){
+                    $temp_dirt=$markset[$i+1]['mark_time']-$markset[$i]['mark_time'];
+                    if($temp_dirt>$dirt){
+                        $dirt=$temp_dirt;
+                    }
+                }
+                if ($max_mark_time['mark_time']+$dirt/2 > time()&&$max_mark_time['mark_time']<time() && $max_mark_time['status']>0) $showtype = 3;
+
             }else{
                 $meetdb = D('Meet')->where(array('id' => $id))->find();
                 if (empty($meetdb)) $this->error("未找到会议数据");
@@ -137,20 +149,31 @@ class WeixinController extends BaseController {
                 if ($meetdb['eTime'] < $nowtime) $showtype = 1;
                 if ($meetdb['sTime'] > ($nowtime + 60 * 60)) $showtype = 2;
                 $max_mark_id = D('Meet_marknum')->where(array('uid' => $this->uid, 'meet_id' => $id))->max('id');
-                $data_mark_time=D('Meet_marknum')->where(array('id'=>$max_mark_id))->find();
-                if ($data_mark_time['mark_time']+60 * 60 > time()&& $data_mark_time['mark_time']<time() && $data_mark_time['status']>0) $showtype = 3;
+                $max_mark_time=D('Meet_marknum')->where(array('id'=>$max_mark_id))->find();
                 //读取签到数据
                 $markset = D('Meet_markset')->where(array('meet_id' => $id))->order('id')->select();
+                $max=count($markset)-1;
+                //求签到时间最小差值
+                $dirt=365*24*60*60;
+                for($i=0;$i<$max;$i++){
+                    $temp_dirt=$markset[$i+1]['mark_time']-$markset[$i]['mark_time'];
+                    if($temp_dirt<$dirt){
+                        $dirt=$temp_dirt;
+                    }
+                }
+                if ($max_mark_time['mark_time']+$dirt/2 > time()&&$max_mark_time['mark_time']<time() && $max_mark_time['status']>0) $showtype = 3;
             }
-            if ($markset[0]['mark_time'] > $nowtime) {
+        if ($markset[0]['mark_time'] > $nowtime) {
                 $max_mark_sort = 1;
             } else {
-                foreach ($markset as $k => $v) {
-                    if ($markset[$k]['mark_time'] < $nowtime && $nowtime < $markset[$k + 1]['mark_time']){
-                        $max_mark_sort = $k + 2;
-                    }else{
-                        $max_mark_sort = 1;
+                if($max>0){
+                    foreach ($markset as $k => $v) {
+                        if ($markset[$k]['mark_time'] < $nowtime && $nowtime < $markset[$k + 1]['mark_time']){
+                            $max_mark_sort = $k + 2;
+                        }
                     }
+                }else{
+                    $max_mark_sort = 1;
                 }
             }
             $this->assign('mark_sort', $max_mark_sort);

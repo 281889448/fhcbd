@@ -46,15 +46,23 @@
 		
 	</head>
 	<body>
-	    
 		<div id="wrapper">
 			<div id="scroller">
 				<div class="mark">
 					<div class="login_box">
 						<h3  id="title">账户绑定</h3>
-						<input type="text" id="mobile"/>
-						<input type="password" class="pw"  id="pwd">
-						<button class="btn" onclick="submit()">绑定</button>
+						<if condition="$id eq 'ok'">
+							<div style="padding: 30px;">
+								<span style='color: red;'>已经绑定，如需解绑，请联系系统管理员！</span>
+							</div>
+							<else/>
+							<div id="input-box">
+								<input type="text" id="mobile"/>
+								<input type="password" class="pw"  id="pwd">
+								<button class="btn" onclick="submit()">绑定</button>
+							</div>
+							<div id="status" style="display: none;padding: 30px;">帮定中...</div>
+						</if>
 					</div>
 				</div>			
 			</div>
@@ -70,6 +78,8 @@
 				})
 			})
 	function submit(){
+		$('#input-box').hide();
+		$('#status').show();
 		$.ajax({
 			type: "POST",
 			url: "{:U('Weixin/savebind',array('openid'=>$openid))}",
@@ -78,10 +88,13 @@
 				data=$.parseJSON(data);
 				if(data.code==1) //成
 				{
-					window.location.reload();
+					$('#status').html("<span style='color: red;'>绑定成功！，请关闭本页面，进行其他操作！</span>");
 				}else{
-					$('#title').html("<span style='color: red;'>"+data.msg+"</span>");
-					setTimeout('$("#title").html("账户绑定")',2000);
+					$('#status').html("<span style='color: red;'>"+data.msg+"</span>");
+					setTimeout(function () {
+						$('#input-box').show();
+						$('#status').hide();
+					},4000);
 				}
 			}
 		})

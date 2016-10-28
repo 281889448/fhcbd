@@ -208,6 +208,7 @@
 								data=$.parseJSON(data);
 								if(data.code==1) //成
 								{
+									alert(data.msg);
 									window.location.reload();
 								}else{
 									alert(data.msg);
