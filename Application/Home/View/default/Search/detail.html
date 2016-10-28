@@ -1,0 +1,238 @@
+<extend name="Base/common"/>
+
+<block name="body">
+			<!--个人资料修改-->
+			<div class="ar_content">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<div class="span12">
+							<div id="tableWrap">
+								<table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+									<thead>
+										<tr>
+											<th colspan="6">
+												提案详情
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="" style="width: 140px;">
+												提出期间
+											</td>
+											<td>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet_type','id'=>$proposal['id'],1))}
+											</td>
+											<td>
+												类别
+											</td>
+											<td>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'leibie','id'=>$proposal['id'],1))}
+											</td>
+											<td>
+												提出日期
+											</td>
+											<td>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'create_time','id'=>$proposal['id'],1))}
+											</td>
+										</tr>
+										<tr>
+											<td>
+												提案类型
+											</td>
+											<td>
+												<select name="type_id" class="form-control input-sm" disabled>
+													<volist name="tree" id="top">
+														<option value="{$top.id}" <eq name="top.id" value="$proposal['type_id']">selected</eq> >
+														{$top.title}
+														</option>
+													</volist>
+												</select>
+											</td>
+											<td>
+												会议次数
+											</td>
+											<td>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet','id'=>$proposal['id'],1))}
+											</td>
+											<td>
+												人数
+											</td>
+											<td>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'renshu','id'=>$proposal['id'],1))}
+											</td>
+										</tr>
+										<tr>
+											<td>
+												案由
+											</td>
+											<td colspan="3">
+
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title','id'=>$proposal['id'],1))}
+
+
+											</td>
+											<td>
+												是否公开
+											</td>
+											<td class="text-align:left">
+												<div class="pull-left">
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'is_public','id'=>$proposal['id'],1))}
+												</div>
+
+											</td>
+
+
+										</tr>
+
+										
+										<tr>
+											<td>
+												内容
+											</td>
+											<td colspan="5">
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'content','id'=>$proposal['id'],1))}
+											</td>
+										</tr>
+										<tr>
+											<td>
+												附件
+											</td>
+											<td colspan="5">
+
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'fujian','id'=>$proposal['id'],1))}
+											</td>
+										</tr>
+
+										
+										<tr>
+											<td rowspan="2">
+												办理单位
+												
+											</td>
+											
+										</tr>
+										<tr>
+											<td colspan="5">
+												<table border="1" cellspacing="" cellpadding="" >
+													<tr>
+														<th class="text-center">交办单位</th>
+														<th class="text-center">分管责任人</th>
+														<th class="text-center">电话</th>
+														<th class="text-center">经办人</th>
+														<th class="text-center">经办人电话</th>
+														<th class="text-center">办理时间</th>
+														<th class="text-center">状态</th>
+														<th class="text-center">操作</th>
+													</tr>
+													<volist name="proposal_result" id="pr">
+													<tr>
+														<td class="text-center">{$pr.unit}</td>
+														<td class="text-center">{$pr.leader}</td>
+														<td class="text-center">{$pr.leadertelephone}</td>
+														<td class="text-center">{$pr.contact}</td>
+														<td class="text-center">{$pr.telephone}</td>
+														<td class="text-center">{$pr.end_time|date='Y-m-d',###}</td>
+														<td class="text-center">
+															<switch name="pr[status]">
+																<case value="1">未处理</case>
+																<case value="2">已处理</case>
+																<case value="3">移交办理申请中</case>
+																<case value="4">移交办理已处理</case>
+																<case value="5">退回重办</case>
+																<case value="6">已接收</case>
+															</switch>
+
+														</td>
+														<td class="text-center"><a href="{:U('Home/Search/handreply',array('result_id'=>$pr[id]))}" class="btn btn-default">查看办理</a></td>
+													</tr>
+													</volist>
+												</table>
+											</td>
+										</tr>
+
+										
+										<tr>
+											<td>
+												提案人
+											</td>
+										<td >
+											{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'author','id'=>$proposal['id'],1))}
+										</td>
+										<td>
+												联系人
+											</td>
+											<td >
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'contact','id'=>$proposal['id'],1))}
+											</td>
+											<td>
+												联系方式
+											</td>
+											<td>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'telephone','id'=>$proposal['id'],1))}
+											</td>
+										</tr>
+										<tr>
+
+											
+											
+											
+											<td>联系人单位</td>
+											<td colspan="6">{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'contact_unit','id'=>$proposal['id'],1))}</td>
+										</tr>
+										
+										<tr>
+											<td>备注：</td>
+											<td colspan="6">
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'suggest','id'=>$proposal['id'],1))}
+											</td>
+										</tr>
+										
+										
+										
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<if condition="$proposal_joint">
+						<div id="tableWrap">
+							
+							<div>联名列表</div>
+							<table border="" cellspacing="" cellpadding="">
+
+								<tr>
+									<th class="text-center">用户名</th>
+									<th class="text-center">委员姓名</th>
+									<th class="text-center">界别组</th>
+									<th class="text-center">专委会</th>
+									<th class="text-center">街道联络委</th>
+									<th class="text-center">状态</th>
+									<th class="text-center">操作</th>
+								</tr>
+
+								<volist name="proposal_joint" id="pj">
+								<tr>
+									<td class="text-center"> {$pj['user']['nickname']} </td>
+									<td class="text-center"> {$pj['user']['名称']} </td>
+									<td class="text-center"> {$pj['user']['界别']} </td>
+									<td class="text-center"> {$pj['user']['专委会']} </td>
+									<td class="text-center"> {$pj['user']['街道联络委']} </td>
+									<td class="text-center">同意</td>
+									<td class="text-center">
+										<a href="" class="btn btn-default btn-sm">查看说明</a>
+									</td>
+								</tr>
+
+								</volist>
+
+
+								
+							</table>
+
+						</div>
+						</if>
+						<a href="{$back_url}" class="btn btn-default">返回</a>
+					</div>
+				</div>
+			</div>
+		</block>

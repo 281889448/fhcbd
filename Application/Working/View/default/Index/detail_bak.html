@@ -1,0 +1,132 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form action="{:U('Polls/Index/doPost',array('id'=>$content['id']))}" method="post" name="frm" id="formId">
+                            <input type="hidden" name="status" />
+                            <input type="hidden" name="id" value="{$content['id']}"/>
+                            <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                                <thead>
+                                <tr>
+                                    <th colspan="6">
+                                        添加社情民意
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="col-sm-1">
+                                        日期
+                                    </td>
+                                    <td class="col-sm-3">
+                                        <input size="16" type="text" value="{:date('Y-m-d H:i:s',$content['time'])}" name="time" readonly="readonly" class="form_datetime form-control" required>
+                                    </td>
+                                    <td>
+                                        作者
+                                    </td>
+                                    <td colspan="1" >
+                                        {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'author','id'=>$polls['id'],1,$name))}
+                                    </td>
+                                    <td class="col-sm-1">
+                                        类别
+                                    </td>
+                                    <td class="col-sm-3">
+                                        <select name="type_id" class="form-control input-sm" disabled>
+                                            <volist name="tree" id="top">
+                                                <option value="{$top.id}" >
+                                                    {$top.title}
+                                                </option>
+                                            </volist>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        参与人员
+                                    </td>
+                                    <td colspan="5">
+                                        {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'partake','id'=>$content['id'],1))}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        标题
+                                    </td>
+                                    <td colspan="5">
+                                        {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'title','id'=>$content['id'],1))}
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>
+                                        内容
+                                    </td>
+                                    <td colspan="5">
+                                        {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'content','id'=>$content['id'],1))}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>附件</td>
+                                    <td colspan="5">
+                                        {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'upload','id'=>$content['id'],1))}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>采用情况</td>
+                                    <td colspan="5">
+                                        {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'adopt','id'=>$content['id'],1))}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>批示情况</td>
+                                    <td colspan="5">
+                                        {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'make','id'=>$content['id'],1))}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        退回意见
+                                    </td>
+                                    <td colspan="5">
+                                        {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'comments','id'=>$content['id'],1))}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+
+                                        <switch name="group">
+                                            <case value="委员|集体">
+                                        <button class="btn btn-primary btn-sm" onclick="document.frm.status.value=2;">提交</button>
+                                        </case>
+                                            <case value="政协办公室">
+                                                <button class="btn btn-primary btn-sm" onclick="document.frm.status.value=3;">提交</button>
+                                            </case>
+                                            </switch>
+                                        <switch name="group">
+                                         <case value="委员|集体">
+                                                <a class="btn btn-default btn-sm" href="{:U('Polls/Index/index',array('status'=>4))}" >返回</a>
+                                            </case>
+                                            <case value="政协办公室">
+                                                <a class="btn btn-default btn-sm" href="{:U('Polls/Index/index',array('status'=>4))}" >返回</a>
+                                            </case>
+
+
+                                        </switch>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

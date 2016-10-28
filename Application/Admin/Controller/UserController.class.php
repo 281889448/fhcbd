@@ -858,6 +858,118 @@ str;
         }
         return $error;
     }
+
+    //导入用户
+    public function import(){
+        if(IS_POST){
+            if($_FILES) {
+                $config = array(
+                    'exts' => array('xlsx', 'xls'),
+                    'rootPath' => "./Public/",
+                    'savePath' => 'Uploads/',
+                    //'autoSub'    =>    true,
+                    'subName' => array('date', 'Ymd'),
+                );
+
+                $upload = new \Think\Upload($config);
+                //var_dump($upload);exit;
+                if (!$info = $upload->upload()) {
+                    $this->error($upload->getError());
+                } else {
+                    //$info = $upload->getUploadFileInfo();
+
+                }
+
+
+                //var_dump($_FILES);exit;
+                import("Org.Util.PHPExcel");
+
+                $file_name = $upload->rootPath . $info['file']['savepath'] . $info['file']['savename'];
+                $extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+                if ($extension == 'xlsx') {
+                    $objReader = new \PHPExcel_Reader_Excel2007();
+                    $objExcel = $objReader->load($file_name);
+                } else if ($extension == 'xls') {
+                    $objReader = new \PHPExcel_Reader_Excel5();
+                    $objExcel = $objReader->load($file_name);
+                } else if ($extension == 'csv') {
+                    $PHPReader = new \PHPExcel_Reader_CSV();
+
+                    //默认输入字符集
+                    $PHPReader->setInputEncoding('GBK');
+
+                    //默认的分隔符
+                    $PHPReader->setDelimiter(',');
+
+                    //载入文件
+                    $objExcel = $PHPReader->load($file_name);
+                }
+
+                $sheet = $objExcel->getSheet(0);
+                //   $sheet = $objReader->getSheet(0);
+                $highestRow = $sheet->getHighestRow(); // 取得总行数
+                $highestColumn = $sheet->getHighestColumn(); // 取得总列数
+                //headArr 里均为扩展字段
+                $headArr = ['A' => ['38', '姓名'], 'B' => ['39', '曾用名'], 'C' => ['62', '手机号码'], 'D' => ['75', '宗教'], 'E' => ['41', '出生日期'], 'F' => ['40', '性别'], 'G' => ['42', '民族'], 'H' => ['43', '籍贯'], 'I' => ['46', '文化程度'], 'J' => ['73', '属地'], 'K' => ['103', '政治面貌'], 'L' => ['48', '党派职务'], 'M' => ['74', '婚姻'], 'N' => ['36', '身份证号'], 'O' => ['65', '电子邮箱'], 'P' => ['47', '职称'], 'Q' => ['44', '邮编'], 'R' => ['67', '社会阶级'], 'S' => ['50', '工作单位'], 'T' => ['52', '单位地址'], 'U' => ['54', '参加工作时间'], 'V' => ['49', '现任职务'], 'W' => ['51', '推荐单位'], 'X' => ['53', '办公电话'], 'Y' => ['63', '家庭电话'], 'Z' => ['64', '家庭住址'], 'AA' => ['66', 'QQ号码'], 'AB' => ['55', '加入党派日期'], 'AC' => ['68', '本人简历'], 'AD' => ['69', '有否港澳台关系及联系'], 'AE' => ['70', '兴趣爱好及特长'], 'AF' => ['71', '备注'], 'AG' => ['76', '加入政协日期'], 'AH' => ['77', '退出政协日期'], 'AI' => ['60', '是否省委员'], 'AJ' => ['61', '是否区委员'], 'AK' => ['59', '是否常委'], 'AL' => ['72', '委员状态'], 'AM' => ['96', '届别'], 'AN' => ['56', '专委会'], 'AO' => ['93', '专委会组'], 'AP' => ['57', '街道联络委'], 'AQ' => ['58', '界别小姐'], 'AR' => ['98', '调整，变动原因'], 'AS' => ['97', '调整变动时间']];
+                for ($i = 2; $i < $highestRow; $i++) {
+                    //首先在用户主表里添加一条用户记录  得到UID
+                    $User = new UserApi;
+
+                    $username = $objExcel->getActiveSheet()->getCell('C'.$i)->getValue();
+                    $password = '123456';
+                    $email = $objExcel->getActiveSheet()->getCell('O'.$i)->getValue();
+                    $uid = $User->register($username, $username, $password, $email);
+
+
+                    if (0 < $uid) { //注册成功
+                        $user = array('uid' => $uid, 'nickname' => $username, 'status' => 1);
+                        M('Member')->add($user);
+                        //通过用户UID 以及字段ID  字段值 插入扩展字段
+
+
+                        $this->import_expandinfo($uid, $i, $headArr, $objExcel);
+                    }
+
+                }
+                $this->success('导入成功');
+
+
+
+
+
+
+            }else{
+                $this->error('请选择一个上传文件！');
+            }
+
+        }else{
+            $this->display();
+        }
+
+
+    }
+
+
+
+    private function import_expandinfo($uid,$i,$headArr,$objExcel){
+
+        foreach($headArr as $k=>$v){
+            $data['field_data'] = $objExcel->getActiveSheet()->getCell($k.$i)->getValue();
+
+            $data['field_id'] = reset($v);
+            $data['uid'] = $uid;
+            $data['createTime'] = time();
+            $data['changeTime'] = time();
+            $rs = M('Field')->where(['field_id'=>$data['field_id'],'uid'=>$uid])->find();
+            if($rs){
+                $data['id'] = $rs['id'];
+              $flag =  M('Field')->save($data);
+            }else{
+                $flag = M('Field')->add($data);
+            }
+        }
+        return $flag;
+    }
 /*---------------------------------start-------------------------------------------------*/
     /*
      * 设置是否手工结算积分

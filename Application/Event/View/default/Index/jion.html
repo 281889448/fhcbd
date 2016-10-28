@@ -1,71 +1,78 @@
 <extend name="Base/common"/>
 <block name="body">
-<div class="ar_content">
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span12">
-                <div id="tableWrap">
-                    <form name="frm" method="post" action="">
-
-                   </form>
-                    <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
-                        <thead>
-                        <tr>
-                            <th >
-                                姓名
-                            </th>
-                            <th >
-                                单位
-                            </th>
-                            <th >
-                                联系电话
-                            </th>
-                            <th >
-                                是否参加
-                            </th>
-                            <th >
-                                提交时间
-                            </th>
-                            <th >
-                                不能参加原因
-                            </th>
-
-                        </tr>
-                        </thead>
-                        <tbody>
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form action="" method="post" id="to_search">
+                            <table border="0" style="margin-bottom:15px">
+                                <tr>
+                                    <td  style="width:200px">
+                                        <select name="status" class="form-control input-sm" >
+                                            <option value="5"<if condition="$search_status eq ''">selected</if>>所有类型</option>
+                                            <option value="0"<if condition="$search_status eq '0'">selected</if>>未选择</option>
+                                            <option value="1"<if condition="$search_status eq '1'">selected</if>>参加</option>
+                                            <option value="2"<if condition="$search_status eq '2'">selected</if>>请假中</option>
+                                            <option value="3"<if condition="$search_status eq '3'">selected</if>>请假被拒绝</option>
+                                            <option value="4"<if condition="$search_status eq '4'">selected</if>>请假被批准</option>
+                                        </select>
+                                    </td>
+                                    <td  style="width:200px">
+                                        <input type="text " value="{$search_name}" name="truename" class="form-control input-sm" placeholder="按姓名查询">
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-primary btn-sm" style="margin-left:15px" onclick="to_search()">查询</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                        <span>应参加：{$total_count}人</span>
+                        <span style="color:red">{$search_total_num}</span>
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th >姓名</th>
+                                <th >单位</th>
+                                <th > 联系电话</th>
+                                <th >是否参加</th>
+                                <th >提交时间</th>
+                                <th >不能参加原因</th>
+                            </tr>
+                            </thead>
+                            <tbody>
                             <volist name="data" id="vo" empty="暂时没有参家活动人员数据">
                                 <tr>
                                     <td>{$vo.truename}</td>
                                     <td>{$vo.company}</td>
                                     <td>{$vo.phone}</td>
-                                    <td><if condition="$vo['status'] eq 1">参加<else/>不能参加</if></td>
-                                    <td>{$vo.creat_time|date="Y-m-d H:i:s",###}</td>
+                                    <td>
+                                        <switch name="vo.status">
+                                            <case value="0">未选择</case>
+                                            <case value="1">参加</case>
+                                            <case value="2">请假中</case>
+                                            <case value="3">请假被拒绝</case>
+                                            <case value="4">请假被批准</case>
+                                        </switch>
+                                    </td>
+                                    <td><if condition="$vo['creat_time'] gt 0">{$vo.creat_time|date="Y-m-d H:i:s",###}</if></td>
                                     <td>{$vo.whytext|default="无"}</td>
                                 </tr>
                             </volist>
-                        </tbody>
-                    </table>
-                    <!--<nav>
-                        <ul class="pagination">
-                            <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-                            <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li>
-                                <a href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>-->
-                   
+                            </tbody>
+                        </table>
                         <a href="javascript:history.back(-1);" class="btn btn-default  btn-sm" type="submit">返回</a>
-                   
-                </div>
 
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <script type="text/javascript">
+        //搜索
+        function to_search(){
+            $("#to_search").submit();
+        }
+    </script>
 </block>

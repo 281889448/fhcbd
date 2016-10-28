@@ -38,13 +38,14 @@ class BaseController extends Controller
         if(sp_is_mobile()  && ACTION_NAME != 'login' ){
             //redirect(U('Wap/Proposal/Index',['status'=>1]));
             session('redirect_url',str_replace('/','\\',serialize(__SELF__)));
+
             if(session('openid') ){
                 $this->openid=session('openid');
             }else{
                 $this->openid=get_user_openid();
             }
             //判断是否绑定
-            if($this->openid){
+            if($this->openid){ 
                 $user=D('Ucenter_member')->where(array('openid'=>$this->openid))->find();
                 if(empty($user) && ACTION_NAME != 'binding' && ACTION_NAME != 'savebind'){
                     $this->redirect('Wap/Weixin/binding');

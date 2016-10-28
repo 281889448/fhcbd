@@ -98,10 +98,10 @@ class IndexController extends BaseController
     {
 
         if (trim(op_t($event_type)) == '') {
-            $this->error('请输入活动类型。');
+            $this->error('请输入会议类型。');
         }
         if (trim(op_t($title)) == '') {
-            $this->error('请输入活动名称。');
+            $this->error('请输入会议名称。');
         }
         if (trim(op_t($sTime)) == '') {
             $this->error('请输入开始时间。');
@@ -111,23 +111,24 @@ class IndexController extends BaseController
         }
 
         if ($sTime > $eTime) {
-            $this->error('活动开始时间不能大于活动结束时间');
+            $this->error('会议开始时间不能大于会议结束时间');
         }
         if (trim(op_h($address)) == '') {
-            $this->error('请输入活动地点。');
+            $this->error('请输入会议地点。');
         }
 
         if (trim(op_h($people)) == '') {
-            $this->error('请输入参加活动人员。');
+            $this->error('请输入参加会议人员。');
         }
         if (trim($explain) == '') {
-            $this->error('请输入活动内容。');
+            $this->error('请输入会议内容。');
         }
         //判断签到时间  第二次总比第一次大，最后一次消息会议结束时间
         $mark_time = $_POST['mark_time'];
         $count = count($mark_time) + 1;
         if ($mark_time[1] == 0) $this->error('会议签到次数至少设定一次！');
         if ((strtotime($mark_time[1])+60*60) <strtotime($sTime)) $this->error('第一次签到时间不能提前会议开始1小时');
+        if (strtotime($mark_time[count($mark_time)]) >strtotime($eTime)) $this->error('最后一次签到时间不能大于会议结束时间');
         for ($i = 1; $i < $count; $i++) {
             if (strtotime($mark_time[$i + 1]) < strtotime($mark_time[$i]) && $i + 1 < $count) {
                 $this->error('第' . ($i + 1) . '次签到的时间要大于第' . $i . '次签到的时间');
@@ -161,13 +162,17 @@ class IndexController extends BaseController
                 $temp_arr[$k]['event_id'] = $result;
                 $temp_arr[$k]['status'] = 0;
                 $temp_arr[$k]['mark_sort'] = 1;
+                //添加签到详情
                 D('Event_marknum')->add($temp_arr[$k]);
+                //添加参会详情
+                D('Event_attend')->add($temp_arr[$k]);
             }
             $this->success("添加成功", U('Event/Index/index'));
         }
 
 
     }
+
 
     //获取人员详细信息公共函数 $str="1,2,3,4,5,6"格式
     public function uid_to_get_detail($str)
@@ -191,10 +196,10 @@ class IndexController extends BaseController
     {
         $id = I('get.id');
         if (trim($_POST['event_type']) == '') {
-            $this->error('请输入活动类型。');
+            $this->error('请输入会议类型。');
         }
         if (trim($_POST['title']) == '') {
-            $this->error('请输入活动名称。');
+            $this->error('请输入会议名称。');
         }
         if (trim($_POST['sTime']) == '') {
             $this->error('请输入开始时间。');
@@ -204,22 +209,24 @@ class IndexController extends BaseController
         }
 
         if ($_POST['sTime'] > $_POST['eTime']) {
-            $this->error('活动开始时间不能大于活动结束时间');
+            $this->error('会议开始时间不能大于会议结束时间');
         }
         if (trim($_POST['address']) == '') {
-            $this->error('请输入活动地点。');
+            $this->error('请输入会议地点。');
         }
 
         if (trim($_POST['people']) == '') {
-            $this->error('请输入参加活动人员。');
+            $this->error('请输入参加会议人员。');
         }
         if (trim($_POST['explain']) == '') {
-            $this->error('请输入活动内容。');
+            $this->error('请输入会议内容。');
         }
         //判断签到时间  第二次总比第一次大，最后一次消息会议结束时间
         $mark_time = $_POST['mark_time'];
         $count = count($mark_time) + 1;
         if ($mark_time[1] == 0) $this->error('会议签到次数至少设定一次！');
+        if ((strtotime($mark_time[1])+60*60) <strtotime($_POST['sTime'])) $this->error('第一次签到时间不能提前会议开始1小时');
+        if (strtotime($mark_time[count($mark_time)]) >strtotime($_POST['eTime'])) $this->error('最后一次签到时间不能大于会议结束时间');
         for ($i = 1; $i < $count; $i++) {
             if (strtotime($mark_time[$i + 1]) < strtotime($mark_time[$i]) && $i + 1 < $count) {
                 $this->error('第' . ($i + 1) . '次签到的时间要大于第' . $i . '次签到的时间');
@@ -499,21 +506,64 @@ class IndexController extends BaseController
 //参会详情
     public function jion($id)
     {
-        $attend = D('Event_attend')->where(array('event_id' => $id))->select();
-        foreach ($attend as $key => $val) {
-            //$val['uid'];
-            $truename = D('Field')->where(array('uid' => $val['uid'], 'field_id' => 38))->find();
-            $attend[$key]['truename'] = $truename['field_data'];
-            $company = D('Field')->where(array('uid' => $val['uid'], 'field_id' => 50))->find();
-            $attend[$key]['company'] = $company['field_data'];
-            // $marknum=D('Event_marknum')->where(array('uid'=>$val['uid']))->select();
-            // $attend[$key]['marknum']=count($marknum);
-            // $attend[$key]['marktime']=array();
-            // foreach($marknum as $kk=>$vv){
-            //array_push($attend[$key]['marktime'],$vv['mark_time']);
-            //}
+        if (IS_POST) {
+            $data['truename'] = array('like', '%' . I('post.truename') . '%');
+            $data['status'] = intval(I('post.status'));
+            $map['event_id'] = $id;
+            //按照状态查询
+            if (empty(I('post.truename')) && $data['status'] !== 5) {
+                $map['status'] = $data['status'];
+                //按照名称和状态
+            } elseif ((!empty(I('post.truename'))) && $data['status'] != 5) {
+                $map['truename'] = $data['truename'];
+                $map['status'] = $data['status'];
+                //按照名称查询
+            } elseif (I('post.truename') && $data['status'] == 5) {
+                $map['truename'] = $data['truename'];
+            }
+            //查询全部数据
+            $attend = D('Event_marknum')->where($map)->select();
+            $number_attend=count($attend);
+            switch ($data['status']){
+                case 0:
+                    $search_text='未选择';
+                    $search_status=0;
+                    break;
+                case 1:
+                    $search_text='参加';
+                    $search_status=1;
+                    break;
+                case 2:
+                    $search_text='请假中';
+                    $search_status=2;
+                    break;
+                case 3:
+                    $search_text='请假被拒绝';
+                    $search_status=3;
+                    break;
+                case 4:
+                    $search_text='请假被批准';
+                    $search_status=4;
+                    break;
+                default:
+                    $search_text='共';
+                    break;
+            }
+            $search_total_num=$search_text."：".$number_attend."人";
+            $this->assign('search_name',I('post.truename'));
+            $this->assign('search_total_num',$search_total_num);
+            $this->assign('search_status',$search_status);
+        }else{
+            $attend = D('Event_attend')->where(array('event_id' => $id))->select();
+            foreach ($attend as $key => $val) {
+                $truename = D('Field')->where(array('uid' => $val['uid'], 'field_id' => 38))->find();
+                $attend[$key]['truename'] = $truename['field_data'];
+                $company = D('Field')->where(array('uid' => $val['uid'], 'field_id' => 50))->find();
+                $attend[$key]['company'] = $company['field_data'];
+            }
         }
-        print_r($attend);
+        $total_count=count(D('Event_attend')->where(array('event_id' => $id))->select());
+        $this->assign('total_count',$total_count);
         $this->assign('data', $attend);
         $this->display();
     }
@@ -556,17 +606,51 @@ class IndexController extends BaseController
             }
             //查询全部数据
             $attend = D('Event_marknum')->where($map)->select();
+            $number_attend=count($attend);
+            switch ($data['status']){
+                case 0:
+                    $search_text='未签';
+                    $search_status=0;
+                    break;
+                case 1:
+                    $search_text='已签';
+                    $search_status=1;
+                    break;
+                case 2:
+                    $search_text='迟到';
+                    $search_status=2;
+                    break;
+                case 3:
+                    $search_text='已请假';
+                    $search_status=3;
+                    break;
+                case 4:
+                    $search_text='已补签';
+                    $search_status=4;
+                    break;
+                default:
+                    $search_text='共';
+                    break;
+            }
+            $search_total_num=$search_text."：".$number_attend."人";
+            $this->assign('search_name',I('post.truename'));
+            $this->assign('search_total_num',$search_total_num);
+            $this->assign('search_status',$search_status);
         } else {
             //默认第一次签到
             $attend = D('Event_marknum')->where(array('event_id' => $id, 'mark_sort' => 1))->select();
         }
-        $markset = D('Event_markset')->where(array('event_id' => $id))->select();
+        $markset = D('EventMarkset')->where(array('event_id' => $id))->select();
+
+
         $where['status']=array('in','1,2,4');
         $where['event_id']=$id;
-        $checkin_count = D('EventMarknum')->where($where)->count();
-        $total_count =count($attend);
-
-        $this->assign('checkin_count',$checkin_count);
+        if(empty($where['mark_sort']) && IS_POST){
+            $total_count =D('EventMarknum')->where(array('event_id'=>$id))->count();
+        }else{
+            $where['mark_sort']=$data['mark_sort']?$data['mark_sort']:1;
+            $total_count =count($attend);
+        }
         $this->assign('total_count',$total_count);
         $this->assign('markset', $markset);
         $this->assign('event_id', $id);
@@ -620,7 +704,7 @@ public function back($id){
         $tempid="Peo-p-dtXVASb0zppGuqIM-YePwz2zUmK6egJLLP43U";
         $data = D('Event')->where(array('id' =>$id ))->find();
         $arr = array(
-            'href' => 'http://zxlz.daifayuan.com' . U('Home/Weixin/jion/type/event', array('id' => $id)),
+            'href' => 'http://zxlz.daifayuan.com' . U('Wap/Weixin/jion/type/event', array('id' => $id)),
             'first' => '关于' . $data['title'] . '通知',
             'keyword1' => date('Y-m-d H:i:s', $data['sTime']),
             'keyword2' => $data['title'],
@@ -632,7 +716,7 @@ public function back($id){
         $wxapi = new WeixinApi();
         $time = 0;
         foreach ($userdata as $key => $val) {
-            $res = $wxapi->sendTempMsg_Event_Meet($val['openid'], $arr,$tempid);
+            $res = $wxapi->sendTempMsg_Event_Event($val['openid'], $arr,$tempid);
             if ($res['rt']) $time++;
         }
         echo json_encode(array('time' => $time));
@@ -686,25 +770,14 @@ public function back($id){
         $data['status'] = I('post.status');
         $data['back'] = I('post.back');
         $id = D('Event_attend')->where(array('id' => $id))->save($data);
-        $exit = $this->return_exit_arr($id, '成功！', '提交失败');
+        if($id && $data['status']==4){
+            //如果是批准请假，签到中标明请假，状态为6
+            $user=D('Event_attend')->where(array('id' => I('post.id')))->find();
+            $map['uid']=$user['uid'];
+            $map['event_id']=$user['event_id'];
+            D('Event_marknum')->where($map)->save(array('status'=>6));
+        }
+        $exit = return_exit_arr($id, '成功！', '提交失败');
         echo $exit;
     }
-    //请假列表页面
-/*    public function leave_list($id=NULL){
-        //列表页面显示
-        $event = D("Event")->order('id desc')->select();
-        $count=M()->query("SELECT COUNT(*) as leave_mem,a.* FROM thinkox_event_attend b left join thinkox_event a ON a.id = b.event_id where b.status=2 GROUP BY a.id");
-        foreach($event as $k=>$v){
-            foreach($count as $ck=>$cv){
-                if($cv['id'] == $v['id']){
-                    $event[$k]['leave_mem'] = $cv['leave_mem'];
-                    break;
-                }
-            }
-        }
-        $this->assign('count',$count);
-        $this->assign("event", $event);
-        $this->display();
-    }*/
-    
 }

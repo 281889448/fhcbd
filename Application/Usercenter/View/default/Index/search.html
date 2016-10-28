@@ -84,7 +84,7 @@
 							</tr>
 						</table>
 						<table border="0" cellspacing="" cellpadding="">
-							<tr><td  style="width: 200px;"><input size="16" type="text" value="" id="s_time"  readonly="" class="form-control laydate-icon" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" placeholder="起始时间"></td><td style="width: 200px;"><input size="16" type="text" value="" id="e_time" name="expand_41" readonly="" class="form-control laydate-icon" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" placeholder="截止时间"></td><td style="width: 200px;"><input type="text" class="form-control jiebieclass" ></td>
+							<tr><td  style="width: 200px;"><input size="16" type="text" value="" id="s_time"  readonly="" class="form-control laydate-icon" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" placeholder="出生日期 起"></td><td style="width: 200px;"><input size="16" type="text" value="" id="e_time" name="expand_41" readonly="" class="form-control laydate-icon" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" placeholder="出生日期 止"></td><td style="width: 200px;"><input type="text" class="form-control jiebieclass"  placeholder="--届别--"></td>
 								<td><a  class="btn btn-primary"  style="margin-bottom:10px;margin-left: 30px" id="stat">统计</a></td></tr>
 						</table>
 						<table class="table table-bordered" id="stat-table">
@@ -181,7 +181,7 @@
 
 
 											}else{
-												alert(response.content);
+												alert('未检索到相关信息！');
 											}
 										},
 										error:function (xhr, ajaxOptions, thrownError){

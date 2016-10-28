@@ -1,0 +1,491 @@
+@charset "utf-8";
+html {
+  font-family: "Helvetica Neue", Helvetica, STHeiTi, Arial, sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+/*IOS
+
+iOS 4.0+ 使用英文字体 Helvetica Neue，之前的iOS版本降级使用 Helvetica，中文字体设置为华文黑体STHeiTi。
+
+Android
+
+原生Android下中文字体与英文字体都选择默认的无衬线字体，4.0之前版本英文字体原生Android使用的是Droid Sans，中文字体原生Android会命中Droid Sans Fallback，4.0+ 中英文字体都会使用原生Android新的Roboto字体。其他第三方Android系统也一致选择默认的无衬线字体。
+
+最后加上Arial字体方便pc端查看效果*/
+body {
+  margin: 0;
+  background-color: white;
+  height: 100%;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+article,
+footer,
+header,
+nav,
+section {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block;
+  vertical-align: baseline;
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+a {
+  background: transparent;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  color: #555;
+}
+a:active {
+  outline: 0;
+}
+a:active {
+  color: #006699;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+img {
+  border: 0;
+  vertical-align: middle;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+textarea {
+  overflow: auto;
+  resize: vertical;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+html,
+button,
+input,
+select,
+textarea {
+  font-family: "Helvetica Neue", Helvetica, STHeiTi, Arial, sans-serif;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+form,
+blockquote {
+  margin: 0;
+}
+ul,
+ol,
+li,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+}
+ul,
+ol {
+  list-style: none outside none;
+}
+h1,
+h2,
+h3 {
+  line-height: 2;
+  font-weight: normal;
+}
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  color: #ddd;
+}
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: #ddd;
+}
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: #ddd;
+}
+/* 工具样式 */
+.textover_1 {
+  overflow: hidden;
+  /*超出隐藏需要设置宽高超出宽就隐藏*/
+  text-overflow: ellipsis;
+  /*以省略号的形式隐藏*/
+  white-space: nowrap;
+  /*禁止文字自动换行*/
+}
+/*文本超出两行省略*/
+.textover_2 {
+  overflow: hidden;
+  /*超出隐藏需要设置宽高超出高就隐藏*/
+  text-overflow: ellipsis;
+  /*以省略号的形式隐藏*/
+  -webkit-line-clamp: 2;
+  /*超出多少行以省略的形式隐藏*/
+  /* Firefox 从上往下排列*/
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  /* Safari、Opera 以及 Chrome */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  /* W3C */
+  display: box;
+  box-orient: vertical;
+}
+.clear:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+@font-face {
+  font-family: 'iconfont';
+  src: url('iconfont/iconfont.eot');
+  src: url('iconfont/iconfont.eot?#iefix') format('embedded-opentype'), url('iconfont/iconfont.woff') format('woff'), url('iconfont/iconfont.ttf') format('truetype'), url('iconfont/iconfont.svg#iconfont') format('svg');
+  
+  /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  /* chrome、firefox */
+  /* IE6-IE8 */
+  /* IE9*/
+  /* iOS 4.1- */
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+* {
+  box-sizing: border-box;
+}
+img {
+  background: #eee;
+}
+#header {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1.65rem;
+  line-height: 1.65rem;
+  background: #fff;
+  padding: 0;
+  color: #eee;
+  font-size: 0.75rem;
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+}
+#header h2 {
+  width: 80%;
+  font-size: 0.75rem;
+  line-height: 1.65rem;
+  float: left;
+  color: #333;
+}
+#header a {
+  width: 10%;
+  height: 100%;
+  color: #c8c9ce;
+  float: left;
+}
+#header a i {
+  font-size: 0.75rem;
+}
+#header input {
+  width: 80%;
+  height: 1.25rem;
+  background: #f1f2f6;
+  border: none;
+  border-radius: 0.15rem;
+  color: #c8c9ce;
+  outline: none;
+  float: left;
+  margin-top: 0.25rem;
+  text-indent: 5px;
+}
+#footer {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2.5rem;
+  background: #fff;
+  padding: 0;
+  border-top: 1px solid #444;
+  color: #333333;
+}
+#footer a {
+  width: 25%;
+  color: #333333;
+  position: relative;
+}
+#footer a.on {
+  color: #b30000;
+}
+#footer a i {
+  width: 100%;
+  display: block;
+  font-size: 1.25rem;
+  text-align: center;
+}
+#footer a span {
+  font-size: 0.6rem;
+  line-height: 1.05rem;
+  text-align: center;
+  width: 100%;
+  display: block;
+}
+#footer a em {
+  height: 0.75rem;
+  width: 0.75rem;
+  font-size: 0.5rem;
+  color: #fff;
+  text-align: center;
+  line-height: 0.75rem;
+  display: block;
+  background: red;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  right: 0.5rem;
+}
+#wrapper {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 2.5rem;
+  left: 0;
+  width: 100%;
+  background: #f1f0f5;
+  overflow: hidden;
+}
+#wrapper1 {
+  position: absolute;
+  z-index: 1;
+  top: 1.5rem;
+  bottom: 2.5rem;
+  left: 0;
+  width: 100%;
+  background: #f1f0f5;
+  overflow: hidden;
+}
+#scroller {
+  position: absolute;
+  z-index: 1;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  width: 100%;
+  height: 100%;
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  -ms-text-size-adjust: none;
+  -o-text-size-adjust: none;
+  text-size-adjust: none;
+}
+#scroller {
+  background: rgba(0, 0, 0, 0.5);
+}
+#wrapper {
+  bottom: 0;
+}
+.mark .login_box {
+  width: 14rem;
+  height: 9.6rem;
+  background: #fff;
+  margin: 6.25rem auto 0;
+  text-align: center;
+}
+.mark .login_box h3 {
+  font-size: 0.75rem;
+  line-height: 2.5rem;
+  color: #36a5ff;
+}
+.mark .login_box input {
+  width: 11rem;
+  height: 1.575rem;
+  border: 1px solid #DDD;
+  border-radius: 0.125rem;
+  outline: none;
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  background: url(01.png) no-repeat 0.25rem 0.325rem;
+}
+.mark .login_box input:focus {
+  border: 1px solid #36A5FF;
+}
+.mark .login_box .pw {
+  background: url(02.png) no-repeat 0.25rem 0.325rem;
+}
+.mark .login_box .btn {
+  height: 1.75rem;
+  width: 7.75rem;
+  background: #36A5FF;
+  text-align: center;
+  line-height: 1.75rem;
+  color: #fff;
+  font-size: 0.7rem;
+  margin: 0.5rem auto;
+  border: none;
+  outline: none;
+  display: block;
+  border-radius: 0.125rem;
+}
+#footer {
+  text-align: center;
+}
+#footer .join_box {
+  margin: 0.5rem auto;
+  width: 14.5rem;
+}
+#footer .mark_box {
+  margin: 0.5rem auto;
+  width: 7rem;
+}
+#footer .mark_btn,
+#footer .join_btn {
+  float: left;
+  margin: 0 0.125rem;
+  width: 7rem;
+  height: 1.75rem;
+  background: #36A5FF;
+  display: block;
+  color: #fff;
+  border-radius: 0.125rem;
+  text-align: center;
+  line-height: 1.75rem;
+  outline: none;
+  border: none;
+  font-size: 0.75rem;
+}
+#footer .jion_btn_dis {
+  background: gray;
+}
+.mark_article {
+  padding: 0.5rem;
+  background: #f0eff4;
+}
+.mark_article .user_name {
+  width: 100%;
+  height: 1.5rem;
+  background: #fff;
+  color: #36A5FF;
+  text-indent: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.7rem;
+  line-height: 1.5rem;
+}
+.mark_article .con {
+  padding: 0.5rem;
+  width: 100%;
+  background: #fff;
+  font-size: 0.7rem;
+  color: #36A5FF;
+}
+.jion p {
+  font-size: 0.7rem;
+  padding-left: 0.5rem;
+  line-height: 1.5rem;
+  color: red;
+}
+.jion textarea {
+  width: 100%;
+  font-size: 0.7rem;
+  color: #333;
+}

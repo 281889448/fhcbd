@@ -1,0 +1,160 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    
+    
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+
+                        <h4 style="padding: 5px"> 提案办理情况</h4>
+                        <form action="{:U('Proposal/Result/handReply')}" name="proposalresult"  method="post">
+                            <input type="hidden" name="result_id" value="{$result[id]}" />
+                            <input type="hidden" name="status"  />
+                        <table class="table table-bordered table-responsive table-condensed detail_right" style="width: 1000px;">
+
+                            <tbody>
+
+                            <tr>
+                                <td >
+                                    案号
+                                </td>
+
+                                <td>
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'code','id'=>$proposal_result['proposal_id'],1))}
+                                </td>
+                                <td>文号</td>
+                                <td> {:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'wenhao','id'=>$proposal_result['id'],1))}</td>
+
+
+                            <tr>
+                                <td>
+                                    案由
+                                </td>
+                                <td>
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title','id'=>$proposal_result['proposal_id'],1))}
+                                </td>
+                                <td >
+                                    办理日期
+                                </td>
+                                <td >
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'end_time','id'=>$proposal_result['id'],1))}
+
+                                  
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    内容
+                                </td>
+                                <td colspan="3">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'content','id'=>$proposal_result['proposal_id'],1))}
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td>办理单位</td>
+                                <td>{:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'unit','id'=>$proposal_result['id'],1))}</td>
+                                <td>办理结果</td>
+                                <td>{:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'rate','id'=>$proposal_result['id'],1))}</td>
+                            </tr>
+                            <tr>
+                                <td>分管负责人</td>
+                                <td>{:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'leader','id'=>$proposal_result['id'],1))}</td>
+                                <td>联系方式</td>
+                                <td>{:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'leaderphone','id'=>$proposal_result['id'],1))}</td>
+                            </tr>
+
+                            <tr>
+                                <td>经办人</td>
+                                <td>{:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'contact','id'=>$proposal_result['id'],1))}</td>
+                                <td>联系方式</td>
+                                <td>{:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'telephone','id'=>$proposal_result['id'],1))}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    办理内容
+                                </td>
+                                <td colspan="3">
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'suggest','id'=>$proposal_result['id'],1))}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    提案附件下载
+                                </td>
+                                <td colspan="3">
+                                <div class="pull-left">
+                                    
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'fujian','id'=>$proposal_result['proposal_id'],1))}
+                                </div>
+                                </td>
+                            </tr>
+
+
+
+                            <tr>
+                                <td colspan="4" class="textc">
+                                    <div class="pull-left">
+                                    征询意见情况
+                                        
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>沟通形式</td>
+                                <td>{:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'link_type','id'=>$proposal_result['id'],1))}</td>
+                                <td>
+                                    沟通时间
+                                </td>
+                                <td>
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'link_time','id'=>$proposal_result['id'],1))}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    委员评定意见
+                                </td>
+                                <td >
+                                <div class="pull-left">
+                                    
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'comment','id'=>$proposal_result['id'],1))}
+                                </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td >
+                                    征询意见附件
+                                </td>
+                                <td colspan="3">
+                                <div class="pull-left">
+                                    
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'fujian','id'=>$proposal_result['id'],1))}
+                                </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+
+
+
+                                    <a class="btn btn-default pull-left" href="{$back_url}">返回</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>

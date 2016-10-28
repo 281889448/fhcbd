@@ -15,7 +15,7 @@
 define('UC_AUTH_KEY', '3hBF$~UNkTDA>*-i1j69VKe?OcJ.R!lEq"g#5LnY'); //加密KEY
 return array(
 /* 模块相关配置 */
-'AUTOLOAD_NAMESPACE' => array('Addons' => ONETHINK_ADDON_PATH), //扩展模块列表
+'AUTOLOAD_NAMESPACE' => array('Addons' => ONETHINK_ADDON_PATH,'Sms'=>'./Sms'), //扩展模块列表
 'DEFAULT_MODULE'     => 'Home',
 'MODULE_DENY_LIST'   => array('Common', 'User'),
 //'MODULE_ALLOW_LIST'  => array('Home','Admin'),
@@ -105,4 +105,6 @@ return array(
 'callback' => false, //检测文件是否存在回调函数，如果存在返回文件信息数组
 ),
 'LOAD_EXT_CONFIG' => 'proposal.status,proposal_group,polls_config',
+    /* 命名空间 */
+
 );

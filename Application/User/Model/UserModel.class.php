@@ -72,7 +72,7 @@ class UserModel extends Model
 					$map_field['field_id'] = $val['id'];
 					
 					$field_data = D('field')->where($map_field)->getField('field_data');
-				
+
 					if ($field_data == null || $field_data == '') {
 						$member[$key] = '';
 					} else {
@@ -92,6 +92,7 @@ class UserModel extends Model
 	 * $viewFields 要展示的字段
 	 */
 		public function getUsers($fields = array(),$viewFields = array()){
+
 			if(!$this->check_model()){return false;}
 				//获取到 中文字段 与其对应的 字段id值的键值对
 				$fields = array_filter($fields);
@@ -102,8 +103,10 @@ class UserModel extends Model
 				//将条件中的中文字段值替换成数字为key
                $map['aga.uid'] = $fields['user_id'];
                 unset($fields['user_id']);
+
 				foreach($fields as $key=>$value){
 					if($field_setting[$key]){
+
 						$fields_tmp[$field_setting[$key]] = $value;
 
 					//卸载原来的数组元素
@@ -139,7 +142,8 @@ class UserModel extends Model
 			//如果设置了展示字段
 				if(!empty($viewFields)){
 					$newFields = array();
-					
+
+
 					foreach($viewFields as $v){
 						$newFields[$v] = $fields_list[$v];
 					}
@@ -160,8 +164,9 @@ class UserModel extends Model
 
 					foreach ($fields_list as $key => $val) {
 						//设置setting表里对应用户ID字段
-					
+
 						//$fields[$val['id']] 为筛选条件  如果与筛选字段传过来有值 ，就将其作为有交筛选字段
+
 						if(!empty($fields[$val['id']])){
 							$map_field['uid'] = $tkl['uid'];
 							$map_field['field_id'] = $val['id'];

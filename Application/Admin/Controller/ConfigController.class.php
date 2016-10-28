@@ -221,8 +221,10 @@ class ConfigController extends AdminController {
 				    $data[$key]['field_data'] = $val['value'];
 				    break;
 			    case 'radio':
-				    $val['value'] = op_t($_POST['expand_' . $val['id']]);
-				    $data[$key]['field_data'] = $val['value'];
+				    $val['value'] = $_POST['expand_' . $val['id']];
+             
+				    $data[$key]['field_data'] = reset($val['value']);
+
 				    break;
 			    case 'checkbox':
 				    $val['value'] = $_POST['expand_' . $val['id']];

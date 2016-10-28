@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>政协委员履职平台</title>
+    <include file="cssjs"/>
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i>
+        <h1>十五届一次会议031号</h1>
+        <!--<button class="ui-btn">回首页</button>-->
+    </header>
+    <section class="ui-container">
+        <table class="ui-table ui-border ui-table2">
+            <tbody>
+                <tr>
+                    <td>
+                        提出期间
+                    </td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'meet_type',$content['id'],1,$data['meet_type']))}
+                    </td>
+                </tr>
+                <tr>
+                    <td>提出日期</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'create_time',$content['id'],1))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'leibie',$content['id'],1))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 会议次数</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'meet',$content['id'],1))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数</td>
+                    <td> {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'renshu',$content['id'],1))}</td>
+                </tr>
+                <tr>
+                    <td> 提案类型</td>
+                    <td>
+                        <select name="type_id" disabled readonly>
+
+                            <volist name="tree" id="top">
+                                <option value="{$top.id}" <eq name="content.type_id" value="$top.id">selected </eq>  >
+                                {$top.title}
+                                </option>
+                            </volist>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td> 案&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'title',$content['id'],1))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 内&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;容</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'content',$content['id'],1))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'fujian',$content['id'],1))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 提&nbsp;&nbsp;案&nbsp;&nbsp;人</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'author',$content['id'],1))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 联&nbsp;&nbsp;系&nbsp;&nbsp;人</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'contact',$content['id'],1))}
+                    </td>
+                </tr> 
+                <tr>
+                    <td> 联系方式</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'telephone',$content['id'],1))}
+                    </td>
+                </tr>
+                <tr>
+                    <td> 联系单位</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'contact_unit',$content['id'],1))}
+                    </td>
+                </tr>
+                 <tr>
+                    <td> 界&nbsp;&nbsp;别&nbsp;&nbsp;组</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'jiebie',$content['id'],1))}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td> 是否公开</td>
+                    <td>
+                        {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'is_public',$content['id'],1))}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    
+   
+
+   
+</body>
+
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" type="text/css" href="/Application/Wap/View/default/Weixin/static/index.css" />
+		<meta name="" content="" id="pixclPatio" />
+		<title>绑定账号</title>
+		<script>
+			function setSize(){
+				var pixclPatio = 1 / window.devicePixelRatio;
+				var htmlPixclPatio = document.getElementById('pixclPatio');
+				htmlPixclPatio.innerHTML = '<meta name="viewport" content="width=device-width,initial-scale=' + pixclPatio + ',minimum-scale=' + pixclPatio + ',maximum-scale=' + pixclPatio + ',user-scalable=no" />'
+				pixclPatio = 1 / window.devicePixelRatio;
+				var html = document.getElementsByTagName('html')[0];
+				var pageWidth = html.getBoundingClientRect().width;
+				html.style.fontSize = pageWidth / 16 + 'px';
+				if(parseInt(html.style.fontSize) > 96) {
+					html.style.fontSize = 96 + 'px'
+				}
+			}
+			setSize()
+			window.addEventListener("resize", setSize, false);
+		</script>
+		<script src="/Application/Wap/View/default/Weixin/static/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/Application/Wap/View/default/Weixin/static/iscroll.js"></script>
+		<script src="/Application/Wap/View/default/Weixin/static/jquery.min.js"></script>
+		<script type="text/javascript">
+			var myScroll;
+			function loaded() {
+				myScroll = new IScroll('#wrapper', {
+					mouseWheel: true,
+					click:true
+				});
+			}
+			document.addEventListener('touchmove', function(e) {
+				e.preventDefault();
+			}, false);
+		</script>
+		<!--调用滚动-->
+		<script>
+			$(function() {
+				loaded()
+			})
+		</script>
+		
+	</head>
+	<body>
+	    
+		<div id="wrapper">
+			<div id="scroller">
+				<div class="mark">
+					<div class="login_box">
+						<h3  id="title">账户绑定</h3>
+						<input type="text" id="mobile"/>
+						<input type="password" class="pw"  id="pwd">
+						<button class="btn" onclick="submit()">绑定</button>
+					</div>
+				</div>			
+			</div>
+		</div>
+		
+	</body>
+<script type="text/javascript">
+			$(function(){
+				$("input").on("focus",function(){
+					$(".login_box").css({"marginTop":"0"})
+				}).on("blur",function(){
+					$(".login_box").css({"marginTop":"6.25rem"})
+				})
+			})
+	function submit(){
+		$.ajax({
+			type: "POST",
+			url: "{:U('Weixin/savebind',array('openid'=>$openid))}",
+			data: {'mobile':$('#mobile').val(),'pwd':$('#pwd').val()},
+			success: function(data){
+				data=$.parseJSON(data);
+				if(data.code==1) //成
+				{
+					window.location.reload();
+				}else{
+					$('#title').html("<span style='color: red;'>"+data.msg+"</span>");
+					setTimeout('$("#title").html("账户绑定")',2000);
+				}
+			}
+		})
+	}
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

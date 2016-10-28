@@ -148,6 +148,7 @@ class FileuModel extends Model{
 	private function downLocalFile($file, $callback = null, $args = null){
 
 		if(is_file($file['rootpath'].$file['savepath'].$file['savename'])){
+
 			/* 调用回调函数新增下载数 */
 			is_callable($callback) && call_user_func($callback, $args);
 

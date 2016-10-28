@@ -3,21 +3,17 @@ namespace Home\Controller;
 use Common\Controller\BaseController;
 //继承Home/Common/function微信公共函数
 class WeixinController extends BaseController {
-	public $appid;
-	public $appsecret;
 	public $openid;
 	public $tobind=false;//为true则需要绑定
 	public $uid;
 	function __construct()
 	{
 		parent::__construct();
-		$this->appid='wx07fdd9a4503cca15';
-		$this->appsecret='6682cef161cd61003e561cde96336ec0';
 		if(session('openid') ){
 			$this->openid=session('openid');
 
 		}else{
-			$this->openid=get_user_openid($this->appid,$this->appsecret);
+			$this->openid=get_user_openid();
 		}
 
 		if($this->openid){

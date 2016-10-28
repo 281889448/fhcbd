@@ -19,6 +19,7 @@ class ConfigController extends BaseController
             $this->error('请登陆后再访问本页面。');
         }
         $this->setTitle('编辑资料');
+        $this->assign('current','usercenter');
 
     }
     

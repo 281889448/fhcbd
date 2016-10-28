@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>{$content.title}</title>
+    <include file="cssjs"/>
+</head>
+
+<body ontouchstart="">
+<header class="ui-header ui-header-positive ui-border-b">
+    <i class="ui-icon-return" onclick="history.back()"></i>
+    <h1>{$content.code}</h1>
+    <!--<button class="ui-btn">回首页</button>-->
+</header>
+<footer class="ui-footer ui-footer-btn">
+    <a href="#">确定我的联名状态</a>
+</footer>
+<section class="ui-container">
+    <div class="searchlistwrap">
+        <ul class="searchlist">
+            <li>
+                <p>提出期间：{:W('InputRender/InputRender',array('modelid'=>4,'name'=>'meet_type',$content['id'],1,$data['meet_type']))}</p>
+            </li>
+            <li>
+                <p>提出日期： {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'create_time',$content['id'],1))}</p>
+            </li>
+            <li>
+                <p class="clear"><span class="fl">类别： {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'leibie',$content['id'],1))}</span><span>人数：{:W('InputRender/InputRender',array('modelid'=>4,'name'=>'renshu',$content['id'],1))}</span></p>
+            </li>
+            <li>
+                <p>提案类型：<select name="type_id" disabled readonly>
+
+                    <volist name="tree" id="top">
+                        <option value="{$top.id}" <eq name="content.type_id" value="$top.id">selected </eq>  >
+                        {$top.title}
+                        </option>
+                    </volist>
+                </select></p>
+            </li>
+            <li>
+                <p>会议次数： {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'meet',$content['id'],1))}</p>
+            </li>
+            <li>
+                <p>是否公开： {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'is_public',$content['id'],1))}</p>
+            </li>
+            <li>
+                <p>案由：{:W('InputRender/InputRender',array('modelid'=>4,'name'=>'title',$content['id'],1))}</p>
+            </li>
+            <li>
+                <p>内容： {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'content',$content['id'],1))}</p>
+            </li>
+        </ul>
+        <ul class="searchlist">
+            <li>
+                <p> 附件: {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'fujian',$content['id'],1))} </p>
+            </li>
+        </ul>
+        <ul class="searchlist">
+            <li>
+                <p>提案人： {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'author',$content['id'],1))}</p>
+            </li>
+            <li>
+                <p class="clear"><span class="fl">联系人：{:W('InputRender/InputRender',array('modelid'=>4,'name'=>'contact',$content['id'],1))}</span><span class="fr">电话： {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'telephone',$content['id'],1))}</span></p>
+            </li>
+
+            <li>
+                <p>联系单位： {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'contact_unit',$content['id'],1))}</p>
+            </li>
+            <li>
+                <p>联名理由： {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'joint_content',$content['id'],1))}</p>
+            </li>
+        </ul>
+
+        <ul class="searchlist">
+            <li>
+                <p>联名人员</p>
+            </li>
+            <li>
+                <p>用  户  名：小新星</p>
+            </li>
+            <li>
+                <p>委员姓名：王浩</p>
+            </li>
+            <li>
+                <p>界  别  组：中国工农民主党</p>
+            </li>
+            <li>
+                <p>专  委  会：提案委</p>
+            </li>
+            <li>
+                <p>街道联络委：新华街联络委员会</p>
+            </li>
+            <li>
+                <p>状        态：<font >不同意</font></p>
+            </li>
+        </ul>
+        <ul class="searchlist">
+            <li>
+                <p>联名人员</p>
+            </li>
+            <li>
+                <p>用  户  名：天空</p>
+            </li>
+            <li>
+                <p>委员姓名：王浩</p>
+            </li>
+            <li>
+                <p>界  别  组：中国工农民主党</p>
+            </li>
+            <li>
+                <p>专  委  会：提案委</p>
+            </li>
+            <li>
+                <p>街道联络委：新华街联络委员会</p>
+            </li>
+            <li>
+                <p>状        态：<font >同意</font></p>
+            </li>
+        </ul>
+    </div>
+
+
+</section>
+</body>
+</html>

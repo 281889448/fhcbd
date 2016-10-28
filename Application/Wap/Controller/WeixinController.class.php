@@ -125,7 +125,7 @@ class WeixinController extends BaseController {
                 if ($eventdb['sTime'] > ($nowtime + 60 * 60)) $showtype = 2;
                 $max_mark_id = D('Event_marknum')->where(array('uid' => $this->uid, 'event_id' => $id))->max('id');
                 $data_mark_time=D('Event_marknum')->where(array('id'=>$max_mark_id))->find();
-                if ($data_mark_time['mark_time'] + 60 * 60 > time() && $data_mark_time['status']<2) $showtype = 3;
+                if ($data_mark_time['mark_time']+60 * 60 > time()&& $data_mark_time['mark_time']<time() && $data_mark_time['status']>0) $showtype = 3;
                 //读取签到数据
                 $markset = D('Event_markset')->where(array('event_id' => $id))->order('id')->select();
             }else{
@@ -138,7 +138,7 @@ class WeixinController extends BaseController {
                 if ($meetdb['sTime'] > ($nowtime + 60 * 60)) $showtype = 2;
                 $max_mark_id = D('Meet_marknum')->where(array('uid' => $this->uid, 'meet_id' => $id))->max('id');
                 $data_mark_time=D('Meet_marknum')->where(array('id'=>$max_mark_id))->find();
-                if ($data_mark_time['mark_time'] + 60 * 60 > time() && $data_mark_time['status']<2) $showtype = 3;
+                if ($data_mark_time['mark_time']+60 * 60 > time()&& $data_mark_time['mark_time']<time() && $data_mark_time['status']>0) $showtype = 3;
                 //读取签到数据
                 $markset = D('Meet_markset')->where(array('meet_id' => $id))->order('id')->select();
             }
@@ -148,6 +148,8 @@ class WeixinController extends BaseController {
                 foreach ($markset as $k => $v) {
                     if ($markset[$k]['mark_time'] < $nowtime && $nowtime < $markset[$k + 1]['mark_time']){
                         $max_mark_sort = $k + 2;
+                    }else{
+                        $max_mark_sort = 1;
                     }
                 }
             }

@@ -1,3 +1,5 @@
+
+<if condition="!empty($group_view)">
 <!-- Modal -->
 <style type="text/css">
 	.con, .people_N{
@@ -54,7 +56,7 @@
 					<input type="hidden" value="" id="contact_ids"/>
 
 					<foreach name="contact_group" item="cg" key="k">
-
+						<if condition="$group_view['parent_id'] == $k || $group_view == 'all'">
 						<div class="box_N">
 							<label><input type="checkbox" value="{$k}" class="big_group"/>{$cg['name']}</label>
 							<label>
@@ -73,21 +75,38 @@
 									<div class="con" style="display: block;position: relative;left: -20px;top: -20px;">
 										<php>
 											switch($k){
-											case '2':
-											$map['是否常委'] = '是';
-											break;
-											case '3':
-											$map['街道联络委'] = $cgs[name];
-											break;
-											case '6':
-											$map['七党一联主委'] = '是';
-											break;
+
+												case '2':
+													$map['是否常委'] = '是';
+													break;
+												case '3':
+													$map['主任'] = ['in','民族街联络委员会,民权街联络委员会,满春街联络委员会,花楼水塔街联络委员会,前进街联络委员会,民意街联络委员会,新华街联络委员会,万松街联络委员会,北湖街联络委员会,唐家墩街联络委员会,常青街联络委员会,汉兴街联络委员会,江汉经济开发区联络委员会'];
+
+													break;
+
+
+												case '5':
+													$map['名称'] = $cgs[name];
+													$is_jt = 1;
+													break;
+												case '6':
+													$map['七党一联主委'] = '是';
+													break;
 											case '7':
 											$map['主席会议成员'] = '是';
+
 											break;
+
 											}
 
-											$m=D('User/User');$m->setModel(WEIYUAN);$users = $m->getUsers($map,array('名称','界别','街道联络委','专委会')); $map = array();</php>
+											$m=D('User/User');
+											if($js_jt == 1){
+												$m->setModel(TEAM);
+											}else{
+												$m->setModel(WEIYUAN);
+											}
+
+											$users = $m->getUsers($map,array('名称','界别','街道联络委','专委会','七党一联主委','主席会议成员','是否常委','主任')); $map = array();</php>
 										<volist name="users" id="u">
 											<label><input type="checkbox" value="{$u['id']}"/>{$u['名称']}</label>
 										</volist>
@@ -99,6 +118,7 @@
 							</if>
 
 							<foreach name="cg.subgroup" key="k2" item="cgs">
+								<if condition="$group_view['id'] == $k2 || $group_view == 'all'">
 								<div class="people_N" style="padding-left: 20px">
 									<div class="tit">
 										<label><input type="checkbox" value="{$k2}"/>{$cgs.name}</label>
@@ -109,21 +129,40 @@
 
 									<div class="con">
 										<php>
+											$is_jt = 0;
 											switch($k){
 											case '1':
 											$map['专委会'] = $cgs[name];
 											break;
+
+											break;
 											case '4':
-											$map['街道联络委'] = $cgs[name];
+											$map['名称'] = $cgs[name];
+
+											$is_jt = 1;
 											break;
 											case '5':
-											$map['专委会'] = $cgs[name];
+											$map['名称'] = $cgs[name];
+											$is_jt = 1;
 											break;
+
 											case '8':
 											$map['街道联络委'] = $cgs[name];
 											break;
 											}
-											$m=D('User/User');$m->setModel(WEIYUAN);$users = $m->getUsers($map,array('名称','界别','街道联络委','专委会')); $map = array(); </php>
+											$m=D('User/User');
+
+											if($is_jt){
+												$m->setModel(TEAM);
+												$users = $m->getUsers($map,['名称']);
+
+											}else{
+												$m->setModel(WEIYUAN);
+
+												$users = $m->getUsers($map,array('名称','界别','街道联络委','专委会','七党一联主委','主席会议成员','是否常委','主任'));
+											}
+
+											$map = array(); </php>
 										<volist name="users" id="u">
 											<label><input type="checkbox" value="{$u['id']}"/>{$u['名称']}</label>
 										</volist>
@@ -131,9 +170,11 @@
 
 									</div>
 								</div>
+								</if>
 							</foreach>
 
 						</div>
+						</if>
 					</foreach>
 
 					<script type="text/javascript">
@@ -300,3 +341,4 @@
 		</div>
 	</div>
 </div>
+</if>

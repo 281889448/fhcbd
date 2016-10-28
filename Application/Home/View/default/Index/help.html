@@ -1,15 +1,31 @@
 <extend name="Base/common"/>
 
 <block name="body">
+    <style>
+        #tableWrap{
+            padding:40px !important;
+        }
+        a{
+            color: #00A5E0;
+        }
+        p{
+            line-height:30px;
+        }
+    </style>
     <div class="ar_content">
         <div class="container-fluid">
             <div class="row-fluid">
                 <div class="span12">
                     <div id="tableWrap" >
-                        <p>帮助中心</p>
-                        <p><a href="/Public/办理答复议提案须知.doc">办理答复议提案须知（附件下载）</a>
+                        <h4 style="color: #999;margin-bottom: 30px">帮助中心</h4>
+                        <p>中国人民政治协商会议武汉市江汉区委员会</p>
+                        <p>单位地址: 武汉市江汉区新华路255号</p>
+                        <p>联系电话: 027-85481646</p>
+                        <p>技术支持: 武汉火凤凰云计算服务股份有限公司</p>
+                        <hr>
+                        <p><a href="{:U('Home/Fileu/download',['id'=>999])}">办理答复议提案须知（附件下载）</a>
                         </p>
-                        <p><a href="/Public/江汉区政协委员服务与管理信息系统-操作说明文档.doc">江汉区政协委员服务与管理信息系统-操作说明文档（附件下载）</a>
+                        <p><a href="{:U('Home/Fileu/download',['id'=>998])}">江汉区政协委员服务与管理信息系统-操作说明文档（附件下载）</a>
                         </p>
                     </div>
                 </div>

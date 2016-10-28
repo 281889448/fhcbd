@@ -18,18 +18,18 @@
 									</select>
 								</td>	
 								<td  style="width:200px">
-									
+
 									<select name="status" class="form-control input-sm" >
-										<option value="5">所有类型</option>
-										<option value="0">未签</option>
-										<option value="1">已签</option>
-										<option value="2">迟到</option>
-										<option value="3">已请假</option>
-										<option value="4">已补签</option>
+										<option value="5"<if condition="$search_status eq ''">selected</if>>所有类型</option>
+										<option value="0" <if condition="$search_status eq '0'">selected</if>>未签</option>
+										<option value="1"<if condition="$search_status eq '1'">selected</if>>已签</option>
+										<option value="2"<if condition="$search_status eq '2'">selected</if>>迟到</option>
+										<option value="3"<if condition="$search_status eq '3'">selected</if>>已请假</option>
+										<option value="4"<if condition="$search_status eq '4'">selected</if>>已补签</option>
 									</select>
 								</td>
 								<td  style="width:200px">
-									<input type="text "  name="truename" class="form-control input-sm" placeholder="按姓名查询">
+									<input type="text " value="{$search_name}"  name="truename" class="form-control input-sm" placeholder="按姓名查询">
 								</td>
 								<td>
 									<a href="#" class="btn btn-primary btn-sm" style="margin-left:15px" onclick="to_search()">查询</a>
@@ -37,8 +37,8 @@
 							</tr>
 						</table>
 						</form>
-						<span>应签({$total_count})</span>
-						<span>已签({$checkin_count})</span>
+						<span>应签：{$total_count}人 </span>
+						<span style="color:red">{$search_total_num}</span>
 						<table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
 							<thead>
 							<tr>
@@ -79,12 +79,15 @@
 									<elseif condition="$vo['status'] eq 2" />
 										<td style="color:orange">迟到</td>
 										<td class=""></td>
-									<elseif condition="$vo['status'] eq 4" />
+										<elseif condition="$vo['status'] eq 4" />
 										<td style="color:orange">已补签</td>
 										<td class="">
 											<a class="btn btn-primary btn-sm" onclick="up_status({$vo.id},'qxbq')">取消补签</a>
 										</td>
-									<else />
+										<elseif condition="$vo['status'] eq 6"/>
+										<td style="color:blue">已手机请假</td>
+										<td class=""></td>
+										<else/>
 										<td style="color:blue">已请假</td>
 										<td class="">
 											<a class="btn btn-primary btn-sm" onclick="up_status({$vo.id},'qxqj')">取消请假</a>

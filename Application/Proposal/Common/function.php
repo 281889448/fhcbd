@@ -133,11 +133,12 @@ function process_log( $action = null,$model = null, $proposal_id = null, $user_i
 				$data['create_time'] = NOW_TIME;
 				$data['group'] = get_group($user_id);
 				$data['to_status'] = $proposal['status'];
-				
+                $data['result_id'] = $record_id;
 				switch(strtolower($action)){
 					case 'handover':
 						
 						$data['proposal_id'] = $proposal['id'];
+
 						$data['to_status'] = 193;
 						$data['remark'] = "办理单位【{$do_user['名称']}】对提案人【{$proposal_user['名称']}】，案号【{$proposal['code']}】,案由【{$proposal['title']}】的提案执行了移交办理操作";
 						break;
@@ -147,12 +148,12 @@ function process_log( $action = null,$model = null, $proposal_id = null, $user_i
 						break;
 					case 'handagain':
 						
-						$data['result_id'] = $record_id;
+
 						$data['remark'] = "政府督查室【{$do_user['名称']}】对办理单位【{$result_user['名称']}】，案号【{$proposal['code']}】,案由【{$proposal['title']}】的提案执行了办理反馈操作";
 						break;
 
                     case 'denyback':
-                        $data['result_id'] = $record_id;
+                       
                         $data['to_status'] = 193;
                         $data['remark'] = "政府督查室【{$do_user['名称']}】对办理单位【{$proposal_user['名称']}】，案号【{$proposal['code']}】,案由【{$proposal['title']}】的提案执行了拒绝退回操作";
                         break;

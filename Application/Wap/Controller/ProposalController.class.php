@@ -310,7 +310,7 @@ class ProposalController extends BaseController
            */
             $group = get_group(get_uid());
             if($content['status'] == 2 && ($group == '委员' || $group == '集体')){
-                $back_url = U('Proposal/Index/index',array('status'=>2));
+                $back_url = U('Wap/Proposal/index',array('status'=>2));
                 //流程记录
                 process_log( 'dopost','proposal', $proposal_id, get_uid(),$proposal_id);
 
@@ -345,14 +345,14 @@ class ProposalController extends BaseController
             D('Fileu')->where($map_f)->setField('record_id',$rs);
 
             if($content['status'] == 2){
-                $back_url = U('Proposal/Index/index',array('status'=>2));
+                $back_url = U('Wap/Proposal/index',array('status'=>2));
                 //流程记录
                 process_log( 'dopost','proposal', $rs, get_uid(),$rs);
 
                 //积分记录
                 action_log('weiyuan_basic_proposal_add','proposal',$rs,$content['uid']);
             }else{
-                $back_url = U('Proposal/Index/detail',array('id'=> $rs ));
+                $back_url = U('Wap/Proposal/detail',array('id'=> $rs ));
             }
 
 //同步到微博

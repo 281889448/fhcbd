@@ -7,39 +7,39 @@
                     <div id="tableWrap">
                         <form action="{:U('Event/Index/leave',array('id'=>$data['id']))}" method="post" name="frm" id="formId">
                             <input type="hidden" name="status" />
-                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
-                            <thead>
-                            <tr>
-                                <th > 活动名称</th>
-                                <th > 活动类型</th>
-                                <th > 姓名</th>
-                                <th > 单位</th>
-                                <th > 联系电话</th>
-                                <th >提交时间</th>
-                                <th >请假原因</th>
-                                <th >附件 </th>
-                                <th >操作 </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <volist name="data" id="vo" empty="暂时没有参加活动人员数据">
+                            <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                                <thead>
                                 <tr>
-                                    <td>{$vo.event_name}</td>
-                                    <td>{$vo.event_type}</td>
-                                    <td>{$vo.truename}</td>
-                                    <td>{$vo.company}</td>
-                                    <td>{$vo.phone}</td>
-                                    <td>{$vo.creat_time|date="Y-m-d H:i:s",###}</td>
-                                    <td>{$vo.whytext|default="无"}</td>
-                                    <td>{:W('Common/InputRender/InputRender',array('modelid'=>13,'name'=>'file',$vo[id],1))}</td>
-                                    <td><a class="btn btn-primary btn-sm btn-sub-end" data-toggle="modal" data-target="#myModal" delid="{$vo['id']}" href="javascript:;">批准</a><span ></span>
-                                        <a class="btn btn-primary btn-sm btn-back-end" data-toggle="modal" data-target="#myModal" delid="{$vo['id']}" href="javascript:;">退回</a><span ></span><td>
+                                    <th > 会议名称</th>
+                                    <th > 会议类型</th>
+                                    <th > 姓名</th>
+                                    <th > 单位</th>
+                                    <th > 联系电话</th>
+                                    <th >提交时间</th>
+                                    <th >请假原因</th>
+                                    <th >附件 </th>
+                                    <th >操作 </th>
                                 </tr>
-                            </volist>
-                            </tbody>
-                        </table>
-                        <a href="javascript:history.back(-1);" class="btn btn-default  btn-sm" type="submit">返回</a>
-                         </form>
+                                </thead>
+                                <tbody>
+                                <volist name="data" id="vo" empty="暂时没有参加活动人员数据">
+                                    <tr>
+                                        <td>{$vo.event_name}</td>
+                                        <td>{$vo.event_type}</td>
+                                        <td>{$vo.truename}</td>
+                                        <td>{$vo.company}</td>
+                                        <td>{$vo.phone}</td>
+                                        <td>{$vo.creat_time|date="Y-m-d H:i:s",###}</td>
+                                        <td>{$vo.whytext|default="无"}</td>
+                                        <td>{:W('Common/InputRender/InputRender',array('modelid'=>14,'name'=>'file',$vo[id],1))}</td>
+                                        <td><a class="btn btn-primary btn-sm btn-sub-end" data-toggle="modal" data-target="#myModal" delid="{$vo['id']}" href="javascript:;">批准</a><span ></span>
+                                            <a class="btn btn-primary btn-sm btn-back-end" data-toggle="modal" data-target="#myModal" delid="{$vo['id']}" href="javascript:;">退回</a><span ></span><td>
+                                    </tr>
+                                </volist>
+                                </tbody>
+                            </table>
+                            <a href="javascript:history.back(-1);" class="btn btn-default  btn-sm" type="submit">返回</a>
+                        </form>
                     </div>
 
                 </div>
@@ -48,10 +48,11 @@
     </div>
     <script type="text/javascript">
         var delid='';
+        var url='';
         var data='';
         var lock_ajax=true;
         $(function() {
-            //请假批准
+
             $(".btn-sub-end").click(function() {
                 $('#confrim').text('提交通过请假将不能撤回，确定提交吗？');
                 delid=$(this).attr('delid');
@@ -59,7 +60,7 @@
                 data={'id': delid,'status':4};
             });
 
-            //请假退回
+            //活动请假退回
             $(".btn-back-end").click(function() {
                 delid=$(this).attr('delid');
                 $('#confrim').html('<textarea name="back" placeholder="请填写退回意见"  class="form-control"></textarea>');
@@ -69,7 +70,7 @@
 
 
         })
-        function ajax_sub(data) {
+        function ajax_sub(url,data) {
             if (data.status ==3) {
                 var back = $("textarea[name='back']").val();
                 data = {'id': delid, 'status': $('#status').val(), 'status': 3, 'back': back};
@@ -89,7 +90,7 @@
                         data = $.parseJSON(data);
                         if (data.code == 1) {
                             $("#myModal").hide();
-                            window.location.reload();
+                            window.location.href='{$url}';
                         } else {
                             alert(data.msg);
                         }
@@ -113,7 +114,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" >关闭</button>
-                    <button id="sure" type="button" class="btn btn-primary"  onclick="ajax_sub(data)">确定</button>
+                    <button id="sure" type="button" class="btn btn-primary"  onclick="ajax_sub(url,data)">确定</button>
                 </div>
 
             </div>

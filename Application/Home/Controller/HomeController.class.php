@@ -27,7 +27,7 @@ class HomeController extends Controller {
 
 		 define('UID',is_login());
 
-
+        
 		 //验证登陆，如果是在登陆页面就不再进行跳转
         if( !UID && ACTION_NAME != 'login'){// 还没登录 跳转到登录页面
 

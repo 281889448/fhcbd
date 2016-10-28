@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" type="text/css" href="Application/Wap/View/default/Weixin/static/index.css" />
+		<meta name="" content="" id="pixclPatio" />
+		<script>
+			function setSize() {
+				var pixclPatio = 1 / window.devicePixelRatio;
+				var htmlPixclPatio = document.getElementById('pixclPatio');
+				htmlPixclPatio.innerHTML = '<meta name="viewport" content="width=device-width,initial-scale=' + pixclPatio + ',minimum-scale=' + pixclPatio + ',maximum-scale=' + pixclPatio + ',user-scalable=no" />'
+				pixclPatio = 1 / window.devicePixelRatio;
+				var html = document.getElementsByTagName('html')[0];
+				var pageWidth = html.getBoundingClientRect().width;
+				html.style.fontSize = pageWidth / 16 + 'px';
+				if(parseInt(html.style.fontSize) > 96) {
+					html.style.fontSize = 96 + 'px'
+				}
+			}
+			setSize()
+			window.addEventListener("resize", setSize, false);
+		</script>
+		<script src="Application/Wap/View/default/Weixin/static/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Application/Wap/View/default/Weixin/static/iscroll.js"></script>
+		<script type="text/javascript">
+			var myScroll;
+			function loaded() {
+				myScroll = new IScroll('#wrapper', {
+					mouseWheel: true,
+					click:true
+				});
+			}
+			document.addEventListener('touchmove', function(e) {
+				e.preventDefault();
+			}, false);
+		</script>
+		<!--调用滚动-->
+		<script>
+			$(function() {
+				loaded()
+			})
+		</script>
+		<style type="text/css">
+			#wrapper{
+				background: #f0eff4 ;
+				bottom: 0rem;
+			}
+			#scroller{
+				background: #f0eff4 ;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<div id="scroller">
+				<div class="mark_article">
+					<p class="user_name"><span style="float: left;">标题</span> <span class="textover_1" style="width: 13rem;display: block;float: left;color: #333;">{$data['title']}</span></p>
+					<p class="user_name"><span style="float: left;">类型</span> <span class="textover_1" style="width: 13rem;display: block;float: left;color: #333;">{$data['type']}</span></p>
+					<p class="user_name"><span style="float: left;">时间</span> <span class="textover_1" style="width: 13rem;display: block;float: left;color: #333;">{$data['stime']|date="Y-m-d",###}</span></p>
+					<div class="con">
+						<p >内容</p>
+						<div class="text" style="color: #333;">
+							{$data['content']}
+						</div>
+						
+						
+					</div>
+					
+					
+				</div>
+			</div>
+		</div>
+		
+		
+	</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

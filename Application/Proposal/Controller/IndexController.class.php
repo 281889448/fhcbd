@@ -1750,14 +1750,16 @@ class IndexController extends BaseController
 		$this->ajaxReturn($data);
 	}
 	
-	//移交办理处理
+	//移交办理  信息获取
 	public function handtransfer_ajax($result_id){
 		$status = 0;
 		//proposal_process
-		$map['pr.id'] = $result_id;
-		$map['pp.to_status'] = 19;
+	/*	$map['pr.id'] = $result_id;
+		$map['pp.to_status'] = 192;
 		
 		$result_p = D('ProposalResult')->alias('pr')->field('pr.id,pp.suggest')->join(' __PROPOSAL_PROCESS__ pp on pr.user_id=pp.user_id and pr.proposal_id=pp.proposal_id')->where($map)->order('pp.create_time desc')->find();
+*/
+	$result_p = D('ProposalProcess')->where(['result_id'=>$result_id,'to_status'=>193])->order('create_time desc')->find();
 
 		if($result_p ){
 			$status = 1;

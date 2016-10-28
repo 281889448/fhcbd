@@ -61,27 +61,27 @@ return array(
 	),
 	'12'=>array(
 		'parent_id' => 1,
-		'name' => '经科委',
+		'name' => '经济科技委',
 		'is_final' => true,
 	),
 	'13'=>array(
 		'parent_id' => 1,
-		'name' => '文史委',
+		'name' => '文史学习委',
 		'is_final' => true,
 	),
 	'14'=>array(
 		'parent_id' => 1,
-		'name' => '社法委',
+		'name' => '社会法制与人口资源环境委',
 		'is_final' => true,
 	),
 	'15'=>array(
 		'parent_id' => 1,
-		'name' => '外事委',
+		'name' => '民族宗教与港澳台侨外事委',
 		'is_final' => true,
 	),
 	'16'=>array(
 		'parent_id' => 1,
-		'name' => '委工委',
+		'name' => '委员工作委',
 		'is_final' => true,
 	),
 	
@@ -214,27 +214,27 @@ return array(
 	),
 	'52'=>array(
 		'parent_id' => 5,
-		'name' => '经科委',
+		'name' => '经济科技委',
 		'is_final' => true,
 	),
 	'53'=>array(
 		'parent_id' => 5,
-		'name' => '文史委',
+		'name' => '文史学习委',
 		'is_final' => true,
 	),
 	'54'=>array(
 		'parent_id' => 5,
-		'name' => '社法委',
+		'name' => '社会法制与人口资源环境委',
 		'is_final' => true,
 	),
 	'55'=>array(
 		'parent_id' => 5,
-		'name' => '外事委',
+		'name' => '民族宗教与港澳台侨外事委',
 		'is_final' => true,
 	),
 	'56'=>array(
 		'parent_id' => 5,
-		'name' => '委工委',
+		'name' => '委员工作委',
 		'is_final' => true,
 	),
 

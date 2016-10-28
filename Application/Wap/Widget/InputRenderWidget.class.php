@@ -39,7 +39,7 @@ class InputRenderWidget extends Controller {
 		if($id){
 			$data = M(ucwords($model['name']))->find($id);	
 		}
-
+		
 		if(empty($data)){
 		    $data[$field[name]] = $defval;
         }

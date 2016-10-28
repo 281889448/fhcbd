@@ -1,0 +1,281 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" type="text/css" href="Application/Wap/View/default/Weixin/static/index.css" />
+		<script src="Application/Wap/View/default/Weixin/static/jquery.min.js"></script>
+		<meta name="" content="" id="pixclPatio" />
+		<title>{$data['title']}邀请</title>
+		<script>
+			function setSize() {
+				var pixclPatio = 1 / window.devicePixelRatio;
+				var htmlPixclPatio = document.getElementById('pixclPatio');
+				htmlPixclPatio.innerHTML = '<meta name="viewport" content="width=device-width,initial-scale=' + pixclPatio + ',minimum-scale=' + pixclPatio + ',maximum-scale=' + pixclPatio + ',user-scalable=no" />'
+				pixclPatio = 1 / window.devicePixelRatio;
+				var html = document.getElementsByTagName('html')[0];
+				var pageWidth = html.getBoundingClientRect().width;
+				html.style.fontSize = pageWidth / 16 + 'px';
+				if(parseInt(html.style.fontSize) > 96) {
+					html.style.fontSize = 96 + 'px'
+				}
+			}
+			setSize()
+			window.addEventListener("resize", setSize, false);
+		</script>
+		<script src="Application/Wap/View/default/Weixin/static/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Application/Wap/View/default/Weixin/static/iscroll.js"></script>
+		<script type="text/javascript">
+			var myScroll;
+			function loaded() {
+				myScroll = new IScroll('#wrapper', {
+					mouseWheel: true,
+					click:true
+				});
+			}
+			document.addEventListener('touchmove', function(e) {
+				e.preventDefault();
+			}, false);
+		</script>
+		<!--调用滚动-->
+		<script>
+			$(function() {
+				loaded()
+			})
+		</script>
+		<style type="text/css">
+			#wrapper{
+				background: #f0eff4 ;
+				bottom: 2.7rem;
+			}
+			#scroller{
+				background: #f0eff4 ;
+			}
+			 .modal-mark{
+
+				 height: 100%;
+				 width: 100%;
+				 position: fixed;
+				 top: 0;
+				 left: 0;
+				 background:rgba(0,0,0,0.5) ;
+				 z-index: 90;
+				 display: none;
+
+			 }
+			.modal{
+
+				width: 80%;
+				height: auto;margin: 0 auto;
+				margin-top: .5rem;
+				top: 0;left: 0;
+				z-index: 99;
+				background:#eee;
+				font-size: 1rem;
+				/*display: none;*/
+			}
+			.modal-header{
+				width: 100%;
+				padding: 20px 0;
+				height: 100px
+			}
+			.modal-close{
+				line-height: 1rem;
+				cursor: pointer;
+				height: 1rem;
+				width: 1rem;
+				text-align:center;
+				background: red;
+				color: #fff;
+				margin-right: 20px;
+				border-radius: 100%;
+				border:1px solid #ddd;
+
+			}
+			.join_btn{
+				/*float: left;*/
+				margin: .2rem auto;
+				width: 80%;
+				height: 1.75rem;
+				background: #36A5FF;
+				display: block;
+				color: #fff;
+				border-radius: 0.125rem;
+				text-align: center;
+				line-height: 1.75rem;
+				outline: none;
+				border: none;
+				font-size: 0.75rem;
+			}
+			.btn-gray{
+				background: gray;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div id="scroller">
+				<div class="mark_article">
+					<p class="user_name">尊敬的：{$userdb['truename']},您好</p>
+					<p class="user_name">{$typename}名称：{$data['title']}</p>
+					<div class="con" style="margin-bottom: 0.5rem">
+						{$typename}简介:{$data['explain']}
+					</div>
+					<p class="user_name">开始时间：{$data['sTime']|date="Y-m-d H:i:s",###}</p>
+					<p class="user_name">结束时间：{$data['eTime']|date="Y-m-d H:i:s",###}</p>
+					<p class="user_name" style="height: auto !important;" >{$typename}地点：{$data['address']}</p>
+						<if condition="$attenddb['status'] eq 2">
+							<div class="jion" id="dis">
+								<p>我的请假原因:</p>
+								<p >{$attenddb['whytext']}</p>
+							</div>
+						</if>
+				</div>
+			</div>
+		</div>
+		<div id="footer">
+				<if condition="$nowtime gt $data['eTime'] ">
+					<div class="mark_box clear">
+					<a href="#dis" class="mark_btn jion_btn_dis">已经结束</a>
+					</div>
+				<else/>
+					<if condition="$attenddb['status'] eq 1">
+						<div class="mark_box clear">
+						<a href="#dis" class="mark_btn jion_btn_dis">已选择参与</a>
+						</div>
+					<elseif condition="$attenddb['status'] eq 2"/>
+							<div class="mark_box clear">
+						<a href="#dis" class="mark_btn jion_btn_dis">请假审核中</a>
+							</div>
+					<elseif condition="$attenddb['status'] eq 3"/>
+					<div class="mark_box clear">
+						<a href="#dis" class="mark_btn jion_btn_dis">请假未通过</a>
+					</div>
+					<elseif condition="$attenddb['status'] eq 4"/>
+					<div class="mark_box clear">
+						<a href="#dis" class="mark_btn jion_btn_dis">成功请假</a>
+					</div>
+					<else />
+						<div class="join_box clear">
+						<a href="" class="join_btn fl" id="join">参与</a>
+						<a href="#dis" class="join_btn jion_btn_dis dis_btn fl" id="nojoin">请假</a>
+							</div>
+					</if>	
+				</if>
+
+		</div>
+		<!-- 这里是个弹框 -->
+		<div class="modal-mark">
+			<div class="modal" style="padding: 0.5rem" >
+				<div class="modal-header">
+					<span style="float: left;font-size: .75rem;"> 请假事由：</span> <span  class="modal-close" style="float: right;">X</span>
+				</div>
+				<div class="modal-body">
+					<textarea name="whytext" cols="30" rows="10" style="width: 100%;height: 3rem;font-size: .75rem;" oninput="chang_style(this)"></textarea>
+					{:W('Home/InputRender/inputRender',[14,'file',$data['id']])}
+					<!--div class="btn join_btn" style="position: relative;">选择文件</div-->
+					<span id="show_iamge_name"></span>
+				</div>
+				<br>
+				<hr>
+				<div class="modal-footr" >
+					<span class="btn-gray join_btn " id="sub_nojoin">提交</span>
+					<p style="font-size: .65rem;color: #666;padding: 2rem .5rem;">填写请假原因和上传相关证明</p>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+		var locksend=false;
+		var whytext='';
+			$(function(){
+				//弹框上传附件
+				$(".dis_btn").click(function(){
+					$(".modal-mark").css({
+						"display":"block"
+					})
+				})
+				$(".modal-close").click(function(){
+					$(".modal-mark").hide()
+				})
+				//保存参加数据
+				$("#join").click(function(){
+					var choose =confirm('参与成功将不能修改，确定参与吗？');
+					if(choose){
+						$.ajax({
+							type: "POST",
+							url: "{:U('Weixin/saveJion',array('uid'=>$userdb['id'],'e_m_id'=>$data['id'],'name'=>$userdb['truename'],'phone'=>$userdb['mobile'],'type'=>$type))}",
+							success: function(data){
+								data=$.parseJSON(data);
+								if(data.code==1) //成
+								{
+									window.location.reload();
+								}else{
+									alert(data.msg);
+								}
+							}
+						})
+					}
+				})
+				//保存请假数据
+				$("#sub_nojoin").click(function(){
+					if(locksend){
+						var choose =confirm('参与成功将不能修改，确定参与吗？');
+						if(choose){
+							$.ajax({
+								type: "POST",
+								url: "{:U('Weixin/saveJion',array('uid'=>$userdb['id'],'e_m_id'=>$data['id'],'name'=>$userdb['truename'],'phone'=>$userdb['mobile'],'type'=>$type))}",
+								data:{'whytext':whytext},
+								success: function(data){
+									data=$.parseJSON(data);
+									if(data.code==1) //成
+									{
+										window.location.reload();
+									}else{
+										alert(data.msg);
+									}
+								}
+							})
+						}
+					}else{
+						$('textarea[name=whytext]').css('border','1px solid red');
+					}
+				})
+			})
+		function chang_style(id){
+			 whytext=$(id).val();
+			if(whytext){
+				$('#sub_nojoin').removeClass('btn-gray');
+				locksend=true;
+			}
+		}
+		</script>
+	</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -337,6 +337,7 @@ function get_user_openid(){
 	$redirect_uri=$redirect_uri 	= "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 	$info=array('appid'=>$appid,'oauthinfo'=>"snsapi_base",'appsecret'=>$secret);
 	$codeUrl =get_code_url($info,$redirect_uri);
+
 	if(empty($_GET['code']) && empty($_GET['state'])){
 		header("Location: $codeUrl");
 		exit;

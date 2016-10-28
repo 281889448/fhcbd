@@ -36,11 +36,11 @@ class StatisticsController extends BaseController {
 	 */
 	public function weiyuan(){
 		$user_id = get_uid();
+
+        //从当年1月1号开始
+        $year['stime'] =  strtotime(date('Y',time()).'-01-01');
 		
-		$year = I('post.year');
-		$year = $year ? $year : date('Y',time()) ;
-		
-		
+
 		$m = D('User/User');
 		$m->setModel(WEIYUAN);
 		$member = $m->getUser($user_id);
@@ -79,19 +79,24 @@ class StatisticsController extends BaseController {
 		$proposal_weiyuan = $m->getUsers(array(),array('名称','手机号','专委会','街道联络委'));
 
 		$pagesize = 16;
-		$year = I('post.year');
-		$year = $year ? $year : date('Y',time()) ;
-		$data = $this->page_array($pagesize,$page,$proposal_weiyuan);
-		$totalCount = count($proposal_weiyuan);
-		
-		foreach($data as $k=>$v){
-			
-			$this->getStatisticsResult($data[$k]['proposal'],$v['uid'],$year);
-		}
+        if(IS_POST){
+            $map = I('post.');
+            $this->assign('map',$map);
+            $year = ['stime'=>strtotime($map['stime']),'etime'=>strtotime($map['etime'])];
+
+            $data = page_array($pagesize,$page,$proposal_weiyuan);
+            $totalCount = count($proposal_weiyuan);
+
+            foreach($data as $k=>$v){
+
+                $this->getStatisticsResult($data[$k]['proposal'],$v['uid'],$year);
+            }
 
 
-		$this->assign('totalPageCount', $totalCount);
-		$this->assign('data',$data);
+            $this->assign('totalPageCount', $totalCount);
+            $this->assign('data',$data);
+        }
+
 		$this->display();
 	}
 	
@@ -102,9 +107,19 @@ class StatisticsController extends BaseController {
 	 */
 	private function getActionResult($action_id,$user_id,$year){
 		
-		$map['create_time'] = array('BETWEEN',strtotime("{$year}-01-01").','.strtotime("{$year}-12-31"));
-		
-		
+        $stime = $year['stime'];
+        $etime = $year['etime'] ?  $year['etime'] + 3600 * 24 : 0;
+
+        if($stime && $etime){
+            $map['create_time'] = array('BETWEEN',$stime.','.$etime);
+        }else{
+            if($year['stime']){
+                $map['create_time'] = ['gt',$stime];
+            }elseif($year['etime']){
+                $map['create_time'] = ['lt',$etime];
+            }
+        }
+
 		$count = D('ActionLog')->where(array('user_id'=>$user_id,'action_id'=>$action_id,$map))->count();
 
 		$rule = parse_action($action_id,$user_id);
@@ -159,7 +174,7 @@ class StatisticsController extends BaseController {
 		$totalCount = count($proposal_weiyuan);
 		
 		$pagesize = 16;
-		$data = $this->page_array($pagesize,$page,$proposal_weiyuan);
+		$data = page_array($pagesize,$page,$proposal_weiyuan);
 		$this->assign('totalPageCount', $totalCount);
 		$this->assign('statistics',$data);
 		$this->display();
@@ -435,28 +450,7 @@ class StatisticsController extends BaseController {
      //   }
     }
 	
-	/**
-	 * 数组分页函数 核心函数 array_slice
-	 * 用此函数之前要先将数据库里面的所有数据按一定的顺序查询出来存入数组中
-	 * $count  每页多少条数据
-	 * $page  当前第几页
-	 * $array  查询出来的所有数组
-	 * order 0 - 不变   1- 反序
-	 */
-	private function page_array($count,$page,$array,$order){
-		global $countpage; #定全局变量
-		$page=(empty($page))?'1':$page; #判断当前页面是否为空 如果为空就表示为第一页面
-		$start=($page-1)*$count; #计算每次分页的开始位置
-		if($order==1){
-			$array=array_reverse($array);
-		}
-		$totals=count($array);
-		$countpage=ceil($totals/$count); #计算总页面数
-	
-		$pagedata=array();
-		$pagedata=array_slice($array,$start,$count);
-		return $pagedata; #返回查询数据
-	}
+
 	
 	
 

@@ -396,6 +396,7 @@ function getExtend($group_id,$name,$uid){
 	
 	$map['profile_group_id'] = array('eq',$group_id);
 	$map['field_name'] = array('eq',$name);
+    $map['status'] = 1;
 	$extend = $mfs->where($map)->getField('id,id,field_name,profile_group_id,visiable,required,sort,form_type,form_default_value,validation,status,createTime,child_form_type,input_tips');
 	$current = reset($extend);
 	$map2['field_id'] = array('eq',$current['id']);

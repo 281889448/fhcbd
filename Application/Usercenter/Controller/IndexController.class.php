@@ -67,7 +67,7 @@ class IndexController extends BaseController
             $mapstr = implode(' and ',$map['param']);
 
             if($map['gaibie']){
-                $mapstr_gaibie = " AND gaibie='{$map['gaibie']}' ";
+                $mapstr_gaibie = " AND gaibie like '%{$map['gaibie']}%' ";
             }
             if($map['stime']){
                 $mapstr_stime = " AND birth > ".strtotime($map['stime'])." ";
@@ -105,13 +105,13 @@ class IndexController extends BaseController
         $model->execute($drop_sql);
         $mu = D('User/User');
         $mu->setModel(WEIYUAN);
-        $members = $mu->getUsers(array(),array('专委会','专委会组','街道联络委','界别','文化程度','职称','界别','党派职务','属地','现任职称','是否省委员','是否市委员','是否区委员','是否常委','委员状态','民族','性别','届别'));
+        $members = $mu->getUsers(array(),array('专委会','专委会组','街道联络委','界别','文化程度','职称','社会身份','党派职务','属地','现任职称','是否省委员','是否市委员','是否区委员','是否常委','委员状态','民族','性别','届别','生日'));
 
         $member_sql = "insert into temp_member(uid,zwh,zwhz,jdllw,jiebie,wenhua,zhicheng,jieji,dpzhiwu,froms,xrzhiwu,shenwy,shiwy,quwy,cw,status1,mizu,sex,birth,gaibie)values";
         foreach($members as $member){
-            $member['birthday'] = strtotime($member['birthday']);
-            $member_sql .= "('{$member['uid']}','{$member['专委会']}','{$member['专委会组']}','{$member['街道联络委']}','{$member['界别']}','{$member['文化程度']}','{$member['职称']}','{$member['界别']}','{$member['党派职务']}',
-		      '{$member['属地']}','{$member['现任职称']}','{$member['是否省委员']}','{$member['是否市委员']}','{$member['是否区委员']}','{$member['是否常委']}','{$member['委员状态']}','{$member['民族']}','{$member['性别']}','{$member['birthday']}','{$member['届别']}'),";
+
+            $member_sql .= "('{$member['uid']}','{$member['专委会']}','{$member['专委会组']}','{$member['街道联络委']}','{$member['界别']}','{$member['文化程度']}','{$member['职称']}','{$member['社会身份']}','{$member['党派职务']}',
+		      '{$member['属地']}','{$member['现任职称']}','{$member['是否省委员']}','{$member['是否市委员']}','{$member['是否区委员']}','{$member['是否常委']}','{$member['委员状态']}','{$member['民族']}','{$member['性别']}','{$member['生日']}','{$member['届别']}'),";
         }
         $member_sql = substr($member_sql,0,strlen($member_sql)-1);
         //定义临时表的字段
@@ -136,6 +136,7 @@ class IndexController extends BaseController
 									    gaibie VARCHAR(30) ,
 									    birth VARCHAR(15) ";
         $model->execute("CREATE TEMPORARY TABLE temp_member ({$field_sql})");
+
         //初始化临时表信息
         $model->execute($member_sql);
 
@@ -147,7 +148,18 @@ class IndexController extends BaseController
     public function index()
     {	$this->create_member_tmptable();
         $map = I('get.');
-        $this->assign('mapstr',implode(',',$map));
+
+        $config_view = ['zwh'=>'专委会','zwhz'=>'专委会组','jdllw'=>'街道联络委','jiebie'=>'界别','wenhua'=>'文化程度','zhicheng'=>'职称','jieji'=>'社会身份','dpzhiwu'=>'党派职务','froms'=>'属地','xrzhiwu'=>'现任职称','shenwy'=>'是否省委员','shiwy'=>'是否市委员','quwy'=>'是否区委员','cw'=>'是否常委','status1'=>'委员状态','mizu'=>'民族','sex'=>'性别','birth'=>'生日','gaibie'=>'届别'];
+
+        foreach($map as $k=>$v){
+            $map_tmp[] = $config_view[$k].'：'.$v;
+        }
+        $map_tmpstr = implode('，',$map_tmp);
+
+        $this->assign('mapstr',$map_tmpstr);
+
+
+
         $mapstr = array2string($map);
         $mapstr = str_replace(',',' and ',$mapstr);
         $data = M()->query("select * from temp_member where {$mapstr}");
