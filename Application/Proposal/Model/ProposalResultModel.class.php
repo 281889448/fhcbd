@@ -113,7 +113,7 @@ class ProposalResultModel extends Model{
 	public function setDo($result_id){
 		$data['status'] = 2;   //4的状态为已办理
 		$user_id = get_uid();
-		$group = get_group($user_id);
+		$group = reset(get_group($user_id));
 		if($user_id || $group != '办理单位'){return false;}
 		$m = D('ProposalResult');
 		$map['user_id'] = array('eq',$user_id);

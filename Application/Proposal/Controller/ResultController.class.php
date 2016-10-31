@@ -230,11 +230,11 @@ class ResultController extends BaseController
 			$map['proposal_id'] = array('eq',$proposal_id);
 		
 		//查办共用 一个模板，当当前用户组是办理单位时，才以UID作为条件
-		if(get_group(get_uid())=='办理单位'){
+		if(reset(get_group(get_uid()))=='办理单位'){
 			$map['user_id'] = get_uid();
             $back_url = U('Proposal/Index/index',['status'=>13]);
 		}else{
-		    if(get_group(get_uid())=='提案委'){
+		    if(reset(get_group(get_uid()))=='提案委'){
             $back_url = I('server.HTTP_REFERER');
             }else{
             //上面代码 dcs 在退回重办操作后，返回会出错
@@ -339,7 +339,7 @@ class ResultController extends BaseController
 	 * autor: MR.Z <327778155@qq.com>
 	 */
 		private function check_view($status){
-			$group = get_group(get_uid());
+			$group = reset(get_group(get_uid()));
 			$view_status = C('VIEW_STATUS');
 			if(!in_array( $status,$view_status[$group])){
 				$this->error("您没有访问该提案的权限");

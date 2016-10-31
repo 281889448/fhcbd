@@ -29,7 +29,7 @@ class TongxunluWidget extends Action {
         $user = $m->getUser($uid);
         if(!S('TONGXUNLU_'.$uid)){
 
-            $group = get_group($uid);
+            $group = reset(get_group($uid));
             $m = D('User/User');
 
             //通讯录数组

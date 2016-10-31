@@ -30,7 +30,7 @@
                                             类别
                                         </td>
                                         <td>
-                                            <php>$group = get_group(get_uid())</php>
+                                            <php>$group = reset(get_group(get_uid()))</php>
                                             {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'leibie','id'=>$content['id'],1,$group))}
                                         </td>
                                         <td>
@@ -130,9 +130,11 @@
                                             {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'contact_unit','id'=>$content['id'],'',$data['工作单位']))}
                                         </td>
                                     </tr>
+
                                     <tr>
                                         <td colspan="6">
                                             <div class="pull-left">
+                                                {__TOKEN__}
                                                 <button class="btn btn-primary" onClick="document.proposal.status.value='1';document.proposal.action='{:U('Proposal/Index/doPost')}'">保存</button>
                                                 <button class="btn btn-primary" onClick="document.proposal.status.value='2';document.proposal.action='{:U('Proposal/Index/doPost')}'">直接提交</button>
                                                 <a class="btn btn-default" href="{$back_url}">返回</a></div>

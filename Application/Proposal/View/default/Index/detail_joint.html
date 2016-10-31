@@ -34,8 +34,8 @@
 												类别
 											</td>
 											<td>
-												<php>$group = get_group($content['uid'])</php>
-												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'leibie','id'=>$content['id'],1,$group))}
+												<php>$group = reset(get_group($content['uid']))</php>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'leibie','id'=>$content['id'],1,$group[0]))}
 											</td>
 											<td>
 												提出日期

@@ -138,7 +138,7 @@
 
                       <a href="{:U('Proposal/Result/handCheck',array('proposal_id'=>$c[proposal_id]))}"  class="btn btn-primary btn-sm">查办</a>
                     </in>
-                    <php>$group = get_group(get_uid());</php>
+                    <php>$group = reset(get_group(get_uid()));</php>
                     <in name="status" value="19,14">
 
                     <if condition="$group=='办理单位'">

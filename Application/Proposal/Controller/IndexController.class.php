@@ -70,7 +70,7 @@ class IndexController extends BaseController
 	   
 	    //固定的状态下才会有匹配user_id
 			$uid_array = C('UID_FILTER');
-	    $group = get_group(get_uid());
+	    $group = reset(get_group(get_uid()));
 	    switch($group){
 		    case '委员':
 		    	  if(in_array($status,$uid_array[$group])){
@@ -263,7 +263,7 @@ class IndexController extends BaseController
 			$check_isSign = D('proposal_attend')->where(array('uid' => is_login(), 'proposal_id' => $result['proposal_id']))->select();
 			
 			
-			$group = get_group(get_uid());
+			$group = reset(get_group(get_uid()));
 			$this->assign('check_isSign', $check_isSign);
 			
 			$proposal_content = D('Proposal')->where(array( 'id' => $result['proposal_id']))->find();
@@ -470,7 +470,7 @@ class IndexController extends BaseController
 
             if (!is_administrator(is_login())) { //不是管理员则进行检测
 								//记录user_id 与当前UID匹配
-	            if((get_group(get_uid())=='提案委' && $content_temp['status']==2)) {
+	            if((reset(get_group(get_uid()))=='提案委' && $content_temp['status']==2)) {
 		
 	            }else{
                 if ($content_temp['uid'] != is_login()) {
@@ -498,7 +498,7 @@ class IndexController extends BaseController
             $weiboApi->resetLastSendTime();
             $weiboApi->sendWeibo("我修改了活动【" . $title . "】：" . $postUrl);
 	*/
-            $group = get_group(get_uid());
+            $group = reset(get_group(get_uid()));
 		        if($content['status'] == 2 && ($group == '委员' || $group == '集体')){
 			        $back_url = U('Proposal/Index/index',array('status'=>2));
 			        //流程记录
@@ -513,7 +513,7 @@ class IndexController extends BaseController
             if ($rs) {
                 $this->success($str.'成功。',$back_url);
             } else {
-                $this->success($str.'失败。', '');
+                $this->error($str.'失败。', '');
             }
         } else {
 						$content['create_time'] = time();
@@ -555,7 +555,7 @@ class IndexController extends BaseController
             if ($rs) {
                 $this->success($str.'成功。' . $tip,   $back_url );
             } else {
-                $this->success($str.'失败。', '');
+                $this->error($str.'失败。', '');
             }
         }
     }
@@ -822,7 +822,7 @@ class IndexController extends BaseController
 	 * autor: MR.Z <327778155@qq.com>
 	 */
 		private function check_view($status){
-			$group = get_group(get_uid());
+			$group = reset(get_group(get_uid()));
 			$view_status = C('VIEW_STATUS');
 
 			if(!in_array( $status,$view_status[$group])){
@@ -860,7 +860,7 @@ class IndexController extends BaseController
 		    $mu = D('User/User');
 		    $mu->setModel(WEIYUAN);
 		    $member = $mu->getUser(get_uid());
-	      $group = get_group(get_uid());
+	      $group = reset(get_group(get_uid()));
 	      
         $this->assign('check_isSign', $check_isSign);
 
@@ -1093,7 +1093,7 @@ class IndexController extends BaseController
 
         $mu = D('User/User');
         $user_id = get_uid();
-        $group = get_group($user_id);
+        $group = reset(get_group($user_id));
         if($group=='委员'){
             $group_id = WEIYUAN;
         }elseif($group=='集体'){
@@ -1183,7 +1183,7 @@ class IndexController extends BaseController
 		     
 		      
 	      }
-				if(get_group(get_uid())=='提案委'){
+				if(reset(get_group(get_uid()))=='提案委'){
 					$this->assign('back_url',I('server.HTTP_REFERER'));
 				}else{
 	        $this->assign('back_url',U('Proposal/Index/index',array('status'=>1)));
