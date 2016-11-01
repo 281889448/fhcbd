@@ -17,15 +17,10 @@
                             </thead>
                             <php>
                                 $htmlstatus_working = 1;
-                                switch($group){
-                                    case '政协办公室':
-                                        if($working['status']==2)$htmlstatus_working = 0;
-
-                                    break;
-                                    case '办公室主任':
-                                       if($working['status']==3)$htmlstatus_working = 0;
-                                    break;
+                                if(get_permission(get_uid(),['政协工作人员','秘书长'])){
+                                  $htmlstatus_working = 0;
                                 }
+
                             </php>
                             <tbody>
                             <tr>
@@ -67,8 +62,8 @@
                                     {:W('Common/InputRender/InputRender',array('modelid'=>15,'name'=>'upload','id'=>$working['id'],1))}
                                 </td>
                             </tr>
-                            <switch name="group">
-                                <case value="委员|集体">
+
+                                    <if condition="get_permission(get_uid(),['委员','集体'])">
                                     <tr>
                                         <td colspan="6">
 
@@ -80,37 +75,40 @@
 
                                         </td>
                                     </tr>
-                                </case>
-                                <case value="政协办公室|办公室主任">
+                                    </if>
+
+                            <if condition="get_permission(get_uid(),['政协工作人员','秘书长'])">
                                     <input type="hidden" name="status"/>
 
                                     <php>
-                                        switch($group){
-                                            case '政协办公室':
+
+
+                                        <!--switch($group){
+                                            case '政协工作人员':
                                             if($working[status]!=2)$htmlstatus_working = 1;
                                         break;
-                                        case '办公室主任':
+                                        case '秘书长':
                                         if($working[status]!=3)$htmlstatus_working = 1;
                                         break;
-                                        }
+                                        }-->
                                     </php>
 
 
                             <tr>
                                 <td colspan="6">
 
-                                    <if condition="$group=='政协办公室' && $working[status] == 2">
+                                    <if condition="get_permission(get_uid(),['政协工作人员']) && $working[status] == 2">
                                     <a class="btn btn-primary btn-sm btn-de" href="javascript:;" data-toggle="modal" data-target="#myModal3"  onclick="document.form_back.status.value=4;">退回</a>
                                     <a class="btn btn-primary btn-sm btn-del" href="javascript:;"  data-toggle="modal" data-target="#myModal1"  onclick="document.form_working.status.value=3;" >审核通过</a>
-                                        <elseif condition="$group=='办公室主任' && $working[status] == 3"/>
+                                        <elseif condition="get_permission(get_uid(),['秘书长']) && $working[status] == 3"/>
                                     <a class="btn btn-primary btn-sm btn-de" href="javascript:;" data-toggle="modal" data-target="#myModal3" onclick="document.form_back.status.value=5;">二审退回</a>
                                     <a class="btn btn-primary btn-sm btn-del" href="javascript:;"  data-toggle="modal" data-target="#myModal1" onclick="document.form_working.status.value=6;" >终审通过</a>
                                    </if>
                                     <a class="btn btn-default btn-sm" href="{:U('Working/Index/index',array('status'=>$working['status']))}">返回</a>
                                 </td>
                             </tr>
-                                    </case>
-                                </switch>
+                                    </if>
+
                             </tbody>
                             <!-- Small modal 通过审核-->
                             <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

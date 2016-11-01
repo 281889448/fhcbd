@@ -30,7 +30,9 @@
                                             类别
                                         </td>
                                         <td>
-                                            <php>$group = reset(get_group(get_uid()))</php>
+                                            <php>if(get_permission(get_uid(),['委员'])){$group = '委员';}
+                                                if(get_permission(get_uid(),['集体'])){$group = '集体';}
+                                            </php>
                                             {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'leibie','id'=>$content['id'],1,$group))}
                                         </td>
                                         <td>

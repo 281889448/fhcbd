@@ -110,11 +110,13 @@ class ProposalResultModel extends Model{
 	 * @package Proposal\Model
 	 * autor:MR.Z <327778155@qq.com>
 	 */
-	public function setDo($result_id){
+	/*public function setDo($result_id){
 		$data['status'] = 2;   //4的状态为已办理
 		$user_id = get_uid();
-		$group = reset(get_group($user_id));
-		if($user_id || $group != '办理单位'){return false;}
+
+
+
+		if($user_id ||  !get_permission($user_id,['办理单位'])){return false;}
 		$m = D('ProposalResult');
 		$map['user_id'] = array('eq',$user_id);
 		$map['result_id'] = array('eq',$result_id);
@@ -129,7 +131,7 @@ class ProposalResultModel extends Model{
 		}
 		return $flag;
 	}
-	
+	*/
 	
 	//办理单位的设置已经在待交办环节已经设置，此处不用再进行批量设置
 	/**

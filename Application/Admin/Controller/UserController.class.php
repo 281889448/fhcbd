@@ -37,7 +37,7 @@ class UserController extends AdminController
         }
         $list = $this->lists('Member', $map);
 	      foreach($list as &$v){
-	      	  $v['group'] = get_group($v['uid']);
+	      	  $v['group'] = implode(',',get_group($v['uid']));
 	      }
 	 
 	    
@@ -916,7 +916,11 @@ str;
                     $User = new UserApi;
 
                     $username = $objExcel->getActiveSheet()->getCell('C'.$i)->getValue();
-                    $password = '123456';
+                    $idcart = $objExcel->getActiveSheet()->getCell('N'.$i)->getValue();
+                    $carts = $this->getIDCardInfo($idcart);
+                    $password = date('Ymd',strtotime($carts['birthday']));
+
+
                     $email = $objExcel->getActiveSheet()->getCell('O'.$i)->getValue();
                     $uid = $User->register($username, $username, $password, $email);
 
@@ -952,9 +956,12 @@ str;
 
 
     private function import_expandinfo($uid,$i,$headArr,$objExcel){
-
+        $date = ['E','U','AB','AG','AH','AS'];
         foreach($headArr as $k=>$v){
             $data['field_data'] = $objExcel->getActiveSheet()->getCell($k.$i)->getValue();
+            if(in_array($k.$i,$date)){
+                $data['field_data'] = strtotime( $data['field_data']);
+            }
 
             $data['field_id'] = reset($v);
             $data['uid'] = $uid;
@@ -969,6 +976,67 @@ str;
             }
         }
         return $flag;
+    }
+
+
+    /*
+     * 提取身份证号中的出生日期
+     *  MR.Z <327778155@qq.com>
+     * @from http://www.kuitao8.com/20130919/1392.shtml
+     */
+    private function getIDCardInfo($IDCard){
+        $result['error']=0;//0：未知错误，1：身份证格式错误，2：无错误
+        $result['flag']='';//0标示成年，1标示未成年
+        $result['tdate']='';//生日，格式如：2012-11-15
+
+
+
+        if(!(preg_match("/^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$/", $IDCard) || preg_match("/^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}(\d|x|X)$/", $IDCard))){
+            $result['error']=1;
+            return $result;
+        }else{
+            if(strlen($IDCard)==18){
+                $tyear=intval(substr($IDCard,6,4));
+                $tmonth=intval(substr($IDCard,10,2));
+                $tday=intval(substr($IDCard,12,2));
+                if($tyear>date("Y")||$tyear<(date("Y")-100)){
+                    $flag=0;
+                }elseif($tmonth<0||$tmonth>12){
+                    $flag=0;
+                }elseif($tday<0||$tday>31){
+                    $flag=0;
+                }else{
+                    $tdate=$tyear."-".$tmonth."-".$tday." 00:00:00";
+                    if((time()-mktime(0,0,0,$tmonth,$tday,$tyear))>18*365*24*60*60){
+                        $flag=0;
+                    }else{
+                        $flag=1;
+                    }
+                }
+            }elseif(strlen($IDCard)==15){
+                $tyear=intval("19".substr($IDCard,6,2));
+                $tmonth=intval(substr($IDCard,8,2));
+                $tday=intval(substr($IDCard,10,2));
+                if($tyear>date("Y")||$tyear<(date("Y")-100)){
+                    $flag=0;
+                }elseif($tmonth<0||$tmonth>12){
+                    $flag=0;
+                }elseif($tday<0||$tday>31){
+                    $flag=0;
+                }else{
+                    $tdate=$tyear."-".$tmonth."-".$tday." 00:00:00";
+                    if((time()-mktime(0,0,0,$tmonth,$tday,$tyear))>18*365*24*60*60){
+                        $flag=0;
+                    }else{
+                        $flag=1;
+                    }
+                }
+            }
+        }
+        $result['error']=2;//0：未知错误，1：身份证格式错误，2：无错误
+        $result['isAdult']=$flag;//0标示成年，1标示未成年
+        $result['birthday']=$tdate;//生日日期
+        return $result;
     }
 /*---------------------------------start-------------------------------------------------*/
     /*

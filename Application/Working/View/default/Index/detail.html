@@ -79,7 +79,7 @@
                                 </td>
                             </tr>
 
-                            <if condition="$group=='政协办公室' || $group=='办公室主任'" >
+                            <if condition="get_permission(get_uid(),['政协工作人员','秘书长'])" >
                             <tr>
                                 <td>采用情况</td>
                                 <td colspan="5">

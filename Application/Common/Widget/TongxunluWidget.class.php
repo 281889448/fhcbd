@@ -29,7 +29,7 @@ class TongxunluWidget extends Action {
         $user = $m->getUser($uid);
         if(!S('TONGXUNLU_'.$uid)){
 
-            $group = reset(get_group($uid));
+            $group = get_group($uid);
             $m = D('User/User');
 
             //通讯录数组
@@ -52,19 +52,16 @@ class TongxunluWidget extends Action {
             if(is_administrator()){
                 $com_name = 'all';
                 $group = 'all';
-            }else{
-                switch($group){
-                    case '委员':
-                        $m->setModel(WEIYUAN);
-                        $user = $m->getUser($uid);
-                        $com_name = $user['主任'];
-                        break;
-                    case '集体':
-                        $m->setModel(TEAM);
-                        $user = $m->getUser($uid);
-                        $com_name = $user['名称'];
-                        break;
+            }else {
+                if (get_permission($uid, ['委员'])) {
+                    $com_name = $user['主任'];
                 }
+                if (get_permission($uid, ['集体'])) {
+                    $m->setModel(TEAM);
+                    $user = $m->getUser($uid);
+                    $com_name = $user['名称'];
+                }
+
 
                 //其最上级父类只能为专委会和街道联络委
                 $parent_ids = [1,8];

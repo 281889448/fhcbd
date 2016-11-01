@@ -137,19 +137,17 @@ class ConfigController extends BaseController
      */
     public function getExpandInfo($uid = null)
     {   $uid = $uid ? $uid : get_uid();
+
         $profile_group_list = $this->_profile_group_list($uid);
-	      $group = get_group($uid);
-	      switch($group){
-		      case '委员':
-		      	$expand_id = WEIYUAN;
-		      	break;
-		      case '办理单位':
-			      $expand_id = UNIT;
-		      	break;
-		      case '集体':
-			      $expand_id = TEAM;
-			      break;
-	      }
+
+
+        if(get_group(get_uid(),['委员'])){
+            $expand_id = WEIYUAN;
+        }elseif(get_group(get_uid(),['集体'])){
+            $expand_id = TEAM;
+        }elseif(get_group(get_uid(),['办理单位'])){
+            $expand_id = UNIT;
+        }
 
 
         if ($profile_group_list) {
@@ -160,6 +158,7 @@ class ConfigController extends BaseController
             $this->assign('uid',$uid);
             $this->assign('info_list', $info_list);
             $this->assign('profile_group_id', $expand_id);
+
             //dump($info_list);exit;
         }
 

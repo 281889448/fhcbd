@@ -83,10 +83,31 @@ function check_auth($rule, $type = AuthRuleModel::RULE_URL )
 */
 function get_group($uid){
 	if(!$uid){return;}
-	$groupname = D('AuthGroupAccess')->join('__AUTH_GROUP__ ON __AUTH_GROUP_ACCESS__.group_id=__AUTH_GROUP__.id')->where('uid='.$uid)->getField('title');
+	$groupname = D('AuthGroupAccess')->join('__AUTH_GROUP__ ON __AUTH_GROUP_ACCESS__.group_id=__AUTH_GROUP__.id')->where('uid='.$uid)->getField('title',true);
 
 	return $groupname;
 }
+
+/*
+ *  查询当前角色在栏目所需的角色中是否有交集
+ *  create: 2016/10/31
+ * author : MR.Z <327778155@qq.com>
+ * @user_group 当前用户所在组 @need_group 当前节点允许的用户组
+ */
+function get_permission ($uid,$need_group){
+
+    $user_group = get_group($uid);
+
+    //权限判断
+    $rs = array_intersect($user_group,$need_group);
+    if($rs){
+        return true;
+    }
+
+    return false;
+}
+
+
 /**
  *	判断用户请假权限
  * 郝
@@ -96,8 +117,8 @@ function get_group($uid){
  */
 function get_user_type($type,$uid){
     if(!$uid){return;}
-    $group = get_group($uid);
-    if($group=='委员'){
+
+    if(get_permission($uid,['委员'])){
         $director_role=D('Field')->where(array('uid'=>$uid,'field_id'=>99))->find();
         if($director_role) {
             return true;
@@ -151,43 +172,41 @@ function return_weiyuan_uid(){
 /*根据登录角色，返回其审核活动或者会议类型*/
 function auth_apply($type,$uid)
 {
-    //普通用户 委员 集体 政府督查室 提案委 办理单位 政协办公室 办公室主任
+    //普通用户 委员 集体 政府督查室 提案委 办理单位 政协工作人员 秘书长
     // 文史委工作人员 专委会工作人员 秘书长 委工委主任 主席
-    $group = get_group($uid);
+
     //查询扩展
     $findmembers=false;
     if ($type == 'event') {
-        switch (trim($group)) {
-            case '委工委主任':
+
+            if(get_permission($uid,['委工委主任'])){
+
                 $type=array('区政协组织', '其它形式政协活动');
-                break;
-            case '秘书长':
+            }elseif(get_permission($uid,['秘书长'])){
                 $type=array('其它形式政协活动', '公益活动', '其它形式政协活动');
-                break;
-            case '委员':
+            }elseif(get_permission($uid,['委员'])){
                 $type=array('专委会组织','街道联络委组织', '其它形式政协活动');
                 $findmembers=true;//需要单独判断
-                break;
-        }
+            }
+
+
+
     } else {
-        switch (trim($group)) {
-            case '主席':
-                $type=array('全会');
-                $uids=return_changwei_uid();
-                break;
-            case '秘书长':
-                $type=array('全会','常委会','主席会','临时会','专题协商会');
-                $uids=return_weiyuan_uid();
-                break;
-            case '委工委主任':
-                $type=array('全会', '常委会');
-                $uids=return_weiyuan_uid();
-                break;
-            case '委员':
-                $type=array('对口协商会','部门协商会','专委会','街道联络委');
-                $findmembers=true;//需要单独判断
-                break;
+
+        if(get_permission($uid,['主席'])){
+            $type=array('全会');
+            $uids=return_changwei_uid();
+        }elseif(get_permission($uid,['秘书长'])){
+            $type=array('全会','常委会','主席会','临时会','专题协商会');
+            $uids=return_weiyuan_uid();
+        }elseif(get_permission($uid,['委员'])){
+            $type=array('对口协商会','部门协商会','专委会','街道联络委');
+            $findmembers=true;//需要单独判断
+        }elseif(get_permission($uid,['委工委主任'])){
+            $type=array('全会', '常委会');
+            $uids=return_weiyuan_uid();
         }
+
     }
     return array('type'=>$type,'findmembers'=>$findmembers,'ArrUid'=>$uids);
 }

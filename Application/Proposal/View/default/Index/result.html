@@ -138,10 +138,10 @@
 
                       <a href="{:U('Proposal/Result/handCheck',array('proposal_id'=>$c[proposal_id]))}"  class="btn btn-primary btn-sm">查办</a>
                     </in>
-                    <php>$group = reset(get_group(get_uid()));</php>
+
                     <in name="status" value="19,14">
 
-                    <if condition="$group=='办理单位'">
+                    <if condition="get_permission(get_uid(),['办理单位'])">
 
                       <if condition="$c[rstatus] == 1">
                         <a   data-toggle="modal" data-target="#myModal6"   class="btn btn-primary btn-sm" onClick="document.proposalresult_6.id.value={$c[result_id]}">签收</a>

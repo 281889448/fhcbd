@@ -50,8 +50,8 @@ function process_log( $action = null,$model = null, $proposal_id = null, $user_i
 		$proposal = $m->find($proposal_id);
 		// 获取当前提案人的信息
 		$mu = D('User/User');
-	$group_p = get_group($proposal['uid']);
-	$group = $group_p=='集体'? TEAM : WEIYUAN;
+
+	$group = get_permission($proposal['uid'],['集体']) ? TEAM : WEIYUAN;
 		$mu->setModel($group);
 		$proposal_user = $mu->getUser($proposal['uid']);
 	
@@ -83,7 +83,7 @@ function process_log( $action = null,$model = null, $proposal_id = null, $user_i
 				$data['user_id'] = $user_id;
 				$data['proposal_id'] = $proposal_id;
 				$data['create_time'] = NOW_TIME;
-				$data['group'] = get_group($user_id);
+				$data['group'] = reset(get_group(get_uid()));
 				$data['to_status'] = $proposal['status'];
 
 				switch(strtolower($action)){
@@ -131,7 +131,7 @@ function process_log( $action = null,$model = null, $proposal_id = null, $user_i
 				$data['user_id'] = $user_id;
 				$data['proposal_id'] = $proposal_id;
 				$data['create_time'] = NOW_TIME;
-				$data['group'] = get_group($user_id);
+				$data['group'] = reset(get_group(get_uid()));
 				$data['to_status'] = $proposal['status'];
 				
 				switch(strtolower($action)){

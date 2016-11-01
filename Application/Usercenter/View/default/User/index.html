@@ -13,16 +13,17 @@
 
                         <h4 style="padding: 5px;">委员信息列表</h4>
                         <hr style="margin:5px">
+                        <form method="post">
                         <div style="margin-bottom: 10px " class="clearfix">
-                            <input type="text" placeholder="姓名" class="form-control pull-left input-sm" style="width: 100px"> <input type="text" placeholder="手机号" class="form-control pull-left input-sm" style="width: 120px">
+                            <input type="text" placeholder="姓名" name="" class="form-control pull-left input-sm" style="width: 100px"> <input type="text" placeholder="手机号" class="form-control pull-left input-sm" style="width: 120px">
 
                             <div class="pull-left" style="width: 100px">{:W('InputRender/inputRender',array(getExtend(13,'专委会',0),'personal'))}</div>
                             <div class="pull-left" style="width: 180px">{:W('InputRender/inputRender',array(getExtend(13,'街道联络委',0),'personal'))}</div>
 
                             <input type="text" placeholder="届别" class="form-control pull-left input-sm" style="width: 100px">
-                            <input size="16" type="text" value="" name="mark_time[1]" class="form-control laydate-icon pull-left" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" readonly="readonly" style="width: 150px"> <input size="16" type="text" value="" name="mark_time[2]" class="form-control laydate-icon pull-left" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" readonly="readonly" style="width: 150px" > <button class="btn btn-default btn-sm" style="margin-left: 5px"> 搜索</button>
+                            <input size="16" type="text" value="" name="stime" class="form-control laydate-icon pull-left" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" readonly="readonly" style="width: 150px"> <input size="16" type="text" value="" name="etime" class="form-control laydate-icon pull-left" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" readonly="readonly" style="width: 150px" > <button class="btn btn-default btn-sm" style="margin-left: 5px"> 搜索</button>
                         </div>
-
+                        </form>
                         <table class="table table-bordered table-responsive table-condensed" style="margin-top: 10px">
                             <thead>
                             <tr class="text-center">

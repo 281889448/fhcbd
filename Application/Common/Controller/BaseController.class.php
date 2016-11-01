@@ -29,8 +29,9 @@ class BaseController extends Controller
         $m->setModel(WEIYUAN);
         $user = $m->getUser(get_uid());
         $roler = $user['主任'];
-        $this->assign('roler',$roler);
-
+        if($roler){
+         $this->assign('roler',$roler);
+        }
 
 
 

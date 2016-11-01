@@ -37,15 +37,12 @@ class ProposalController extends BaseController
         //固定的状态下才会有匹配user_id
         $uid_array = C('UID_FILTER');
         $group = get_group(get_uid());
-        switch($group){
-            case '委员':
-                if(in_array($status,$uid_array[$group])){
-                    $map['p.uid'] = array('eq',get_uid());
-                }
-                break;
-            default:
-                break;
+        if(get_permission(get_uid(),['委员'])){
+            if(in_array($status,$uid_array[$group])){
+                $map['p.uid'] = array('eq',get_uid());
+            }
         }
+
 
         $map['p.status'] = array('in',"{$status}");
         //只有第一提案人和未并案的提案会显示  即0 2
@@ -137,12 +134,10 @@ class ProposalController extends BaseController
 
         $mu = D('User/User');
         $user_id = get_uid();
-        $group = get_group($user_id);
-        if($group=='委员'){
-            $group_id = WEIYUAN;
-        }elseif($group=='集体'){
-            $group_id = TEAM;
-        }
+
+        if(get_permission(get_uid(),['委员'])){$group_id = WEIYUAN;}
+        if(get_permission(get_uid(),['集体'])){$group_id = TEAM;}
+
         $mu->setModel($group_id);
         $user = $mu->getUser($user_id);
 
@@ -280,7 +275,7 @@ class ProposalController extends BaseController
 
             if (!is_administrator(is_login())) { //不是管理员则进行检测
                 //记录user_id 与当前UID匹配
-                if((get_group(get_uid())=='提案委' && $content_temp['status']==2)) {
+                if((get_permission(get_uid(),['提案委']) && $content_temp['status']==2)) {
 
                 }else{
                     if ($content_temp['uid'] != is_login()) {
@@ -308,8 +303,8 @@ class ProposalController extends BaseController
                    $weiboApi->resetLastSendTime();
                    $weiboApi->sendWeibo("我修改了活动【" . $title . "】：" . $postUrl);
            */
-            $group = get_group(get_uid());
-            if($content['status'] == 2 && ($group == '委员' || $group == '集体')){
+
+            if($content['status'] == 2 && (get_permission(get_uid(),['委员','集体']))){
                 $back_url = U('Wap/Proposal/index',array('status'=>2));
                 //流程记录
                 process_log( 'dopost','proposal', $proposal_id, get_uid(),$proposal_id);
@@ -457,7 +452,7 @@ class ProposalController extends BaseController
 
 
         }
-        if(get_group(get_uid())=='提案委'){
+        if(get_permission(get_uid(),['提案委'])){
             $this->assign('back_url',I('server.HTTP_REFERER'));
         }else{
             $this->assign('back_url',U('Proposal/Index/index',array('status'=>1)));
@@ -616,11 +611,18 @@ class ProposalController extends BaseController
      * autor: MR.Z <327778155@qq.com>
      */
     private function check_view($status){
-        $group = get_group(get_uid());
+        $group =  get_group(get_uid() );;
 
         $view_status = C('VIEW_STATUS');
+        $status_tmp = [];
+        foreach($group as $v){
+            if($view_status[$v]){
+                $status_tmp = array_merge($status_tmp,$view_status[$v]);
+            }
+        }
 
-        if(!in_array( $status,$view_status[$group])){
+        $status_arr =  array_unique($status_tmp) ;
+        if(!in_array( $status,$status_arr)){
             $this->error("您没有访问该提案的权限");
         }
     }

@@ -101,16 +101,16 @@
                                 </tr>
                                 <tr>
                                     <td colspan="6">
-                                        <switch name="group">
-                                            <case value="政协办公室">
+                                        <if condition="get_permission(get_uid(),['政协工作人员'])">
                                                 <a class="btn btn-default btn-sm" href="{:U('Polls/Index/index',array('status'=>2))}">返回</a>
-                                                </case>
-                                            <case value="办公室主任">
-                                                <a class="btn btn-primary btn-sm btn-del"   href="javascript:;" >审核通过</a>
+                                                </if>
+                                        <if condition="get_permission(get_uid(),['秘书长'])">
+
+                                        <a class="btn btn-primary btn-sm btn-del"   href="javascript:;" >审核通过</a>
                                                 <a class="btn btn-primary btn-sm btn-th" href="javascript:;" >退回</a>
                                                 <a class="btn btn-default btn-sm" href="{:U('Polls/Index/index',array('status'=>3))}">返回</a>
-                                            </case>
-                                            </switch>
+                                            </if>
+
                                     </td>
                                 </tr>
                                 </tbody>

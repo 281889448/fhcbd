@@ -62,8 +62,8 @@ class IndexController extends BaseController
 		
            
         }
-	    $group = get_group(get_uid());
-	    if($group=='委员' || $group=='集体' ){$map['uid'] = get_uid();}
+
+	    if(get_permission(get_uid(),['委员','集体']) ){$map['uid'] = get_uid();}
         $map['status'] = array('in',explode(',',$status));
 	    $map = array_filter($map);
 	
@@ -845,7 +845,7 @@ class IndexController extends BaseController
         }
     }
 
-//办公室主任审核通过
+//秘书长审核通过
     public function detail_manger($id){
         $content=D('polls')->where(array('id'=>$id))->find();
         $this->assign('content',$content);
@@ -966,8 +966,19 @@ class IndexController extends BaseController
     
     private function check_view($status){
 	    $group = get_group(get_uid());
+
     	$view_status = C('POLLS_VIEW_STATUS');
-	    if(!in_array( $status,$view_status[$group])){
+
+        $status_tmp = [];
+        foreach($group as $v){
+            if($view_status[$v]){
+                $status_tmp = array_merge($status_tmp,$view_status[$v]);
+            }
+        }
+
+      $status_arr =  array_unique($status_tmp) ;
+
+	    if(!in_array( $status,$status_arr)){
 		    $this->error("您没有访问该社情民意的权限");
 	    }
     	

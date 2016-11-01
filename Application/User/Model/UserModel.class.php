@@ -183,7 +183,7 @@ class UserModel extends Model
 						}else{
 							$map_field['uid'] = $tkl['uid'];
 							$map_field['field_id'] = $val['id'];
-							$field_data = D('field')->where($map_field)->getField('field_data');
+							$field_data = D('field')->cache(true,60)->where($map_field)->getField('field_data');
 							$tkl[$key] = $field_data;
 							
 						}

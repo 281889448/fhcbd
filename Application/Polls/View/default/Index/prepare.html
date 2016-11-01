@@ -17,15 +17,13 @@
                             </thead>
                             <php>
                                 $htmlstatus_polls = 1;
-                                switch($group){
-                                    case '政协办公室':
-                                        if($polls['status']==2)$htmlstatus_polls = 0;
-
-                                    break;
-                                    case '办公室主任':
-                                       if($polls['status']==3)$htmlstatus_polls = 0;
-                                    break;
+                                if(get_permission(get_uid(),['政协人作人员','秘书长']){
+                                    if(in_array($polls['status'],[2,3])){
+                                $htmlstatus_polls = 0;
+                                    }
                                 }
+
+
                             </php>
                             <tbody>
                             <tr>
@@ -91,8 +89,8 @@
                                     {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'upload','id'=>$polls['id'],1))}
                                 </td>
                             </tr>
-                            <switch name="group">
-                                <case value="委员|集体">
+                            <if condition="get_permission(get_uid(),['委员','集体'])" >
+
                                     <tr>
                                         <td colspan="6">
                                             <in name="polls.status" value="6">
@@ -103,19 +101,20 @@
 
                                         </td>
                                     </tr>
-                                </case>
-                                <case value="政协办公室|办公室主任">
+
+                            </if>
+                            <if condition="get_permission(get_uid(),['政协工作人员','秘书长'])" >
+
                                     <input type="hidden" name="status"/>
 
                                     <php>
-                                        switch($group){
-                                            case '政协办公室':
-                                            if($polls[status]!=2)$htmlstatus_polls = 1;
-                                        break;
-                                        case '办公室主任':
-                                        if($polls[status]!=3)$htmlstatus_polls = 1;
-                                        break;
+
+                                        if(get_permission(get_uid(),['政协人作人员','秘书长']){
+                                        if(!in_array($polls['status'],[2,3])){
+                                          $htmlstatus_polls = 1;
                                         }
+                                        }
+
                                     </php>
                             <tr>
                                 <td>采用情况</td>
@@ -136,10 +135,10 @@
                             <tr>
                                 <td colspan="6">
 
-                                    <if condition="$group=='政协办公室' && $polls[status] == 2">
+                                    <if condition="get_permission(get_uid(),['政协人作人员']) && $polls[status] == 2">
                                     <a class="btn btn-primary btn-sm btn-de" href="javascript:;" data-toggle="modal" data-target="#myModal3"  onclick="document.form_back.status.value=4;">退回</a>
                                     <a class="btn btn-primary btn-sm btn-del" href="javascript:;"  data-toggle="modal" data-target="#myModal1"  onclick="document.form_polls.status.value=3;" >审核通过</a>
-                                        <elseif condition="$group=='办公室主任' && $polls[status] == 3"/>
+                                        <elseif condition="get_permission(get_uid(),['秘书长']) && $polls[status] == 3"/>
                                     <a class="btn btn-primary btn-sm btn-de" href="javascript:;" data-toggle="modal" data-target="#myModal3" onclick="document.form_back.status.value=5;">二审退回</a>
                                     <a class="btn btn-primary btn-sm btn-del" href="javascript:;"  data-toggle="modal" data-target="#myModal1" onclick="document.form_polls.status.value=6;" >终审通过</a>
                                    </if>
@@ -149,8 +148,8 @@
 
                                 </td>
                             </tr>
-                                    </case>
-                                </switch>
+                                    </if>
+
                             </tbody>
                             <!-- Small modal 通过审核-->
                             <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

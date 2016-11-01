@@ -34,8 +34,9 @@
 												类别
 											</td>
 											<td>
-												<php>$group = reset(get_group($content['uid']))</php>
-												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'leibie','id'=>$content['id'],1,$group[0]))}
+												<php>if(get_permission($content[uid],['委员']))$group = '委员';
+													if(get_permission($content[uid],['集体']))$group = '集体';</php>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'leibie','id'=>$content['id'],1,$group))}
 											</td>
 											<td>
 												提出日期

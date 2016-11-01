@@ -204,22 +204,18 @@ class IndexController extends BaseController
     	$polls_review_count_2 = S('polls_review_count_2');
 	    $polls_review_count_3 = S('polls_review_count_3');
 	    $group = get_group(get_uid());
-	    switch($group){
-		    case '委员':
-		    case '集体':
+
+        if(get_permission(get_uid(),['集体'])){
+
 		    	$map['uid'] = get_uid();
 			    $map['status'] = 2;
 			    $polls_review_count_user = $model->where($map)->count();
 			    $this->assign('polls_review_count_user',$polls_review_count_user);
 			    unset($map);
-		    	break;
-		    case '政协办公室':
-		    	break;
-		    case '办公室主任':
-		    	
-		    	break;
-		    	
-	    }
+
+        }
+
+
 	    
 	    
 	    
@@ -250,22 +246,15 @@ class IndexController extends BaseController
 	    $working_review_count_2 = S('working_review_count_2');
 	    $working_review_count_3 = S('working_review_count_3');
 	    $group = get_group(get_uid());
-	    switch($group){
-		    case '委员':
-		    case '集体':
-			    $map['uid'] = get_uid();
-		      $map['status'] = 2;
-					$working_review_count_uid = $model->where($map)->count();
-					$this->assign('working_review_count_user',$working_review_count_uid);
-					unset($map);
-			    break;
-		    case '政协办公室':
-			    break;
-		    case '办公室主任':
-			
-			    break;
-		
-	    }
+        if(get_permission(get_uid(),['集体'])){
+            $map['uid'] = get_uid();
+            $map['status'] = 2;
+            $working_review_count_uid = $model->where($map)->count();
+            $this->assign('working_review_count_user',$working_review_count_uid);
+            unset($map);
+
+        }
+
 	
 	
 	
@@ -468,4 +457,6 @@ class IndexController extends BaseController
     public function help(){
         $this->display();
     }
+
+
 }

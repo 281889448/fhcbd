@@ -31,9 +31,30 @@ class UserController extends BaseController
      * create: 2016/9/28
      */
     public function index(){
+    //这里是有问题的
+       /* if(IS_POST){
+            $map = I('get.');
+            if($map['名称']){
+                $map['名称'] = ['like',"%".$map['名称']."%"];
+            }
+            if($map["手机号"]){
+                $map['手机号'] = ['like',$map['手机号']];
+            }
+            if($map['stime']&& $map['etime']){
+                $map['stime'] = strtotime($map['stime']);
+                $map['出生日期'] = ['between',$map['stime'].','.$map['etime']];
+            }elseif($map['stime']){
+                $map['出生日期'] = ['gt',$map['stime']];
+            }elseif($map['etime']){
+                $map['出生日期'] = ['lt',$map['etime']];
+            }
+            $map = array_filter($map);
+        }*/
+
         $m = D('User/User');
         $m->setModel(WEIYUAN);
-        $users = $m->getUsers([],['名称','性别','籍贯','民族','专委会','街道联络委','政治面貌','是否常委','手机号','办公电话','届别']);
+
+        $users = $m->getUsers($map,['名称','性别','籍贯','民族','专委会','街道联络委','政治面貌','是否常委','手机号','办公电话','届别']);
 
         $this->assign('users',$users);
         $this->display();

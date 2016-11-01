@@ -48,7 +48,8 @@
                 <tr>
                     <td> 类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型</td>
                     <td>
-                        <php>$group = get_group(get_uid())</php>
+                        <php>if(get_permission(get_uid(),['委员']))$group = '委员';
+                            if(get_permission(get_uid(),['集体']))$group = '集体';</php>
                         {:W('InputRender/InputRender',array('modelid'=>4,'name'=>'leibie',$proposal_id,1,$group))}
                     </td>
                 </tr>

@@ -1,5 +1,4 @@
-<php>$group=get_group(get_uid());</php>
-<if condition="$uid == is_login() || $group=='政协办公室'">
+<if condition="$uid == is_login() || get_premisson(get_uid(),['政协工作人员'])">
     <script type="text/javascript" src="__JS__/expandinfo-form.js"></script>
     <form action="{:U('Config/edit_expandinfo')}" method="post" class="ajax-form">
         <input type="hidden" name="profile_group_id" value="{$profile_group_id}">

@@ -34,7 +34,11 @@
 												类别
 											</td>
 											<td>
-												<php>$group = reset(get_group($content[uid]))</php>
+												<php>
+													if(get_permission($content[uid],['委员']))$group = '委员';
+													if(get_permission($content[uid],['集体']))$group = '集体';
+
+												</php>
 												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'leibie','id'=>$content['id'],1,$group))}
 											</td>
 											<td>
@@ -71,7 +75,7 @@
 												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'renshu','id'=>$content['id'],1))}
 											</td>
 										</tr>
-										
+
 										<tr>
 											<td>
 												案由
@@ -86,7 +90,7 @@
 												是否公开
 											</td>
 											<td>
-											<div class="pull-left">												
+											<div class="pull-left">
 												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'is_public','id'=>$content['id'],1))}
 											</div>
 											</td>
@@ -109,7 +113,7 @@
 											</td>
 											<td colspan="5">
 											<div class="pull-left">
-												
+
 												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'fujian','id'=>$content['id'],1))}
 											</div>
 											</td>
@@ -137,7 +141,7 @@
 													</tr>
 												<volist name="result_list" id="r">
 													<tr>
-														<td  class="text-center">{:reset(get_group($r['user_id']))}</td>
+														<td  class="text-center">{$r['unit']}</td>
 														<td  class="text-center">{$r['leader']}</td>
 														<td  class="text-center">{$r['contact']}</td>
 														<td  class="text-center">{$r[status]}</td>
@@ -266,7 +270,7 @@
 											</script>
 										</in>
 										<tr>
-											
+
 											<td>
 												提案人
 											</td>
@@ -319,7 +323,7 @@
 												</td>
 												<td colspan="5">
 												<div class="pull-left" style="width: 400px">
-													
+
 													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'recommend','id'=>$content['id'],1))}
 												</div>
 												</td>
@@ -350,30 +354,24 @@
 
 										<tr>
 											<td colspan="6">
-										<php>$group=reset(get_group(get_uid()));</php>
-										<switch name="group">
 
+												<if condition="get_permission(get_uid(),['办理单位'])">
 
-
-
-											<case value="办理单位">
 
 												<in name="content.status" value="19">
 
 													<!--button class="btn btn-primary btn-sm"  onClick="document.proposal.action='{:U('Proposal/Index/setDo',array('proposal_id'=>$content[id]))}'">已办理</button-->
 
 																																																																				<!--针对这个操作会更改 //TODO-->
-													
+
 													<div class="pull-left">
 														<a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" onclick="document.proposal.action='{:U('Proposal/Index/handOver',array('result_id'=>$result_id))}'">申请移交办理</a>
 													<a  class="btn btn-default btn-sm" href="{:U('Proposal/Index/exportProposal',array('proposal_id'=>$content[id]))}">导出提案</a>
-													</div>																																																							
-													
+													</div>
+
 												</in>
 
-											</case>
-
-										</switch>
+												</if>
 												<a class="btn btn-default btn-sm pull-left" href="{$back_url}">返回</a>
 											</td>
 										</tr>

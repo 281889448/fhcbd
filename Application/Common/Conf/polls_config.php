@@ -30,9 +30,9 @@ return array(
     'POLLS_VIEW_STATUS' =>  array(
 	    '委员' => array(1,2,'2,6',4),
 	    '集体' => array(1,2,'2,6',4),
-	    '政协办公室' =>  array(2,3,5),
+	    '政协工作人员' =>  array(2,3,5),
 	    
-	    '办公室主任' =>   array(3,6)
+	    '秘书长' =>   array(3,6)
 
     ),
 
