@@ -5,7 +5,7 @@
             <div class="row-fluid">
                 <div class="span12">
                     <div id="tableWrap">
-                        <h4 style="padding:5px">公告管理列表</h4>
+                        <h4 style="padding:5px">公示公告管理列表</h4>
                         <form name="frm" method="post" action="{:U('Home/Index/message')}">
                         <table border="0" cellspacing="" cellpadding="" class="col-sm-10" style="margin-bottom:15px">
                             <tr>
@@ -31,7 +31,7 @@
                                     {$resaut.title}
                                 </td>
                                 <td>
-                                    {$resaut.stime|date="Y-m-d H:i:s",###}
+                                    {$resaut.time|date="Y-m-d H:i:s",###}
                                 </td>
                                 <td>
                                     {$resaut.author}
@@ -54,58 +54,7 @@
         </div>
     </div>
 
- <script type="text/javascript">
 
-     var delid='';
-     $(function() {
-         $(".btn-del").click(function() {
-             delid=$(this).attr('delid');
-             var choose =confirm('您是否确认删除该记录？');
-             if(choose) {
-                 $.ajax({
-                     type: "POST",
-                     url: "{:U('Message/Index/del')}",
-                     data: {'id': delid},
-                     success: function (data) {
-                      //   data = $.parseJSON(data);
-
-                         if (data.status == 1) {
-                             $('#myModal').modal('hide');
-                             window.location.reload();
-                         } else {
-                             alert(data.msg);
-                         }
-                     }
-                 })
-             }
-         });
-     })
-
-
-
-    function checkSearch()
-         {
-             if(document.frm.keyword.value == '')
-             {
-                 alert("公告标题不能为空！");
-                 document.frm.keyword.focus();
-                 return false;
-             }else{
-                 $("#submit").click();
-             }
-         }
-         function sendmsg(id){
-             $.ajax({
-                 type: "POST",
-                 url: "{:U('Message/Index/sendtemplateMsg')}",
-                 data:{'id':id},
-                 success: function(data) {
-                     data = $.parseJSON(data);
-                     alert('成功通知'+data.time+'位人员');
-                 }
-             })
-         }
- </script>-
 
 </block>
 

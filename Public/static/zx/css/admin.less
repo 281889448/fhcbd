@@ -1,0 +1,261 @@
+@charset "utf-8";
+@import "global.less";
+@basecolor: #428bca;
+@basecolor2: #5498eb;
+a{
+    text-decoration: none;
+    &:hover{
+        text-decoration: none;
+    }
+}
+.navbar-header {
+    background: @basecolor;
+    .navbar-brand{
+        padding: 0!important;
+        padding-right: 50px!important;
+        line-height: 60px!important;
+        color: #fff;
+        &:hover {
+            color: #eee;
+        }
+    }
+}
+.navbar-header {
+    height: 100%;
+    line-height: 60px;
+    a {
+        color: #fff;
+    }
+}
+.ar_container {
+    position: absolute;
+    top: 60px;
+    left: 0;   
+    height: 100%;
+    width: 100%;
+}
+.top-nav{
+margin-left: 20px;
+    width:800px;
+    height: 100%;
+    line-height: 60px;
+
+    li{
+        float: left; height: 100%;
+        padding:0 20px ;
+        background: rgba(0,0,0,0.1);
+        a{
+            display: block;
+            text-decoration: none;
+        }
+        &:hover{
+          background: rgba(0,0,0,0.2);   
+        }
+        &.on{
+          background: rgba(0,0,0,0.2);   
+
+        }
+    }
+}
+.ar_sidebar {
+     box-shadow: 1px 1px 6px #666;
+     z-index: 90;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 250px;
+    background: #fff;
+//  height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+body{
+    background: #eee;
+}
+.ar_content {
+    position: absolute;
+    top: 0;
+//  left: 250px;
+    width: 100%;
+//  height: 90%;
+    overflow-y: auto;
+    overflow-x: auto;
+    background: #eee;
+}
+table{
+    background: #fff;
+   
+}
+.ar_bar {
+    width: 100%;
+    height: 50px;
+    background: @basecolor2;
+    color: #fff;
+    line-height: 50px;
+    text-align: left;
+    text-indent: 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.ar_bar2 {
+    width: 100%;
+    height: 50px;
+    background: #ddd;
+    color: #333;
+    line-height: 50px;
+    text-align: left;
+    text-indent: 20px;
+    font-size: 18px;
+    margin-top: 1px;
+    display: none;
+    cursor: pointer;
+}
+.ar_nav_top {
+    height: 60px;
+    background: @basecolor;
+    color: #fff;
+    position: absolute;
+     box-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 91;
+    overflow: hidden;
+    .container-fluid{
+        height: 100%;
+    }
+    a {
+        color: #fff;
+        &:hover {
+            color: #ddd;
+        }
+    }
+}
+body {
+    overflow: hidden;
+}
+/* 本例子css */
+.sideMenu {
+    // border: 1px solid #ddd;
+    padding-top: 10px;
+    width: 250px;
+}
+.sideMenu h3 {
+    height: 40px;
+    line-height: 40px;
+    padding-left: 10px;
+    border-bottom: 1px solid #e3e3e3;
+    background:#ECEFF1;
+    cursor: pointer;
+    color: #78909C;
+    font-size: 14px;
+}
+.sideMenu h3 em {
+    float: right;
+    display: block;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-style: normal;
+     background-image: url(../img/dn.png);
+    background-repeat: no-repeat;
+    background-position: 5px 12px;
+}
+.sideMenu h3.on{
+    color: #1E88E5;
+    background:#DCE2E5!important;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+    z-index: 99;
+    position: relative;
+}
+.sideMenu h3.on em {
+    background-image: url(../img/ic_bars.png);
+    background-repeat: no-repeat;
+    background-position: 5px 12px;
+}
+.sideMenu ul {
+    padding:0;
+    color: #999;
+    display: none;
+    /* 默认都隐藏 */
+}
+.sideMenu ul li {
+    width: 100%;
+//  height: 40px;
+    background: #DCE2E5;
+    color: #546E7A;
+    line-height: 40px;
+    text-align: left;
+    text-indent: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    a{
+        display: block;
+       color: #546E7A;  
+    }
+    &.active{
+       background: #DCE2E5*0.9;  
+    }
+    ol{
+        display: none;
+        li{
+            background: #c6cbce*0.8;
+            margin-left: 20px;
+            color: #fff;
+            margin-bottom: 1px;
+            &.active{
+                background:#c6cbce*0.7 ;
+            }
+            a{
+                color: #fff;
+                ;
+            }
+        }
+    }
+}
+body,
+html {
+//  min-width: 800px;
+}
+#tableWrap{
+    margin-top:20px;
+    box-shadow:0 0 6px #999;
+    z-index:9;
+//  width: 1020px;
+    background: #fff;
+    padding: 10px;
+    margin-bottom: 20px;
+//  width: 1200px !important;
+    table{
+        width: 100% !important;
+    }
+}
+input[type=checkbox]{
+    margin: 0!important;
+}
+
+.textc{
+    text-align: center;
+    font-weight: bold;
+    color: #000;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

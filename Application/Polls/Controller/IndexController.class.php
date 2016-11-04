@@ -41,13 +41,15 @@ class IndexController extends BaseController
             $etime= I('POST.etime');
 
             $stime=strtotime($stime);
-            $etime=strtotime($etime) + 3600*24;
+            $etime=strtotime($etime) ;
 	        
 	        if(!empty($stime) && !empty($etime)){
+	            $etime = $etime+ 3600*24;
 		        $map['time'] =array('between',"{$stime},{$etime}");
 	        }elseif(!empty($stime) && empty($etime)){
 		        $map['time'] =array('gt',$stime);
 	        }elseif(empty($stime) && !empty($etime)){
+                $etime = $etime+ 3600*24;
 		        $map['time'] =array('lt',$etime);
 	        }
 	        

@@ -32,6 +32,7 @@ class IndexController extends BaseController
 	    $this->assignMessage();
 			$this->assignWork();
 	    $this->assignPolls();
+        $this->assignSurveyCount();
 
                $this->display();
             }
@@ -234,6 +235,24 @@ class IndexController extends BaseController
 	    $this->assign('polls_review_count_3',$polls_review_count_3);
 	    
     }
+
+
+    private function assignSurveyCount(){
+
+      //  $uid = get_uid();
+    //    $map['_string'] = "{$uid} in (author_id) or author_id =''";
+        $surveys = D('Survey')->order('time desc,id desc')->limit('0,5')->select();
+
+        $m = D('User/User');
+        $m->setModel(WEIYUAN);
+
+        foreach($surveys as &$v){
+            $user = $m->getUser($v['uid']);
+            $v['author'] = $user['名称'];
+        }
+        $this->assign('surveys',$surveys);
+
+    }
     
     /*
      * 工作动态个数
@@ -372,6 +391,29 @@ class IndexController extends BaseController
         $this->display();
     }
 
+
+    public function survey($page=1){
+        if(IS_POST){
+            $map = I('post.');
+            $map['title'] = ['like',"%{$map['title']}%"];
+        }
+        $uid = get_uid();
+        $map['_string'] = "{$uid} in (author_id) or author_id =''";
+        $surveys = D('Survey')->where($map)->order('time desc,id desc')->page($page,15)->select();
+
+        $totalCount = D('Survey')->where($map)->count();
+        $m = D('User/User');
+        $m->setModel(WEIYUAN);
+
+        foreach($surveys as &$v){
+            $user = $m->getUser($v['uid']);
+            $v['author'] = $user['名称'];
+        }
+        $this->assign('surveys',$surveys);
+        $this->assign('totalPageCount', $totalCount);
+        //{:getPagination($totalPageCount,10)}
+        $this->display();
+    }
     /*
      * 工作动态列表页
      *  author: MR.Z <327778155@qq.com>

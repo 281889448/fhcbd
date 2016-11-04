@@ -1,0 +1,74 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form name="frm" method="post" action="">
+                        <label for="" class="span12 col-sm-12">
+                            <a href="{:U('Event/Index/search')}" class="btn btn-primary  btn-sm" type="submit">查询</a>
+                            <a href="{:U('Event/Index/add')}" class="btn btn-primary  btn-sm">添加活动</a><span style="margin: 10px;"></span>
+                        </label>
+                            </form>
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="6">
+                                    活动列表
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="textc">活动编号</td>
+                                <td class="textc">活动类别</td>
+                                <td class="textc">活动名称</td>
+                                <td class="textc">活动地点</td>
+                                <td class="textc">活动时间</td>
+                                <td class="textc">管理操作</td>
+                            </tr>
+                            <volist name="event" id="event">
+                            <tr>
+                                <td>{$event.id}</td>
+                                <td>{$event.type}</td>
+                                <td>{$event.title}</td>
+                                <td>{$event.address}</td>
+                                <td>{$event.sTime}--{$event.eTime}</td>
+                                <td>
+                                    <a class="btn btn-primary  btn-sm" href="{:U('Event/Index/detail',array('id'=>$event[id]))}">查看详情</a><span style="margin: 10px;"></span>
+                                    <a class="btn btn-warning  btn-sm" href="{:U('Event/Index/edit',array('id'=>$event[id]))}">修改</a><span style="margin: 10px;"></span>
+                                    <a class="btn btn-danger  btn-sm" href="{:U('Event/Index/doDel',array('id'=>$event[id]))}">删除</a>
+
+                                </td>
+                            </tr>
+                            </volist>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function checkSearch()
+        {
+            if(document.frm.keyword.value == "")
+            {
+                alert("搜索关键字不能为空！");
+                document.frm.keyword.focus();
+                return false;
+            }
+        }
+    </script>
+</block>
+
+
+
+
+
+
+
+
+
+

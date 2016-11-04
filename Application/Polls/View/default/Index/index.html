@@ -7,7 +7,7 @@
                     <div id="tableWrap">
                      <div class="clearfix" style="margin-left:0px;margin-bottom:15px;">
                         <h4 style="margin:5px;margin-left:0">社情民意列表</h4>
-                        <if condition="$group == '委员' || $group == '集体'">
+                         <if condition="get_permission(get_uid(),['委员','集体']) && $status==1">
                         <a href="{:U('Polls/Index/add')}" class="btn btn-primary btn-sm col-sm-1" style="margin-right:15px;padding-left:0">添加社情民意</a>
                        </if>
 

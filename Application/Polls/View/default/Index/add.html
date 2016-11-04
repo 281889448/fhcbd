@@ -44,11 +44,13 @@
                                 作者
                             </td>
                             <td colspan="5">
-                                <input type="hidden"  name="people" id="uids" value=""/>
-                                <div id="Groups" class="btn btn-primary" data-toggle="modal" data-target="#myModalx">
-                                    选择作者
+                                <div class="col-sm-12" style="margin: 0;padding: 0;">
+                                    <div class="btn btn-primary btn-sm" id="add_author" style="margin-left: 10px"> 添加作者</div>
+                                    <div class="col-sm-8"  style="margin: 0;padding: 0;">
+                                        <input type="text" class="form-control input-sm" id="select_id" name="people_view" readonly="readonly" />
+                                        <input type="hidden" name="people" id="s_id"/>
+                                    </div>
                                 </div>
-                                <textarea name="people_view" readonly id="contact_user" class="form-control" style="margin-top: 10px"></textarea>
                             </td>
                         </tr>
                         <tr>
@@ -172,5 +174,143 @@
             })
         })
     </script>
-    {:W('Common/Tongxunlu/index')}
+    <!-- Modal -->
+    <style type="text/css">
+        .anthor_btn {
+            padding: 5px 10px;
+            background: #eee;
+            cursor: pointer;
+        }
+
+        .anthor_btn:after {
+            content: "√";
+        }
+
+        .selected_author {
+            border: 1px solid #ddd;
+            padding: 15px 15px 0 15px;
+            min-height: 57px;
+        }
+
+        .selected_name {
+            padding: 5px 10px;
+            background: #0088CC;
+            cursor: pointer;
+            color: #fff;
+            margin-right: 10px;
+            margin-bottom: 10PX;
+            border-bottom: 1PX SOLID #0088CC;
+            float: left;
+        }
+
+        .selected_name:after {
+            content: "×";
+        }
+    </style>
+    <div class="modal fade" id="myModals" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel"><font color="blue">添加作者</font></h4>
+                </div>
+                <div class="modal-body clearfix">
+                    已选择的作者：
+                    <div class="selected_author clearfix">
+
+                    </div>
+                    <div class="col-sm-12 clearfix" style="padding: 5PX;padding-left: 0;margin: 0">
+                        <div class="col-sm-8" style="margin: 0;padding-left: 0;"><input type="text" class="form-control input-sm" id="author" /></div><button class="btn btn-primary btn-sm" id="search">搜索</button>
+                    </div>
+                    <table class="table table-bordered" id="seach-table">
+                        <tr>
+                            <th>用户名</th>
+                            <th>姓名</th>
+                        </tr>
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary btn-sel-on" data-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function() {
+            $("#add_author").click(function() {
+                $("#myModals").modal('show')
+            });
+            $("#seach-table").on("click",".anthor_btn", function() {
+                var authorName = $(this).text();
+                var s_id = $(this).attr('data');
+                var str = "<span class='selected_name' data='"+s_id+"' >" + authorName + "</span>"
+                $(".selected_author").append(str)
+            });
+            $(".selected_author").on("click", "span", function() {
+                $(this).remove()
+            });
+            $(".btn-sel-on").click(function() {
+                var selarr = [];
+                var s_id = [];
+                $(".selected_author").find("span").each(function(i, e) {
+                    selarr.push($(e).text());
+                    s_id.push($(e).attr('data'));
+                })
+                $("#select_id").val(selarr)
+                $("#s_id").val(s_id)
+                console.log(s_id);
+            });
+
+
+
+
+            //添加
+            $("#search").click(function() {
+
+
+                jQuery.ajax({
+                    type: "POST", // HTTP method POST or GET
+                    url: "{:U('Survey/Index/search_user_ajax')}", //Where to make Ajax calls
+                    dataType:"json", // Data type, HTML, json etc.
+                    data:{'author':$("#author").val()}, //Form variables
+                    success:function(response){
+                        $("#seach-table").html('');
+                        if(response.status !=0){
+                            var trel ;
+
+                            for(var i=0;i<response.content.length;i++){
+                                trel += "<tr><td>"+response.content[i]['nickname']+"</td><td><span class='anthor_btn' data='"+response.content[i]['uid']+"'>"+response.content[i]['名称']+"</span></td></tr>"
+
+                            }
+                            $("#seach-table").append(trel)
+
+
+
+                        }else{
+                            alert('非法访问');
+                        }
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert(thrownError);
+                    }
+                });
+
+
+
+
+
+            })
+
+        })
+
+
+
+
+
+
+
+
+    </script>
 </block>

@@ -30,7 +30,7 @@ class UserController extends BaseController
      * author: MR.Z <327778155@qq.com>
      * create: 2016/9/28
      */
-    public function index(){
+    public function index($page=1){
     //这里是有问题的
        /* if(IS_POST){
             $map = I('get.');
@@ -50,13 +50,39 @@ class UserController extends BaseController
             }
             $map = array_filter($map);
         }*/
+       //下拉选项 专委会
+        $zwh_str = D('FieldSetting')->where(['profile_group_id'=>13,'field_name'=>'专委会','status'=>1])->getField('form_default_value');
+        $jdllw_str = D('FieldSetting')->where(['profile_group_id'=>13,'field_name'=>'街道联络委','status'=>1])->getField('form_default_value');
+        $zwh_item = explode('|',$zwh_str);
+        $jdllw_item = explode('|',$jdllw_str);
+        $this->assign('zwh_item',$zwh_item);
+        $this->assign('jdllw_item',$jdllw_item);
+       if(IS_POST){
+            $data = I('post.');
+           $map['名称'] = ['like',"%{$data['名称']}%"];
+           $map['手机号'] = ['like',"%{$data['手机号']}%"];
+           $map['届别'] = ['like',"%{$data['届别']}%"];
+            if($data['stime'] && $data['etime']){
+                $map['出生日期'] = ['between',$data['stime'].','.$data['etime']];
+            }elseif($data['stime']){
+                $map['出生日期'] = ['gt',$data['stime']];
+            }elseif($data['etime']){
+                $map['出生日期'] = ['lt',$data['etime']];
+            }
 
+       }
+        $map = array_filter($map);
         $m = D('User/User');
         $m->setModel(WEIYUAN);
 
         $users = $m->getUsers($map,['名称','性别','籍贯','民族','专委会','街道联络委','政治面貌','是否常委','手机号','办公电话','届别']);
 
-        $this->assign('users',$users);
+        $pagesize = 20;
+        $data = page_array($pagesize,$page,$users);
+        $totalCount = count($users);
+
+        $this->assign('users',$data);
+        $this->assign('totalPageCount',$totalCount);
         $this->display();
     }
 

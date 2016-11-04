@@ -8,6 +8,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>跳转提示</title>
+	<link rel="stylesheet" href="__STATIC__/zx/css/bootstrap.min.css">
 <style type="text/css">
 *{ padding: 0; margin: 0; }
 body{ background: #fff; font-family: '微软雅黑'; color: #333; font-size: 16px; }
@@ -22,11 +23,9 @@ body{ background: #fff; font-family: '微软雅黑'; color: #333; font-size: 16p
 <body>
 <div class="system-message">
 <?php if(isset($message)) {?>
-<h1>:)</h1>
-<p class="success"><?php echo($message); ?></p>
+<p class="success alert alert-success" ><?php echo($message); ?></p>
 <?php }else{?>
-<h1>:(</h1>
-<p class="error"><?php echo($error); ?></p>
+<p class="error alert alert-danger"><?php echo($error); ?></p>
 <?php }?>
 <p class="detail"></p>
 <p class="jump">

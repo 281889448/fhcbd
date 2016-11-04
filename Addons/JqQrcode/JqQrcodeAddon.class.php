@@ -66,7 +66,7 @@ use Common\Controller\Addon;
 		
             if($config['article_status']){
                 $config = array_merge($param, $config);
-                $config['text'] = U('Home/Weixin/jion/id/'.$param['id'], '', true, true);
+                $config['text'] = U('Wap/Weixin/mark/type/'.$param['type'].'/id/'.$param['id'], '', true, true);
                 $this->assign('addons_config', $config);
                 $this->display('qrcode');
             }

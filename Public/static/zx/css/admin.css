@@ -1,0 +1,577 @@
+@charset "utf-8";
+html,
+body {
+  /* font-family: "Helvetica Neue", Helvetica, STHeiTi, Arial, sans-serif; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; */
+  font-family: "Helvetica Neue", Arial, STHeiti, "Microsoft YaHei", sans-serif, Helvetica, "DroidSansFallback", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3" !important;
+}
+/*IOS
+
+iOS 4.0+ 使用英文字体 Helvetica Neue，之前的iOS版本降级使用 Helvetica，中文字体设置为华文黑体STHeiTi。
+
+Android
+
+原生Android下中文字体与英文字体都选择默认的无衬线字体，4.0之前版本英文字体原生Android使用的是Droid Sans，中文字体原生Android会命中Droid Sans Fallback，4.0+ 中英文字体都会使用原生Android新的Roboto字体。其他第三方Android系统也一致选择默认的无衬线字体。
+
+最后加上Arial字体方便pc端查看效果*/
+body {
+  margin: 0;
+  background-color: white;
+  height: 100%;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+article,
+footer,
+header,
+nav,
+section {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block;
+  vertical-align: baseline;
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+a {
+  background: transparent;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  color: #555;
+}
+a:active {
+  outline: 0;
+}
+a:active {
+  color: #006699;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+img {
+  border: 0;
+  vertical-align: middle;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield;
+  box-sizing: border-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+textarea {
+  overflow: auto;
+  resize: vertical;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+form,
+blockquote {
+  margin: 0;
+}
+ul,
+ol,
+li,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+}
+ul,
+ol {
+  list-style: none outside none;
+}
+h1,
+h2,
+h3 {
+  line-height: 2;
+  font-weight: normal;
+}
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  color: #ddd;
+}
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: #ddd;
+}
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: #ddd;
+}
+/* 工具样式 */
+.textover_1 {
+  overflow: hidden;
+  /*超出隐藏需要设置宽高超出宽就隐藏*/
+  text-overflow: ellipsis;
+  /*以省略号的形式隐藏*/
+  white-space: nowrap
+  /*禁止文字自动换行*/
+}
+/*文本超出两行省略*/
+.textover_2 {
+  overflow: hidden;
+  /*超出隐藏需要设置宽高超出高就隐藏*/
+  text-overflow: ellipsis;
+  /*以省略号的形式隐藏*/
+  -webkit-line-clamp: 2;
+  /*超出多少行以省略的形式隐藏*/
+  /* Firefox 从上往下排列*/
+  -moz-box-orient: vertical;
+  /* Safari、Opera 以及 Chrome */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  /* W3C */
+  display: box;
+  box-orient: vertical;
+}
+.clear:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+@font-face {
+  font-family: 'iconfont';
+  src: url('iconfont/iconfont.eot');
+  src: url('iconfont/iconfont.eot?#iefix') format('embedded-opentype'), url('iconfont/iconfont.woff') format('woff'), url('iconfont/iconfont.ttf') format('truetype'), url('iconfont/iconfont.svg#iconfont') format('svg')
+  
+  /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  /* chrome、firefox */
+  /* IE6-IE8 */
+  /* IE9*/
+  /* iOS 4.1- */
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+img {
+  background: #eee;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
+.navbar-header {
+  background: #428bca;
+}
+.navbar-header .navbar-brand {
+  padding: 0!important;
+  padding-right: 50px!important;
+  line-height: 60px!important;
+  color: #fff;
+}
+.navbar-header .navbar-brand:hover {
+  color: #eee;
+}
+.navbar-header {
+  height: 100%;
+  line-height: 60px;
+}
+.navbar-header a {
+  color: #fff;
+}
+.ar_container {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+.top-nav {
+  margin-left: 20px;
+  width: 800px;
+  height: 100%;
+  line-height: 60px;
+}
+.top-nav li {
+  float: left;
+  height: 100%;
+  padding: 0 20px ;
+  background: rgba(0, 0, 0, 0.1);
+}
+.top-nav li a {
+  display: block;
+  text-decoration: none;
+}
+.top-nav li:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+.top-nav li.on {
+  background: rgba(0, 0, 0, 0.2);
+}
+.ar_sidebar {
+  box-shadow: 1px 1px 6px #666;
+  z-index: 90;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 250px;
+  background: #fff;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+body {
+  background: #eee;
+}
+.ar_content {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: auto;
+  background: #eee;
+}
+table {
+  background: #fff;
+}
+.ar_bar {
+  width: 100%;
+  height: 50px;
+  background: #5498eb;
+  color: #fff;
+  line-height: 50px;
+  text-align: left;
+  text-indent: 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.ar_bar2 {
+  width: 100%;
+  height: 50px;
+  background: #ddd;
+  color: #333;
+  line-height: 50px;
+  text-align: left;
+  text-indent: 20px;
+  font-size: 18px;
+  margin-top: 1px;
+  display: none;
+  cursor: pointer;
+}
+.ar_nav_top {
+  height: 60px;
+  background: #428bca;
+  color: #fff;
+  position: absolute;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 91;
+  overflow: hidden;
+}
+.ar_nav_top .container-fluid {
+  height: 100%;
+}
+.ar_nav_top a {
+  color: #fff;
+}
+.ar_nav_top a:hover {
+  color: #ddd;
+}
+body {
+  overflow: hidden;
+}
+/* 本例子css */
+.sideMenu {
+  padding-top: 10px;
+  width: 250px;
+}
+.sideMenu h3 {
+  height: 40px;
+  line-height: 40px;
+  padding-left: 10px;
+  border-bottom: 1px solid #e3e3e3;
+  background: #ECEFF1;
+  cursor: pointer;
+  color: #78909C;
+  font-size: 14px;
+}
+.sideMenu h3 em {
+  float: right;
+  display: block;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-style: normal;
+  background-image: url(../img/dn.png);
+  background-repeat: no-repeat;
+  background-position: 5px 12px;
+}
+.sideMenu h3.on {
+  color: #1E88E5;
+  background: #DCE2E5!important;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+  z-index: 99;
+  position: relative;
+}
+.sideMenu h3.on em {
+  background-image: url(../img/ic_bars.png);
+  background-repeat: no-repeat;
+  background-position: 5px 12px;
+}
+.sideMenu ul {
+  padding: 0;
+  color: #999;
+  display: none
+  /* 默认都隐藏 */
+}
+.sideMenu ul li {
+  width: 100%;
+  background: #DCE2E5;
+  color: #546E7A;
+  line-height: 40px;
+  text-align: left;
+  text-indent: 20px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.sideMenu ul li a {
+  display: block;
+  color: #546E7A;
+}
+.sideMenu ul li.active {
+  background: #c6cbce;
+}
+.sideMenu ul li ol {
+  display: none;
+}
+.sideMenu ul li ol li {
+  background: #9ea2a5;
+  margin-left: 20px;
+  color: #fff;
+  margin-bottom: 1px;
+}
+.sideMenu ul li ol li.active {
+  background: #8b8e90;
+}
+.sideMenu ul li ol li a {
+  color: #fff;
+}
+#tableWrap {
+  margin-top: 20px;
+  box-shadow: 0 0 6px #999;
+  z-index: 9;
+  background: #fff;
+  padding: 10px;
+  margin-bottom: 14px;
+}
+#tableWrap table {
+  width: 100% !important;
+}
+input[type=checkbox] {
+  margin: 0!important;
+}
+.textc {
+  text-align: center;
+  font-weight: bold;
+  color: #000;
+}
+#login {
+  margin: 200px auto;
+  background: #eee;
+  padding: 50px;
+  width: 600px;
+}
+#login h3 {
+  text-align: center;
+}
+#login input {
+  width: 100%;
+  height: 40px;
+  border: 2px solid #ddd;
+}
+#login .btn {
+  width: 100%;
+  background: #0088CC;
+  color: #fff;
+  height: 40px;
+}
+.top-content {
+  background: rgba(255, 255, 255, 0.5);
+  width: 100%;
+  height: 100%;
+}
+.history_item {
+  width: 100%;
+  position: relative;
+  border-top: 1px dashed #ddd;
+  border-left: 1px solid #0088CC;
+}
+.history_item .dot {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  height: 16px;
+  width: 16px;
+  background: #0088CC;
+  border-radius: 50% ;
+}
+.history_item .info {
+  padding-top: 10px ;
+  padding-left: 30px;
+  padding-bottom: 20px;
+}
+.text_derection {
+  border-bottom: 2px solid #00A2D4;
+}
+.text_derection_hover:hover {
+  border-bottom: 2px solid #00A2D4;
+}
+.text_derection_num {
+  border-bottom: 2px solid #00A2D4;
+  padding: 0 6px;
+}
+#sider_btn {
+  z-index: 99 !important;
+}
+/* 2016年9月11日11:05:14 加 */
+.laydate-icon{
+  height: 30px !important;
+}
+/* 2016年9月13日15:18:27 加 */
+.iconindex{
+  height: 53px;
+  width: 53px;
+  overflow: hidden;
+  padding-left: 53px;
+  background: url("../img/index.png") no-repeat ;
+}
+.iconindex3{
+   height: 53px;
+  width: 53px;
+  overflow: hidden;
+  padding-left: 53px;
+  background: url("../img/index.png") no-repeat ;
+  background-position: 0 -53px;
+}
+.iconindex2{
+   height: 53px;
+  width: 53px;
+  overflow: hidden;
+  padding-left: 53px;
+  background: url("../img/index.png") no-repeat ;
+  background-position: 0 -159px;
+}
+.iconindex4{
+   height: 53px;
+  width: 53px;
+  overflow: hidden;
+  padding-left: 53px;
+  background: url("../img/index.png") no-repeat ;
+  background-position: 0 -106px;
+}
+.iconindex5{
+   height: 53px;
+  width: 53px;
+  overflow: hidden;
+  padding-left: 53px;
+  background: url("../img/index.png") no-repeat ;
+  background-position: 0 -212px;
+}
+.iconindex6{
+   height: 53px;
+  width: 53px;
+  overflow: hidden;
+  padding-left: 53px;
+  background: url("../img/index.png") no-repeat ;
+  background-position: 0 -265px;
+}
+/*2016年9月26日18:37:30加;*/
+.detail_right >thead>tr > td{
+  text-align: right;
+}
+.detail_right >tbody>tr > td{
+  text-align: right;
+}
+.detail_right td:nth-of-type(1){
+  width: 100px !important;
+}

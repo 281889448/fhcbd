@@ -27,7 +27,7 @@ class TongxunluWidget extends Action {
         $m = D('User/User');
         $m->setModel(WEIYUAN);
         $user = $m->getUser($uid);
-        if(!S('TONGXUNLU_'.$uid)){
+    //    if(!S('TONGXUNLU_'.$uid)){
 
             $group = get_group($uid);
             $m = D('User/User');
@@ -49,7 +49,7 @@ class TongxunluWidget extends Action {
             ksort($group_tmp);
             $this->assign('contact_group', $group_tmp);
 
-            if(is_administrator()){
+            if(is_administrator() || get_permission(get_uid(),['秘书长','主席','专委会信息员'])){
                 $com_name = 'all';
                 $group = 'all';
             }else {
@@ -61,6 +61,11 @@ class TongxunluWidget extends Action {
                     $user = $m->getUser($uid);
                     $com_name = $user['名称'];
                 }
+                /*if(get_permission($uid, ['专委会信息员'])){
+                    $m->setModel(ZWHXX);
+                    $user = $m->getUser($uid);
+                    $com_name = $user['名称'];
+                }*/
 
 
                 //其最上级父类只能为专委会和街道联络委
@@ -74,7 +79,6 @@ class TongxunluWidget extends Action {
 
                 }
 
-
             }
 
             //以com_name 来看权限
@@ -85,12 +89,12 @@ class TongxunluWidget extends Action {
             if($uid == 1 || $user['主任'] !== ''){
                 S('TONGXUNLU_'.$uid,$content,60);
             }
-        }else{
+       /* }else{
             if($uid == 1 || $user['主任'] !== ''){
                 $content = S('TONGXUNLU_'.$uid);
             }
 
-        }
+        }*/
         $this->show($content);
     }
 }

@@ -9,13 +9,13 @@
 						<table border="0" style="margin-bottom:15px">
 							<tr>
 							<td style="width:200px">
-									
-									<select name="mark_sort" class="form-control input-sm">
-										<volist name="markset" id="vo">
-										<option value="{$vo.mark_sort}">第{$vo.mark_sort}次签到</option>
-										</volist>
-										<option value="0">全部次序</option>
-									</select>
+								<select name="mark_sort" class="form-control input-sm">
+									<volist name="markset" id="vo">
+										<option value="{$vo.mark_sort}" <if condition="$search_mark_sort eq $vo['mark_sort']">selected</if>>第{$vo.mark_sort}次签到</option>
+									</volist>
+									<option value="0" <if condition="$search_mark_sort eq '0'">selected</if>>全部次序</option>
+								</select>
+							</td>
 								</td>	
 								<td  style="width:200px">
 
@@ -42,7 +42,7 @@
 						<table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
 							<thead>
 							<tr>
-								<th colspan="7">
+								<th colspan="8">
 									签到详情
 								</th>
 							</tr>
@@ -54,6 +54,7 @@
 								<td class="textc">联系电话</td>
 								<td class="textc">签到次序</td>
 								<td class="textc">签到时间</td>
+								<td class="textc">签到位置</td>
 								<td class="textc">状态</td>
 								<td class="textc">管理操作</td>
 							</tr>
@@ -67,6 +68,7 @@
 									<else />
 									<td>{$vo.mark_time|date='Y-m-d H:i:s',###}</td>
 								</if>
+									<td>{$vo.position}</td>
 									<if condition="$vo['status'] eq 0">
 										<td style="color:red">未签</td>
 										<td class="">

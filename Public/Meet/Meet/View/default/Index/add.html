@@ -1,0 +1,163 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form name="frm" method="post" action="{:U('Meet/Index/inset')}">
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="6">
+                                    添加会议
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="span2">
+                                    会议名称
+                                </td>
+                                <td colspan="5">
+                                    <input type="text" class="form-control input-sm" name="title"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    会议类型
+                                </td>
+                                <td colspan="5">
+                                    <select name="type" class="form-control input-sm" value="">
+                                        <option value="全会">全会</option>
+                                        <option value="常委会">常委会</option>
+                                        <option value="主席会">主席会</option>
+                                        <option value="临时会议">临时会议</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    参会人员
+                                </td>
+                                <td colspan="5">
+                                    <textarea type="text" name="people" value="" readonly="readonly" class="form-control peopleN" placeholder="点击选择"></textarea>
+                                    <div class="panel panel-default peopleN_s" style="display: none;">
+
+                                        <div class="panel-heading"><label class="col-sm-2"> <input type="checkbox" id="all_check" class="all_check btn btn-default " onclick="allCheck($(this))"  onchange="checkP2($(this))" value="常委会成员"/>常委会成员  </label>
+                                            <a class="btn btn-default btn-sm slidAll" href="javascript:;">展开</a>
+                                        </div>
+                                        <div class="panel-body" style="display: none;">
+                                            <ul id="list">
+                                                <li class="col-sm-2"><label><input type="checkbox" value="1" onchange="checkP2($(this))"> 1.时间都去哪儿了</label></li>
+                                                <li class="col-sm-2"><label><input type="checkbox" value="2" onchange="checkP2($(this))"> 2.海阔天空</label></li>
+                                                <li class="col-sm-2"><label><input type="checkbox" value="3" onchange="checkP2($(this))"> 3.真的爱你</label></li>
+                                                <li class="col-sm-2"><label><input type="checkbox" value="4" onchange="checkP2($(this))"> 4.不再犹豫</label></li>
+                                                <li class="col-sm-2"><label><input type="checkbox" value="5" onchange="checkP2($(this))"> 5.光辉岁月</label></li>
+                                                <li class="col-sm-2"><label><input type="checkbox" value="6" onchange="checkP2($(this))"> 6.喜欢妳</label></li>
+                                            </ul>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="panel panel-default peopleN_s" style="display: none;">
+
+                                        <div class="panel-heading"><label class="col-sm-2"> <input type="checkbox" id="all_check" class="all_check btn btn-default " onclick="allCheck($(this))"  onchange="checkP2($(this))" value="街道联络委主任"/>街道联络委主任  </label>
+                                            <a class="btn btn-default btn-sm slidAll" href="javascript:;">展开</a>
+                                        </div>
+                                        <div class="panel-body" style="display: none;">
+                                            <ul id="list">
+                                                <li class="col-sm-2"><label><input type="checkbox" value="7" onchange="checkP2($(this))"> 1.时间都去哪儿了1</label></li>
+                                                <li class="col-sm-2"><label><input type="checkbox" value="8" onchange="checkP2($(this))"> 2.海阔天空1</label></li>
+                                                <li class="col-sm-2"><label><input type="checkbox" value="9" onchange="checkP2($(this))"> 3.真的爱你1</label></li>
+                                                <li class="col-sm-2"><label><input type="checkbox" value="10" onchange="checkP2($(this))"> 4.不再犹豫1</label></li>
+                                                <li class="col-sm-2"><label><input type="checkbox" value="11" onchange="checkP2($(this))"> 5.光辉岁月1</label></li>
+                                                <li class="col-sm-2"><label><input type="checkbox" value="12" onchange="checkP2($(this))"> 6.喜欢妳1</label></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    开始时间
+                                </td>
+                                <td colspan="5">
+                                    <div class="col-sm-2">
+                                        <input size="16" type="text" value="" name="sTime" class="form_datetime form-control" required/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    结束时间
+                                </td>
+                                <td colspan="5">
+                                    <div class="col-sm-2">
+                                        <input size="16" type="text" value="" name="eTime" class="form_datetime form-control" required/>
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    会议地点
+                                </td>
+                                <td colspan="5">
+                                    <input type="text" class="form-control input-sm" name="address"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    会议内容
+                                </td>
+                                <td colspan="5">
+                                    <div class="col-sm-10">
+                                    <php>$config='toolbar:[\'bold italic underline fontsize forecolor justifyleft | map image emotion link \']';
+                                    </php>
+                                    {:W('UeditorMini/editor',array('myeditor_edit','content','','100%','200px',$config))}
+                                        </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>签到次数</td>
+                                <td colspan="5">
+                                    <div class="col-sm-1">
+
+                                        <div class="btn btn-default add-time">添加签到次数</div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <table border="" cellspacing="" cellpadding="" id="time-table" name="qdcount">
+                                            <tr>
+                                                <th class="col-sm-2">签到次数</th>
+                                                <th class="col-sm-2">签到开始时间</th>
+                                                <th class="col-sm-2">签到结束时间</th>
+                                            </tr>
+                                            <tr>
+                                                <td name="qdcishu">1</td>
+                                                <td><input size="16" type="text" value="" class="form_datetime form-control" name="qdsTime" required></td>
+                                                <td><input size="16" type="text" value="" class="form_datetime form-control" name="qdeTime" required></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+                                    <a class="btn btn-default btn-sm" href="{:U('Meet/Index/index')}">返回</a>
+                                    <button class="btn btn-default">提交</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

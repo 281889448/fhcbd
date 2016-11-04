@@ -28,7 +28,6 @@ class BaseController extends Controller
             $appid=trim(C('WX_APPID'));
             $appsecret=trim(C('WX_SECRET'));
             $url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appid."&secret=".$appsecret
-
             ;
             $res=https_request($url);
             if($res['errcode']){

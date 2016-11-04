@@ -42,6 +42,58 @@
 				loaded()
 			})
 		</script>
+		<script src="Application/Wap/View/default/Weixin/static/jquery.min.js"></script>
+		<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=56639cec02ea140d82c468d3b987fab2"></script>
+		<script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+		<script type="text/javascript">
+			var map, geolocation;
+			//加载地图，调用浏览器定位服务
+			map = new AMap.Map('container', {
+				resizeEnable: true
+			});
+			map.plugin('AMap.Geolocation', function() {
+				geolocation = new AMap.Geolocation({
+					enableHighAccuracy: true,//是否使用高精度定位，默认:true
+					timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+					buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+					zoomToAccuracy: true,      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+					buttonPosition:'RB'
+				});
+				map.addControl(geolocation);
+				geolocation.getCurrentPosition();
+				AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+				AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+			});
+			//解析定位结果
+			function onComplete(data) {
+				$.ajax({
+					type: "POST",
+					url: "{:U('Weixin/lng_lat_get_address')}",
+					data:{'lng':data.position.getLng(),'lat':data.position.getLat()},
+					success: function(json){
+						if (json.status == 1) {
+							_position=json.regeocode.formatted_address;
+							start_mark();
+						}else {
+							_position="地址位置获取失败";
+							start_mark();
+						}
+					},
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						_position="地址位置获取失败";
+						start_mark();
+					}
+				})
+			}
+			function start_mark() {
+				$('#mark_start').hide();
+				$('#mark').show();
+			}
+			//解析定位错误信息
+			function onError(data) {
+				_position="暂时获取不到位置信息";
+			}
+		</script>
 		<style type="text/css">
 			#wrapper{
 				background: #f0eff4 ;
@@ -75,35 +127,42 @@
 					<a href="#" class="mark_btn jion_btn_dis">未开始</a>
 				<elseif condition="$showtype eq 3"/>
 					<a href="#" class="mark_btn jion_btn_dis" >已经签到</a>
+				<elseif condition="$showtype eq 4"/>
+					<a href="#" class="mark_btn jion_btn_dis" >未到签到时间</a>
+				<elseif condition="$showtype eq 5"/>
+					<a href="#" class="mark_btn jion_btn_dis" >未收到{$typename}邀请</a>
 				<else />
-					<a href="#" class="mark_btn" id="mark">第{$mark_sort}次签到</a>
+					<a href="#" class="mark_btn" id="mark"  style="display: none">{$showtype}第{$mark_sort}次签到</a>
+					<a href="#" class="mark_btn jion_btn_dis" id="mark_start">加载中，请稍后...</a>
 				</if>
 			</div>
 		</div>
 	</body>
-<script src="Application/Wap/View/default/Weixin/static/jquery.min.js"></script>
-<script type="text/javascript">
+
+	<script type="text/javascript">
+	var _position='';
 	$(function(){
 		$('#mark').click(function(){
 				$.ajax({
-					type: "POST",
-					url: "{:U('Weixin/saveMark',array('uid'=>$userdb['id'],'e_m_id'=>$data['id'],'mark_sort'=>$mark_sort,'type'=>$type))}",
-					success: function(data){
-						data=$.parseJSON(data);
-						if(data.code==1){ 
-								alert(data.msg);
-								window.location.reload();
-							}else{
-								alert(data.msg);
-							}
+				type: "POST",
+				url: "{:U('Weixin/saveMark',array('uid'=>$userdb['id'],'e_m_id'=>$data['id'],'mark_sort'=>$mark_sort,'type'=>$type))}",
+				data:{'position':_position},
+				success: function(data){
+					data=$.parseJSON(data);
+					if(data.code==1){
+						alert(data.msg);
+						window.location.reload();
+					}else{
+						alert(data.msg);
 					}
+				}
 			})
 		
 		})
 	})
+
 </script>
 </html>
-
 
 
 

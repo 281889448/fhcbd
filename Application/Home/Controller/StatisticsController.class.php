@@ -71,31 +71,53 @@ class StatisticsController extends BaseController {
 	 * 委员量化统计   政协办公室权限
 	 * author:MR.Z <327778155@qq.com>
 	 *  create: 2016/9/9
-	 *
+	 *  TODO 当前起始时间暂时不起作用
 	 */
 	public function weiyuans($page = 1){
 		$m = D('User/User');
 		$m->setModel(WEIYUAN);
 		$proposal_weiyuan = $m->getUsers(array(),array('名称','手机号','专委会','街道联络委'));
-
+        $map = I('get.');
 		$pagesize = 16;
         if(IS_POST){
             $map = I('post.');
-            $this->assign('map',$map);
-            $year = ['stime'=>strtotime($map['stime']),'etime'=>strtotime($map['etime'])];
 
+            $year = ['stime'=>strtotime($map['stime']),'etime'=>strtotime($map['etime'])];
+            redirect(U('Home/Statistics/weiyuans',$map));
+        }
+        $this->assign('map',$map);
             $data = page_array($pagesize,$page,$proposal_weiyuan);
             $totalCount = count($proposal_weiyuan);
+
+
+            $time = explode('~', C('STOCKTAK_DATE'));
+
+            $map_st['create_time'] = ['between',strtotime($time[0]).','.strtotime($time[1])];
+
+            $stocktak_data = D('StocktakMeet')->where($map_st)->getField('id,uid,type,mark,score,create_time');
+
+            $stock_tmp = [];
+            foreach($stocktak_data as $v){
+                $stock_tmp[$v['uid']][$v['type']]['mark'] = $v['mark'];
+                $stock_tmp[$v['uid']][$v['type']]['score'] = $v['score'];
+            }
+
 
             foreach($data as $k=>$v){
 
                 $this->getStatisticsResult($data[$k]['proposal'],$v['uid'],$year);
+
+                    $data[$k]['qh'] = ($stock_tmp[$v['uid']]['qh']['mark'] && $stock_tmp[$v['uid']]['qh']['score']) ? $stock_tmp[$v['uid']]['qh']['mark'].'/'.$stock_tmp[$v['uid']]['qh']['score'] : '';
+                    $data[$k]['qzx'] = ($stock_tmp[$v['uid']]['qzx']['mark'] && $stock_tmp[$v['uid']]['qzx']['score']) ? $stock_tmp[$v['uid']]['qzx']['mark'].'/'.$stock_tmp[$v['uid']]['qzx']['score'] : '';
+                    $data[$k]['zwhjdllw'] = ($stock_tmp[$v['uid']]['zwhjdllw']['mark'] && $stock_tmp[$v['uid']]['zwhjdllw']['score']) ? $stock_tmp[$v['uid']]['zwhjdllw']['mark'].'/'.$stock_tmp[$v['uid']]['zwhjdllw']['score']:'';
+
+
             }
 
 
             $this->assign('totalPageCount', $totalCount);
             $this->assign('data',$data);
-        }
+
 
 		$this->display();
 	}
@@ -106,7 +128,7 @@ class StatisticsController extends BaseController {
 	 *
 	 */
 	private function getActionResult($action_id,$user_id,$year){
-		
+
         $stime = $year['stime'];
         $etime = $year['etime'] ?  $year['etime'] + 3600 * 24 : 0;
 
@@ -119,8 +141,10 @@ class StatisticsController extends BaseController {
                 $map['create_time'] = ['lt',$etime];
             }
         }
+        $map['user_id'] = $user_id;
+        $map['action_id'] = $action_id;
 
-		$count = D('ActionLog')->where(array('user_id'=>$user_id,'action_id'=>$action_id,$map))->count();
+		$count = D('ActionLog')->where($map)->count();
 
 		$rule = parse_action($action_id,$user_id);
 		$rule = reset($rule);
@@ -376,79 +400,7 @@ class StatisticsController extends BaseController {
 	}
 
 
-	/*
-	 * 盘点积分    清算  会议 活动的积分
-	 * status 2  为盘点信息标记 针对action_log表
-	 * author: MR.Z <327778155@qq.com>
-	 * crreate: 2016/09/26
-	 */
-	public function makeScore(){
-	 //   if(IS_POST){
-            $map_a['is_make'] = ['eq',1];
-            $actions =  D('Action')->where($map_a)->getField('id', 'rule');
-            $start_time = time();
-            $end_time = time();
-        //测试设置is_make 为1
-            $map_al['model'] = 'proposal';
-            $map_al['is_make'] = ['eq',0];
-         //   $map_al['create_time'] = ['between',$start_time.','.$end_time];
 
-            $data = D('ActionLog')->where($map_al)->group('record_id,action_id')->order('create_time desc')->select();
-
-        /*18 出席区政协全体委员会议
-        19 参加专委会（组）、街道联络委员会组织的活动
-        43 参加区政协办公室、委员工作委员会组织的活动
-        当前只有这三个行为是需要手工盘点积分
-        */
-
-        $action_arr = [18,43,19];
-        $mu = D('User/User');
-        $mu->setModel(WEIYUAN);
-        $uids = $mu->getUsers();
-
-
-
-        $total_18 = S('total_18');
-        $total_19 = S('total_19');
-        $total_43 = S('total_43');
-        foreach($uids as $v){
-            $rule_18 = parse_action(18,$v['uid']);
-            $rule_43 = parse_action(43,$v['uid']);
-            $rule_19 = parse_action(19,$v['uid']);
-            $map_u['user_id'] = $v['uid'];
-            $map_u['action_id'] = 18;
-            $count_18 =  M('ActionLog')->where($map_u)->count();
-            $map_u['action_id'] = 19;
-            $count_19 =  M('ActionLog')->where($map_u)->count();
-            $map_u['action_id'] = 43;
-            $count_43 =  M('ActionLog')->where($map_u)->count();
-
-            $score_18 = 40 * ($count_18/$total_18);
-
-            $score_19 = 20 * ($count_19/$total_19);
-
-            $score_43 = 20 * ($count_43/$total_43);
-
-            $make_score = $score_18 + $score_19 + $score_43;
-
-            //清除之前的盘点积分
-           M('Member')->where('uid='.$v['uid'])->setDec('score','make_score');
-
-            M('Member')->where('uid='.$v['uid'])->save(['make_score'=>0]);
-
-
-            $data['uid'] = $v['uid'];
-            $data['make_score'] = $make_score;
-            M('Member')->save($data);
-
-        }
-
-
-        $this->success('盘点积分更新完成');
-
-
-     //   }
-    }
 	
 
 	

@@ -1,3 +1,5 @@
+
+<if condition="$Think.const.MODULE_NAME == 'Admin'">
 <div class="controls">
 
   <input type="file" id="upload_picture_{$field_id}">
@@ -5,8 +7,8 @@
 
   <input type="hidden" name="{$field.name}" id="cover_id_{$field_id}" value="{$data[$field['name']]}"/>
   <div class="upload-img-box">
-    <notempty name="data[$field['name']]">
-      <div class="upload-pre-item"><img src="__ROOT__{$data[$field['name']]|get_cover='path'}"/></div>
+    <notempty name="{avatar}">
+      <div class="upload-pre-item"><img src="{$avatar}" width="100"/></div>
     </notempty>
   </div>
 </div>
@@ -20,7 +22,7 @@
     "swf"             : "__STATIC__/uploadify/uploadify.swf",
     "fileObjName"     : "download",
     "buttonText"      : "上传图片",
-    "uploader"        : "{:U('Usercenter/File/uploadAvatar',array('uid'=>get_uid()))}",
+    "uploader"        : "{:U('Usercenter/File/uploadAvatar',array('uid'=>$uid))}",
     "width"           : 120,
     'removeTimeout'	  : 1,
     'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
@@ -47,3 +49,18 @@
     }
   }
 </script>
+  <else/>
+  <div class="controls">
+
+
+
+
+
+    <div class="upload-img-box">
+      <notempty name="{avatar}">
+        <div class="upload-pre-item"><img src="{$avatar}" width="100"/></div>
+      </notempty>
+    </div>
+  </div>
+
+</if>

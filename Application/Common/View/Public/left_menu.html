@@ -64,10 +64,10 @@
 			   {/*-------------------------usercenter end---------------------------------------*/}
 
 			   {/*-------------------------meet start---------------------------------------*/}
-			   <if condition="get_permission(get_uid(),['秘书长','主席','专委会工作人员','政协工作人员','文史委工作人员','委工委工作人员'])  || $roler">
+			   <if condition="get_permission(get_uid(),['秘书长','主席'])  || $roler">
 	           <h3 <if condition="$current == 'meet'">class="on"</if>>会议管理</h3>
 	           <ul>
-				   <if condition="get_permission(get_uid(),['秘书长','主席','专委会工作人员','政协工作人员','文史委工作人员','委工委工作人员'])">
+				   <if condition="get_permission(get_uid(),['秘书长','主席']) || $roler">
 		            <li><a href="{:U('Meet/Index/index')}">会议列表</a></li>
 				   </if>
 				   <if condition="get_permission(get_uid(),['秘书长','主席']) || $roler">
@@ -80,10 +80,10 @@
 
 
 			   {/*-------------------------event start---------------------------------------*/}
-			   <if condition="get_permission(get_uid(),['秘书长','主席','专委会工作人员','政协工作人员','文史委工作人员','委工委工作人员']) || $roler">
+			   <if condition="get_permission(get_uid(),['秘书长','主席']) || $roler">
 	           <h3 <if condition="$current == 'event'">class="on"</if>>活动管理</h3>
 	           <ul>
-				   <if condition="get_permission(get_uid(),['秘书长','主席','专委会工作人员','政协工作人员','文史委工作人员','委工委工作人员'])">
+				   <if condition="get_permission(get_uid(),['秘书长','主席']) || $roler">
 		           <li><a href="{:U('Event/Index/index')}">活动列表</a></li>
 				   </if>
 				   <if condition="get_permission(get_uid(),['秘书长','主席']) || $roler">
@@ -129,7 +129,7 @@
 			   {/*-------------------------historical start---------------------------------------*/}
 
 			   {/*-------------------------survey start---------------------------------------*/}
-			   <if condition="get_permission(get_uid(),['专委会工作人员','秘书长','主席'])">
+			   <if condition="get_permission(get_uid(),['专委会工作人员','提案委','文史委工作人员','委工委工作人员'])">
 	           <h3 <if condition="$current == 'survey'">class="on"</if>><em></em>调研报告</h3>
 	           <ul>
 		           <li><a href="{:U('Survey/Index/index')}">调研报告列表</a></li>
@@ -139,7 +139,7 @@
 			   {/*-------------------------survey start---------------------------------------*/}
 
 			   {/*-------------------------message start---------------------------------------*/}
-			   <if condition="get_permission(get_uid(),['秘书长','主席','专委会工作人员','政协工作人员','文史委工作人员','委工委工作人员'])  || $roler">
+			   <if condition="get_permission(get_uid(),['秘书长','主席','政协工作人员'])  || $roler">
 	           <h3 <if condition="$current == 'message'">class="on"</if>><em></em>公示公告</h3>
 	           <ul>
 
@@ -150,12 +150,12 @@
 			   {/*-------------------------message start---------------------------------------*/}
 
 			   {/*-------------------------working start---------------------------------------*/}
-			   <if condition="get_permission(get_uid(),['委员','集体','政协工作人员','秘书长','文史委工作人员','委工委工作人员','专委会工作人员'])">
+			   <if condition="get_permission(get_uid(),['委员','集体','政协工作人员','秘书长','文史委工作人员','委工委工作人员','专委会工作人员','提案委'])">
 	           <h3 <if condition="$current == 'working'">class="on"</if>><em></em>工作动态</h3>
 	           </in>
 			   <ul>
 
-					   <if condition="get_permission(get_uid(),['委员','集体','文史委工作人员','委工委工作人员','专委会工作人员'])">
+					   <if condition="get_permission(get_uid(),['委员','集体','文史委工作人员','委工委工作人员','专委会工作人员','提案委'])">
 
 						   <li><a href="{:U('Working/Index/index',array('status'=>1))}">未提交列表</a></li>
 						   <li><a href="{:U('Working/Index/index',array('status'=>4))}">初审退回列表</a></li>
@@ -179,24 +179,24 @@
 
 
 			   {/*-------------------------statistics start---------------------------------------*/}
-				<if condition="get_permission(get_uid(),['秘书长','主席','提案委','委工委工作人员']) || $roler">
+				<if condition="get_permission(get_uid(),['秘书长','主席','提案委','委工委工作人员','政协工作人员','政府督查室']) || $roler">
 
                 <h3
 				<php>if($current=='statistics'){echo  "class='on'";}</php>
 				><em></em>统计分析</h3>
                 <ul>
+					<if condition="get_permission(get_uid(),['秘书长','主席','提案委','委工委工作人员','政协工作人员']) ">
 	                <li><a href="{:U('Usercenter/Index/search')}">委员统计</a></li>
+					</if>
+					<if condition="get_permission(get_uid(),['政府督查室','秘书长','主席','提案委','政协工作人员']) ">
                     <li><a href="{:U('Home/Statistics/index')}">提案统计</a></li>
-                    <li><a href="<php>if(get_permission(get_uid(),['秘书长','主席'])){
-                     echo U('Home/Statistics/weiyuans');
+					</if>
+					<if condition="get_permission(get_uid(),['秘书长','主席']) || $roler">
+                    <li><a href="{:U('Home/Statistics/weiyuans')}"  >委员量化统计</a></li>
+						<elseif condition="get_permission(get_uid(),['委员'])"/>
+						<li><a href="{:U('Home/Statistics/weiyuan')}"  >委员量化统计</a></li>
 
-                    }elseif(get_permission(get_uid(),['委员'])){
-                     echo U('Home/Statistics/weiyuan');
-                    }
-                    </php>"
-
-				     >委员量化统计</a></li>
-
+					</if>
 
                 </ul>
 				   </if>
@@ -224,7 +224,7 @@
 
 			   </php>
 
-			   <if condition="get_permission(get_uid(),['秘书长','主席','提案委','政协工作人员','委员']) || $roler">
+			   <if condition="get_permission(get_uid(),['秘书长','主席','提案委']) || $roler">
 
 
 	           <h3
@@ -232,14 +232,13 @@
 			   > <em></em>统计查询</h3>
 
 	           <ul>
-				   <if condition="get_permission(get_uid(),['秘书长','主席','提案委','政协工作人员']) || $roler">
+				   <if condition="get_permission(get_uid(),['秘书长','主席','提案委']) || $roler">
 				   <li><a href="{:U('Home/Search/index')}">提案查询</a></li>
 				   </if>
 		           <switch name="search_flag">
 
 			           <case value="2"><li><a href="{:U('Home/Search/index')}">提案查询(按专委会)</a></li></case>
 			           <case value="3"><li><a href="{:U('Home/Search/index')}">提案查询(按街道联络委)</a></li></case>
-
 
 		           </switch>
 		

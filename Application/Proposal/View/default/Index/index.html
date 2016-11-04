@@ -10,7 +10,7 @@
       <div class="row-fluid">
         <div class="span12">
           <div id="tableWrap" >
-              {:W('Menumark/index')}
+            {:W('Menumark/index')}
             <form name="search_proposal" method="post">
 
               <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:15px">
@@ -56,10 +56,10 @@
 
             </form>
 
-            <div class="alert alert-info" style="margin-bottom:0"><if condition="$group=='提案委' && $status==2">待审核<elseif condition="$group=='提案委' && $status == '3,4,5,6,7,10'"/  >已审核<else/>{$status_config[$status]}</if>的列表
+            <div class="alert alert-info" style="margin-bottom:0"><if condition="get_permission(get_uid(),['提案委']) && $status==2">待审核<elseif condition="get_permission(get_uid(),['提案委']) && $status == '3,4,5,6,7,10'"/  >已审核<else/>{$status_config[$status]}</if>的列表
 
              <!-- s -->
-             <if condition="$group == '提案委'">
+             <if condition="get_permission(get_uid(),['提案委'])">
          <eq name="status" value="8">
             <a class="btn btn-primary input-sm" href="{:U('Proposal/Index/setCode')}">批量生成案号</a>
             <div class="btn btn-primary" style="margin-left:10px;padding:0" ><a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal6"  onClick="document.proposallist.status.value='18';document.proposallist.action='{:U('Proposal/Index/changeStatus18')}';$('.modal-title').html('是否批量移交')">批量移交</a></div>
@@ -67,7 +67,7 @@
          </eq>
         </if>
 
-          <if condition="$group == '政府督查室'">
+          <if condition="get_permission(get_uid(),['政府督查室'])">
             <eq name="status" value="18">
               <div class="btn btn-primary" style="margin-left:10px;padding:0" ><button class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#myModal6"  onClick="document.proposallist.status.value='19';document.proposallist.action='{:U('Proposal/Index/batchHandover',array('status'=>19))}';$('.modal-title').html('是否批量交办')">批量交办</button></div>
             </eq>
@@ -78,7 +78,7 @@
           </if>
              <!-- e -->
             </div>
-            
+
             <form name="proposallist" method="post">
               <input type="hidden" name="status">
             <table class="table table-bordered table-responsive table-condensed" >

@@ -9,31 +9,31 @@
           <div id="tableWrap">
             <h4 style="padding: 5px;">提案查询</h4>
             <hr style="margin: 5px">
-            <form method="post" name="proposal_search">
+            <form method="post" name="proposal_search" action="{:U('Home/Search/Index',$map)}">
             <table border="0" cellspacing="" cellpadding="" style="margin-bottom: 10px;">
               <tr><th>
                 <select name="type_id" class="form-control input-sm">
                 <option disabled="" selected="" hidden="">--提案类别--</option>
                 <volist name="tree" id="top">
-                  <option value="{$top.id}" >
+                  <option value="{$top.id}" <eq name="map.type_id" value="$top.id">selected</eq> >
                     {$top.title}
                   </option>
                 </volist>
               </select>
               </th>
                 <th>
-                  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'author'))}
+                  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'author','',0,$map['author']))}
 
                 </th>
                 <th>
-                  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'code'))}
+                  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'code','',0,$map['code']))}
                 </th>
 
                 <th>
-                  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title'))}
+                  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title','',0,$map['title']))}
                 </th>
                 <th>
-                  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet'))}
+                  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet','',0,$map['meet']))}
 
 
 
@@ -43,8 +43,8 @@
                 <th>  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'jdllw'))}</th>
                 <th>  {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'jiebie'))}</th>
                 </if>
-                <th><input size="16" type="text" value="" name="sTime" id="sTime" readonly="" class="form-control laydate-icon" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" placeholder="提出日期 起"></th>
-                <th><input size="16" type="text" value="" name="eTime" id="eTime" readonly="" class="form-control laydate-icon" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" placeholder="提出日期 止"></th>
+                <th><input size="16" type="text" value="{$map[sTime]}" name="sTime" id="sTime" readonly="" class="form-control laydate-icon" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" placeholder="提出日期 起"></th>
+                <th><input size="16" type="text" value="{$map[eTime]}" name="eTime" id="eTime" readonly="" class="form-control laydate-icon" required="" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})" placeholder="提出日期 止"></th>
                 <th><button class="btn btn-default btn-sm" >搜索</button></th>
               </tr>
             </table>

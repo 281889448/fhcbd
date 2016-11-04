@@ -908,7 +908,8 @@ class IndexController extends BaseController
     
     private function check_view($status){
 	    $group =  get_group(get_uid()) ;
-    	$view_status = C('Working_VIEW_STATUS');
+    	$view_status = C('WORKING_VIEW_STATUS');
+
         $status_tmp = [];
         foreach($group as $v){
             if($view_status[$v]){

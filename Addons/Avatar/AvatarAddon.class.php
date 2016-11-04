@@ -55,8 +55,12 @@ class AvatarAddon extends Addon
         return true;
     }
 		
-    public function weiyuanAvatar(){
-    	$this->display('view/avatar');
+    public function weiyuanAvatar($uid){
+
+        $avatar = D('Avatar')->where(['uid'=>$uid,'status'=>1])->order('create_time desc')->getField('path');
+        $this->assign('uid',$uid);
+       $this->assign('avatar',$avatar);
+    	$this->display('View/avatar');
     	
     }
     

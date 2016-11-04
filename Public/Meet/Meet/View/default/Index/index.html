@@ -1,0 +1,103 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <div for="" class=" col-sm-12 ">
+                            <div class="col-sm-5">
+
+                                <input type="search" class="form-control input-sm " />
+
+                            </div>
+                            <button type="button" class="btn btn-default btn-sm ">查询</button>
+                            <a href="{:U('Meet/Index/add')}" class="btn btn-primary ">添加会议</a>
+
+                        </div>
+                        <table class="table table-bordered table-responsive table-condensed table-striped" style="width: 1000px;">
+                            <thead>
+                            <tr class="textc">
+                                <th>会议名称</th>
+                                <th>会议类型</th>
+                                <th>参会人员</th>
+                                <th>应到人数</th>
+                                <th>开始时间</th>
+                                <th>结束时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <volist name="meet" id="meet">
+                            <tr>
+                                <td>{$meet.title}</td>
+                                <td>{$meet.type}</td>
+                                <td>{$meet.people}</td>
+                                <td>空着</td>
+                                <td>{$meet.sTime}</td>
+                                <td>{$meet.eTime}</td>
+
+                                <td>
+                                    <a class="btn btn-danger  btn-sm btn-del" href="javascript:;" >删除</a>
+                                    <a href="{:U('Meet/Index/detail',array('id'=>$meet[id]))}" class="btn btn-primary btn-sm">查看</a>
+                                    <a class="btn btn-default btn-sm" href="{:U('Meet/Index/edit',array('id'=>$meet[id]))}">修改</a>
+                                </td>
+                            </tr>
+                            </volist>
+
+                            <script type="text/javascript">
+                                $(function() {
+                                    var deldate;
+                                    //模态关闭的回调
+                                    $('#myModal').on('hide.bs.modal', function() {
+                                        // 执行一些动作...
+                                    });
+                                    //点击删除按钮
+                                    $(".btn-del").click(function(e) {
+                                        //e.preventDefault();
+                                        $('#myModal').modal('show');
+                                        deldate = $(this).closest("tr");
+
+                                    });
+                                })
+                            </script>
+                            </tbody>
+
+                        </table>
+                        <!-- Small modal -->
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalLabel"><font color="red">警告</font></h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        您确定要删除此条信息吗？
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                        <a type="button" class="btn btn-primary btn-del-on" href="{:U('Meet/Index/doDel',array('id'=>$meet[id]))}">确定</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.modal -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+
+
+
+
+
+
+
+
+
+
+

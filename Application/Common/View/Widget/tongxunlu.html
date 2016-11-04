@@ -133,7 +133,7 @@
 											switch($k){
 											case '1':
 											$map['专委会'] = $cgs[name];
-											break;
+
 
 											break;
 											case '4':
@@ -141,30 +141,40 @@
 
 											$is_jt = 1;
 											break;
+
 											case '5':
-											$map['名称'] = $cgs[name];
-											$is_jt = 1;
+											$map['名称'] =  $cgs[name];
+
 											break;
 
 											case '8':
-											$map['街道联络委'] = $cgs[name];
-											break;
+												$map['街道联络委'] = $cgs[name];
+
+												break;
 											}
 											$m=D('User/User');
 
 											if($is_jt){
 												$m->setModel(TEAM);
-												$users = $m->getUsers($map,['名称']);
+												$users = $m->getUsers($map,['名称','联络员']);
 
 											}else{
-												$m->setModel(WEIYUAN);
+												if($k == 5){
+													$m->setModel(ZWHXX);
+													$users = $m->getUsers($map,['名称','姓名']);
 
-												$users = $m->getUsers($map,array('名称','界别','街道联络委','专委会','七党一联主委','主席会议成员','是否常委','主任'));
+												}else{
+													$m->setModel(WEIYUAN);
+														$users = $m->getUsers($map,array('名称','界别','街道联络委','专委会','七党一联主委','主席会议成员','是否常委','主任'));
+											}
 											}
 
-											$map = array(); </php>
+											$map = []; </php>
 										<volist name="users" id="u">
-											<label><input type="checkbox" value="{$u['id']}"/>{$u['名称']}</label>
+											<label><input type="checkbox" value="{$u['id']}"/>
+												<if condition="$k==5 ">{$u['姓名']}<elseif condition="$k==4"/>{$u['联络员']}<else/>{$u['名称']}</if>
+
+											</label>
 										</volist>
 
 
@@ -209,7 +219,7 @@
 
 									}
 								}
-								console.log(tempArr);
+							//	console.log(tempArr);
 								$("#contact_ids").val(tempArr);
 							})
 						});
@@ -231,7 +241,7 @@
 
 									}
 								}
-								console.log(tempArr);
+
 								$("#contact_ids").val(tempArr);
 
 								//成员选中补全
@@ -284,7 +294,7 @@
 
 									}
 								}
-								console.log(tempArr);
+								//console.log(tempArr);
 								$("#contact_ids").val(tempArr);
 								//大组补全
 								for (var i = 0; i < $(this).closest(".box_N").find(".tit input").length; i++) {

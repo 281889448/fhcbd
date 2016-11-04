@@ -1,7 +1,7 @@
 <?php
 namespace Wap\Controller;
 use Common\Controller\BaseController;
-//继承Home/Common/function微信公共函数
+use Common\Api\WeixinApi;
 class WeixinController extends BaseController {
     public $openid;
     public $uid;
@@ -75,31 +75,31 @@ class WeixinController extends BaseController {
     public function saveJion(){
         $data=I('get.');
         $data['creat_time']=time();
+
         if(I('post.whytext')){
             $data['whytext']=I('post.whytext');
             $data['status']=2;
-            //发送模板消息
-            //步骤1得到活动或者会议审核人openid
-            //步骤2发送消息
         }else{
             $data['status']=1;
         }
         if($data['type']=='event'){
             $data['event_id']=$data['e_m_id'];
-            $id=D('Event_attend')->where(array('uid'=>$data['uid'],'event_id'=>$data['event_id']))->save($data);
+            $flag=D('Event_attend')->where(array('uid'=>$data['uid'],'event_id'=>$data['event_id']))->save($data);
             $map_f['model'] = 'event_attend';
         }else{
             $data['meet_id']=$data['e_m_id'];
-            $id=D('Meet_attend')->where(array('uid'=>$data['uid'],'meet_id'=>$data['meet_id']))->save($data);
+            $flag=D('Meet_attend')->where(array('uid'=>$data['uid'],'meet_id'=>$data['meet_id']))->save($data);
             $map_f['model'] = 'meet_attend';
         }
-        if($id){
+        if($flag){
             $map_f['user_id'] = get_uid();
             $map_f['record_id'] = 0;
-            D('Fileu')->where($map_f)->setField('record_id',$id);
+            D('Fileu')->where($map_f)->setField('record_id',$flag);
         }
-        $exit=$this->return_exit_arr($id,'提交成功','提交失败');
+        $exit=$this->return_exit_arr($flag,'提交成功','您未收到邀请，暂时不能参与！');
         echo $exit;
+
+
     }
     //微信审核请假
     public function atu_apply(){
@@ -118,65 +118,58 @@ class WeixinController extends BaseController {
             $id = I('get.id');
             $type = I('get.type');
             if($type=='event') {
-                $eventdb = D('event')->where(array('id' => $id))->find();
-                if (empty($eventdb)) $this->error("未找到活动数据");
+                $eventdb = D('Event')->where(array('id' => $id))->find();
+                if (empty($eventdb)) $this->error("未找到会议数据");
                 $this->assign('data', $eventdb);
-                //计算签到逻辑 1、已过期 2、未开始 3、已签到 4、签到
+                //计算签到逻辑 1、已过期 2、未开始 3、已签到 4、未到签到时间 5、未收到邀请参加活动
                 $nowtime = time();
                 if ($eventdb['eTime'] < $nowtime) $showtype = 1;
                 if ($eventdb['sTime'] > ($nowtime + 60 * 60)) $showtype = 2;
-                $max_mark_id = D('Event_marknum')->where(array('uid' => $this->uid, 'event_id' => $id))->max('id');
-                $max_mark_time=D('Event_marknum')->where(array('id'=>$max_mark_id))->find();
+                $is_user=D('Event_attend')->where(array('uid'=>$this->uid,'event_id'=>$id))->find();
+                if(empty($is_user))$showtype = 5;
                 //读取签到数据
                 $markset = D('Event_markset')->where(array('event_id' => $id))->order('id')->select();
-                $max=count($markset)-1;
-                //求签到时间最小差值
-                $dirt=365*24*60*60;
-                for($i=0;$i<$max;$i++){
-                    $temp_dirt=$markset[$i+1]['mark_time']-$markset[$i]['mark_time'];
-                    if($temp_dirt>$dirt){
-                        $dirt=$temp_dirt;
+                foreach ($markset as $key=>$val){
+                    $dirt=$val['mark_time']-$nowtime;
+                    if(abs($dirt)<=60*60){
+                        $mark_sort=$val['mark_sort'];
                     }
                 }
-                if ($max_mark_time['mark_time']+$dirt/2 > time()&&$max_mark_time['mark_time']<time() && $max_mark_time['status']>0) $showtype = 3;
-
+                if(!$mark_sort){
+                    $showtype=4;
+                }else{
+                    $temp_mark_data = D('Event_marknum')->where(array('uid'=>$userdb['id'],'event_id' => $id,'mark_sort'=>$mark_sort))->find();
+                    if($temp_mark_data['mark_time']>0)$showtype = 3;
+                }
+                $this->assign('typename','活动');
             }else{
                 $meetdb = D('Meet')->where(array('id' => $id))->find();
                 if (empty($meetdb)) $this->error("未找到会议数据");
                 $this->assign('data', $meetdb);
-                //计算签到逻辑 1、已过期 2、未开始 3、已签到 4、签到
+                //计算签到逻辑 1、已过期 2、未开始 3、已签到 4、未到签到时间 5、未收到邀请参加会议
                 $nowtime = time();
                 if ($meetdb['eTime'] < $nowtime) $showtype = 1;
                 if ($meetdb['sTime'] > ($nowtime + 60 * 60)) $showtype = 2;
-                $max_mark_id = D('Meet_marknum')->where(array('uid' => $this->uid, 'meet_id' => $id))->max('id');
-                $max_mark_time=D('Meet_marknum')->where(array('id'=>$max_mark_id))->find();
+                $is_user=D('Meet_attend')->where(array('uid'=>$this->uid,'meet_id'=>$id))->find();
+                if(empty($is_user))$showtype = 5;
                 //读取签到数据
                 $markset = D('Meet_markset')->where(array('meet_id' => $id))->order('id')->select();
-                $max=count($markset)-1;
-                //求签到时间最小差值
-                $dirt=365*24*60*60;
-                for($i=0;$i<$max;$i++){
-                    $temp_dirt=$markset[$i+1]['mark_time']-$markset[$i]['mark_time'];
-                    if($temp_dirt<$dirt){
-                        $dirt=$temp_dirt;
+                foreach ($markset as $key=>$val){
+                    $dirt=$val['mark_time']-$nowtime;
+                    if(abs($dirt)<=60*60){
+                        $mark_sort=$val['mark_sort'];
                     }
                 }
-                if ($max_mark_time['mark_time']+$dirt/2 > time()&&$max_mark_time['mark_time']<time() && $max_mark_time['status']>0) $showtype = 3;
-            }
-        if ($markset[0]['mark_time'] > $nowtime) {
-                $max_mark_sort = 1;
-            } else {
-                if($max>0){
-                    foreach ($markset as $k => $v) {
-                        if ($markset[$k]['mark_time'] < $nowtime && $nowtime < $markset[$k + 1]['mark_time']){
-                            $max_mark_sort = $k + 2;
-                        }
-                    }
+                if(!$mark_sort){
+                    $showtype=4;
                 }else{
-                    $max_mark_sort = 1;
+                    $temp_mark_data = D('Meet_marknum')->where(array('uid'=>$userdb['id'],'meet_id' => $id,'mark_sort'=>$mark_sort))->find();
+                    if($temp_mark_data['mark_time']>0)$showtype = 3;
                 }
+                $this->assign('typename','会议');
             }
-            $this->assign('mark_sort', $max_mark_sort);
+
+            $this->assign('mark_sort', $mark_sort);
             $this->assign('showtype', $showtype);
             $this->assign('type', $type);
             $this->display();
@@ -184,64 +177,69 @@ class WeixinController extends BaseController {
 
     public function saveMark(){
         $data=I('get.');
+        $data['position']=$_POST['position'];
         $data['mark_time']=time();
         if($data['type']=='event'){
             $mark_set=D('Event_markset')->where(array('uid'=>$this->uid,'event_id'=>$data['e_m_id'],'mark_sort'=>$data['mark_sort']))->find();
             $is_user=D('Event_marknum')->where(array('uid'=>$this->uid,'event_id'=>$data['e_m_id'],'mark_sort'=>$data['mark_sort']))->find();
-            //查找用户信息
-            $user=$this->uid_get_detail($this->uid);
-            $data['truename']=$user['truename'];
-            $data['company']=$user['company'];
-            $data['phone']=$user['phone'];
-            $data['event_id']=$data['e_m_id'];
-            if($mark_set['mark_time']<time()){
-                $data['mark_attr']='迟到了';
-                $data['status']=2;//迟到状态
-                if($data['mark_sort']>1 || empty($is_user)){
-                    $id=D('Event_marknum')->add($data);
-                }else{
+            if(!empty($is_user)){
+                //查找用户信息
+                $user=$this->uid_get_detail($this->uid);
+                $data['truename']=$user['truename'];
+                $data['company']=$user['company'];
+                $data['phone']=$user['phone'];
+                $data['event_id']=$data['e_m_id'];
+                if($mark_set['mark_time']<time()){
+                    $data['mark_attr']='迟到了';
+                    $data['status']=2;//迟到状态
                     $data['id']=$is_user['id'];
                     $id=D('Event_marknum')->where(array('id'=>$data['id']))->save($data);
+                    $exit=$this->return_exit_arr($id,'签到成功,但您迟到了','签到失败');
+                }else{
+                    $data['status']=1;//正常签到
+                    $data['id']=$is_user['id'];
+                    $id=D('Event_marknum')->where(array('id'=>$data['id']))->save($data);
+                    $exit=$this->return_exit_arr($id,'签到成功！','签到失败');
                 }
-                $exit=$this->return_exit_arr($id,'签到成功,但您迟到了','签到失败');
+                //只要是签到了就算是可以加积分
+                // author: MR.Z start
+                $event = D('Event')->find( $data['event_id']);
+                if(in_array($event['event_type'],['其它形式政协活动'])){
+
+                  action_log('weiyuan_event_other','proposal',$event['id'] ,$this->uid);
+                }
+                if(in_array($event['event_type'],['公益活动'])){
+
+                    action_log('weiyuan_event_gy','proposal',$event['id'] ,$this->uid);
+                }
+                //end
             }else{
-                $data['status']=1;//迟到状态
-                if($data['mark_sort']>1 || empty($is_user)){
-                    $id=D('Event_marknum')->add($data);
-                }else{
-                    $data['id']=$is_user['id'];
-                    $id=D('Event_marknum')->where(array('id'=>$data['id']))->save($data);
-                }
-                $exit=$this->return_exit_arr($id,'签到成功！','签到失败');
+                $exit=$this->return_exit_arr(0,'您无权参加签到该活动！','您无权参加签到该活动！');
             }
         }else{
             $mark_set=D('Meet_markset')->where(array('uid'=>$this->uid,'meet_id'=>$data['e_m_id'],'mark_sort'=>$data['mark_sort']))->find();
             $is_user=D('Meet_marknum')->where(array('uid'=>$this->uid,'meet_id'=>$data['e_m_id'],'mark_sort'=>$data['mark_sort']))->find();
-            //查找用户信息
-            $user=$this->uid_get_detail($this->uid);
-            $data['truename']=$user['truename'];
-            $data['company']=$user['company'];
-            $data['phone']=$user['phone'];
-            $data['meet_id']=$data['e_m_id'];
-            if($mark_set['mark_time']<time()){
-                $data['mark_attr']='迟到了';
-                $data['status']=2;//迟到状态
-                if($data['mark_sort']>1 || empty($is_user)){
-                    $id=D('Meet_marknum')->add($data);
-                }else{
+            if(!empty($is_user)){
+                //查找用户信息
+                $user=$this->uid_get_detail($this->uid);
+                $data['truename']=$user['truename'];
+                $data['company']=$user['company'];
+                $data['phone']=$user['phone'];
+                $data['meet_id']=$data['e_m_id'];
+                if($mark_set['mark_time']<time()){
+                    $data['mark_attr']='迟到了';
+                    $data['status']=2;//迟到状态
                     $data['id']=$is_user['id'];
                     $id=D('Meet_marknum')->where(array('id'=>$data['id']))->save($data);
+                    $exit=$this->return_exit_arr($id,'签到成功,但您迟到了','签到失败');
+                }else{
+                    $data['status']=1;//迟到状态
+                    $data['id']=$is_user['id'];
+                    $id=D('Meet_marknum')->where(array('id'=>$data['id']))->save($data);
+                    $exit=$this->return_exit_arr($id,'签到成功！','签到失败');
                 }
-                $exit=$this->return_exit_arr($id,'签到成功,但您迟到了','签到失败');
             }else{
-                $data['status']=1;//迟到状态
-                if($data['mark_sort']>1 || empty($is_user)){
-                    $id=D('Meet_marknum')->add($data);
-                }else{
-                    $data['id']=$is_user['id'];
-                    $id=D('Meet_marknum')->where(array('id'=>$data['id']))->save($data);
-                }
-                $exit=$this->return_exit_arr($id,'签到成功！','签到失败');
+                $exit=$this->return_exit_arr(0,'您无权参加签到该会议！','您无权参加签到该会议！');
             }
         }
         // data['type'] meet event data['e_m_id']  data[type_id]
@@ -304,6 +302,16 @@ class WeixinController extends BaseController {
         $temp_arr['phone']=$phone['field_data'];
         return $temp_arr;
     }
+    //高德获取地理位置
+    public function lng_lat_get_address(){
+        $lng=I('post.lng');
+        $lat=I('post.lat');
+        $url="http://restapi.amap.com/v3/geocode/regeo?key=8c067c208272ffc5b985ecb41e5adf71&location=".$lng.",".$lat."&poitype=&radius=50&extensions=all&batch=false&roadlevel=1";
+        $wxapi = new WeixinApi();
+        $res=$wxapi->curlGet($url);
+        $this->ajaxReturn( json_decode($res));
+    }
+
 }
 
 

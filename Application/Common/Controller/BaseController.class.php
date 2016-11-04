@@ -10,15 +10,20 @@ namespace Common\Controller;
 
 
 use Think\Controller;
+use Sms\Sms;
 
 class BaseController extends Controller
 {
+    protected static $sms;
     /* 空操作，用于输出404页面 */
     public function _empty(){
         $this->redirect('Index/index');
     }
 
     protected function _initialize(){
+
+        //初始化短信功能
+        self::$sms = Sms::instance('Smszx', C('SMS.Smszx'));
 
         $a =  D('Home/Member')->need_login();
 

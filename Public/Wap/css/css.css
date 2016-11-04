@@ -1,0 +1,381 @@
+ 
+    .ui-table {
+        background: #fff
+    }
+    
+    .ui-table2>tbody>tr {}
+    
+    .ui-table2>tbody>tr>td {
+        padding-top: .1rem !important;
+        padding-bottom: .1rem !important;
+        text-align: left;
+        padding-left: 10px;
+        padding-right: 10px
+    }
+    
+    .ui-table2>tbody>tr>td:nth-of-type(1) {
+        width: 80px;
+        text-align:justify;
+        text-justify:inter-ideograph;
+        -moz-text-align-last:justify;
+             text-align-last:justify;
+       /*display: inline-block;*/
+        text-justify:distribute-all-lines;
+    }
+    
+    .T_input {
+        width: 70%;
+        height: 26px
+    }
+    
+    input {
+        border: 1px solid #ddd;
+        border-radius: 3px;
+    }
+    
+    select {
+        height: 30px
+    }
+    
+    textarea {
+        width: 95%
+    }
+    .searchtit{
+    	width: 200px;
+    	height: 30px;
+    	overflow: hidden;
+    	text-overflow: ellipsis;
+    	white-space: nowrap;
+    }
+#searchtable td:nth-of-type(2){
+    	width: 60%;
+    	
+    }
+    #searchtable td:nth-of-type(1){
+    	width: 40%;
+    	
+    }
+     #searchtable td{
+     	font-size: 14px;
+     }
+.time{
+	width:100px ;
+}
+.ui-dialog-cnt{
+	width: 99%;
+}
+.editTavle{
+	width: 100%;
+	
+}
+.editTable{
+	width: 100%;
+}
+.editTable td{
+	width: 50%;
+	text-align: center;
+	border: none !important;
+	border-bottom: none;
+	border-top: none;
+	border-right: none;
+	border-left: none;
+	
+}
+.self_btn{
+	margin: 5px auto;
+	padding: 5px 0;
+	width: 90%;
+	border: 1px solid #ddd;
+	display: block;
+	border-radius: 5px;
+	text-align: center;
+}
+.self_btn_f{
+	margin: 5px auto;
+	padding: 5px 0;
+	width: 50%;
+	border: 1px solid #ddd;
+	display: block;
+	border-radius: 5px;
+	text-align: center;
+}
+.self_btn_h{
+	margin: 5px auto;
+	padding: 5px 0;
+	width: 95%;
+	border: 1px solid #ddd;
+	display: block;
+	border-radius: 5px;
+	text-align: center;
+}
+.hr{
+	width: 95%;
+	display: block;
+	margin: 10px auto;
+	border-bottom: 1px solid #ddd;
+}
+.self_select_h{
+	width: 95%;
+	margin: 5px auto;
+}
+.self_input{
+	width: 90%;
+	padding: 5px 0;
+	margin: 5px auto;
+	text-indent: 5px;
+	
+}
+.self_input_h{
+	display: block;
+	width: 95%;
+	padding: 5px 0;
+	margin: 5px auto;
+	text-indent: 5px;
+	
+}
+.self_panel{
+	text-align: left;
+	font-size: 14px;
+}
+.searchlist{
+	width: 90%;
+	margin: 5px auto;
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	font-size: 14px;
+	overflow: hidden;
+	
+}
+.searchlist li{
+	padding: 3px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: -1px;
+}
+.ui-footer{
+	text-align: center;
+	height: 30px;
+	background: #ddd;
+	line-height: 30px;
+}
+.tit{
+	padding-left:15px;
+}
+.lianming{
+	width: 90%;
+	margin: 5px auto;
+}
+.lianming textarea{
+	width: 100%;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 10px 0;
+	text-indent: 10px;
+}
+.process{
+	width: 90%;
+	margin: 5px auto;
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	font-size: 14px;
+	overflow: hidden;
+	padding-left: 20px;
+	position: relative;
+	
+}
+.process li{
+	padding: 3px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: -1px;
+}
+.line{
+	position: absolute;
+	top: 0;
+	left: 10px;
+	border-left: 1px solid #0095DD;
+	height: 100%;
+}
+.line span{
+	height: 10px;
+	width: 10px;
+	border-radius: 50%;
+	background: #0095DD;
+	position: absolute;
+	top: 20px;
+	left: -5px;
+	
+}
+.mmctable{
+	width: 100%;
+	margin: 10px auto;
+	background: #fff;
+}
+.mmctable td,.mmctable th{
+	padding: 4px;
+}
+.clear:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.add_btn{
+	width: 98%;
+	display: block;
+	margin: 5px auto;
+	background: #00AEEF;
+	text-align: center;
+	line-height: 40px;
+	height: 40px;
+	color: #fff;
+	font-size: 14px;
+}
+.btn_bg{
+	background: #00C795;
+}
+.search-box{
+	padding: 10px 0;
+	border: 1px solid #eee;
+	width: 98%;
+	margin: 5px auto;
+	background: #fff;
+}
+	.search-box input,.search-box select{
+		height: 30px;
+		width: 98%;
+		margin: 5px auto;
+		border: 1px solid #ddd;
+		outline: none;
+		border-radius: 0;
+		display: block;
+		text-indent: 5px;
+	}
+	.btn_more{
+		height: 30px;
+		width: 98%;
+		margin: 5px auto;
+		background: #fff;
+		color: #777;
+		text-align: center;
+		line-height: 30px;
+		font-size: 14px;
+	}
+.author_btn{
+	margin: 5px 0;
+	padding:2px 5px ;
+	background: #E0E0E0;
+	border-radius: 5px;
+	display: inline-block;
+}
+.author_btn:after{
+	content: "√";
+}
+.s_bar{
+	width: 98%;
+	margin: 5px auto;
+	background: #fff;
+	padding: 5px 0;
+}
+.s_bar input{
+	height: 30px;
+	padding-left: 10px;
+	margin-left: 10px;
+	
+}
+.c777{color: #777;padding-left: 10px;}
+.s_bar .textarea{
+	border: 1px solid #ddd;
+	width: 90%;
+	margin-left: 10px;
+	min-height: 40px;
+	font-size: 12px;
+}
+.author_del{
+	padding: 2px 5px;
+	background: #00A5E0;
+	color: #fff;
+	border-radius: 5px;
+	margin: 5px;
+	float: left;
+}
+.author_del:after{
+	content: "×";
+}
+.active-line .line{
+	border-color: red;
+}
+.active-line .line span{
+	background: red;
+}
+.textwrap{
+	width: 98%;
+	margin: 5px auto;
+}
+.textwrap textarea{
+	width: 100%;
+	border: 1px solid #ddd;
+}
+.content{
+	width: 98%;
+	margin: 10px auto;
+}
+.content input{
+	height: 30px;
+	width: 100%;
+	display: block;
+	margin: 5px auto;
+	border-radius: 0;
+	text-indent: 10px;
+}
+.content textarea{
+	width: 100%;
+	margin: 5px auto;
+	border: 1px solid #ddd;
+	border-radius: 0;
+	text-indent: 10px;
+}
+
+.fujian{
+	width: 98%;
+	margin: 10px auto;
+	border: 1px solid #ddd;
+	padding: 5px 0;
+	background: #fff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

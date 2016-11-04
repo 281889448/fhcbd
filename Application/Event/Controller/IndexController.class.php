@@ -130,8 +130,10 @@ class IndexController extends BaseController
         if ((strtotime($mark_time[1])+60*60) <strtotime($sTime)) $this->error('第一次签到时间不能提前会议开始1小时');
         if (strtotime($mark_time[count($mark_time)]) >strtotime($eTime)) $this->error('最后一次签到时间不能大于会议结束时间');
         for ($i = 1; $i < $count; $i++) {
-            if (strtotime($mark_time[$i + 1]) < strtotime($mark_time[$i]) && $i + 1 < $count) {
-                $this->error('第' . ($i + 1) . '次签到的时间要大于第' . $i . '次签到的时间');
+            $a=strtotime($mark_time[$i + 1]);
+            $b=strtotime($mark_time[$i]);
+            if (($a < $b &&($i+1)<$count) ||(($i+1)<$count && 7200>($a-$b))) {
+                $this->error('第' . ($i + 1) . '次签到的时间要大于第' . $i . '次签到的时间至少2小时');
             }
         }
         $data['uid'] = 1;
@@ -147,25 +149,35 @@ class IndexController extends BaseController
         if ($result == null) {
             $this->error("添加失败", U('Event/Index/add'));
         } else {
-            //保存设置签到数据;
+            $temp_arr = $this->uid_to_get_detail($data['people']);//签到名单人员
             for ($i = 1; $i < $count; $i++) {
                 $mark_set_arr[$i] = array(
                     'event_id' => $result,
                     'mark_sort' => $i,
                     'mark_time' => strtotime($mark_time[$i])
                 );
-                D('Event_markset')->add($mark_set_arr[$i]);
+                D('Event_markset')->add($mark_set_arr[$i]);//保存签到设置
+
+                foreach ($temp_arr as $k => $v) {
+                        $temp_arr[$k]['event_id'] = $result;
+                        $temp_arr[$k]['status'] = 0;
+                        $temp_arr[$k]['mark_sort'] = $i;
+                    //添加签到详情
+                    D('Event_marknum')->add($temp_arr[$k]);//保存所有签到数据
+                }
             }
-            //保存签到名单人员
-            $temp_arr = $this->uid_to_get_detail($data['people']);
+            //保存参会人员名单,保存参会率名单
             foreach ($temp_arr as $k => $v) {
                 $temp_arr[$k]['event_id'] = $result;
                 $temp_arr[$k]['status'] = 0;
-                $temp_arr[$k]['mark_sort'] = 1;
-                //添加签到详情
-                D('Event_marknum')->add($temp_arr[$k]);
+                $temp_arr[$k]['name'] = $v['truename'];
                 //添加参会详情
-                D('Event_attend')->add($temp_arr[$k]);
+                D('Event_attend')->add($temp_arr[$k]);//保存参会人员
+                    $temp_arr[$k]['record_id'] = $result;//参会率
+                    $temp_arr[$k]['type'] = 'event';//参会率
+                    $temp_arr[$k]['create_time'] = time();//参会率
+                    $temp_arr[$k]['y_mark'] = $count-1;//参会率
+                D('Attendance')->add($temp_arr[$k]);//保存参会率
             }
             $this->success("添加成功", U('Event/Index/index'));
         }
@@ -228,8 +240,10 @@ class IndexController extends BaseController
         if ((strtotime($mark_time[1])+60*60) <strtotime($_POST['sTime'])) $this->error('第一次签到时间不能提前会议开始1小时');
         if (strtotime($mark_time[count($mark_time)]) >strtotime($_POST['eTime'])) $this->error('最后一次签到时间不能大于会议结束时间');
         for ($i = 1; $i < $count; $i++) {
-            if (strtotime($mark_time[$i + 1]) < strtotime($mark_time[$i]) && $i + 1 < $count) {
-                $this->error('第' . ($i + 1) . '次签到的时间要大于第' . $i . '次签到的时间');
+            $a=strtotime($mark_time[$i + 1]);
+            $b=strtotime($mark_time[$i]);
+            if (($a < $b &&($i+1)<$count) ||(($i+1)<$count && 7200>($a-$b))) {
+                $this->error('第' . ($i + 1) . '次签到的时间要大于第' . $i . '次签到的时间至少2小时');
             }
         }
         $data['uid'] = 1;
@@ -245,7 +259,18 @@ class IndexController extends BaseController
         if ($result == null) {
             $this->error("修改失败", U('Event/Index/add'));
         } else {
-            //保存设置签到数据;
+            $temp_arr = $this->uid_to_get_detail($data['people']);//签到名单人员
+            //删除减少人员
+            $people_arr = explode(',', $data['people']);
+            $old_user=D('Event_attend')->where(array('event_id' => $id))->select();
+            foreach ($old_user as $k=>$v){
+                if(!in_array($v['uid'],$people_arr)){
+                    D('Event_marknum')->where(array('event_id' => $id,'uid'=>$v['uid']))->delete();
+                    D('Event_attend')->where(array('event_id' => $id,'uid'=>$v['uid']))->delete();
+                    D('Attendance')->where(array('record_id' => $id,'uid'=>$v['uid'],'type'=>'event'))->delete();
+                }
+            }
+            //更新改变内容
             for ($i = 1; $i < $count; $i++) {
                 $mark_set_arr[$i] = array(
                     'event_id' => $id,
@@ -255,29 +280,48 @@ class IndexController extends BaseController
                 if ($_POST['id'][$i]) {
                     D('Event_markset')->where(array('id' => $_POST['id'][$i]))->save($mark_set_arr[$i]);
                 } else {
-                    D('Event_markset')->where(array('event_id' => $id))->add($mark_set_arr[$i]);
+                    D('Event_markset')->where(array('event_id' => $id))->add($mark_set_arr[$i]);//添加或保存签到设置
                 }
+
+                foreach ($temp_arr as $k => $v) {
+                    $temp_arr[$k]['event_id'] = $id;
+                    $temp_arr[$k]['status'] = 0;
+                    $temp_arr[$k]['mark_sort'] = $i;
+                    $map['event_id']=$id;
+                    $map['uid']=$temp_arr[$k]['uid'];
+                    $map['mark_sort']=$i;
+                    $markuser=D('Event_marknum')->where($map)->find();
+                    if(!$markuser)D('Event_marknum')->add($temp_arr[$k]);//保存所有签到数据
+                }
+
             }
-            //保存签到名单人员
-            $temp_arr = $this->uid_to_get_detail($data['people']);
+            //保存参会人员名单
             foreach ($temp_arr as $k => $v) {
                 $temp_arr[$k]['event_id'] = $id;
                 $temp_arr[$k]['status'] = 0;
-                $temp_arr[$k]['mark_sort'] = 1;
-                $user = D('Event_marknum')->where(array('uid' => $temp_arr[$k]['uid']))->find();
-                if (!$user) D('Event_marknum')->add($temp_arr[$k]);
+                $temp_arr[$k]['name'] = $v['truename'];
+                $temp_arr[$k]['record_id'] = $id;//参会率
+                $temp_arr[$k]['type'] = 'event';//参会率
+                $temp_arr[$k]['create_time'] = time();//参会率
+                $temp_arr[$k]['y_mark'] = $count-1;//参会率
+                //查找条件
+                $map['event_id']=$id;
+                $map['uid']=$temp_arr[$k]['uid'];
+                $user = D('Event_attend')->where($map)->find();
+                if (!$user) D('Event_attend')->add($temp_arr[$k]);
+                    $attend_map['uid']=$temp_arr[$k]['uid'];
+                    $attend_map['record_id']=$id;
+                    $attend_map['type']='event';
+                $attend_user=D('Attendance')->where($attend_map)->find();
+                //更新应签总数
+                if($attend_user['y_mark']!=($count-1)){
+                    D('Attendance')->where(array('id'=>$attend_user['id']))->save($temp_arr[$k]);
+                }
+                if(!$attend_user)D('Attendance')->add($temp_arr[$k]);//保存所有签到数据
             }
             $this->success("修改成功", U('Event/Index/index'));
         }
     }
-
-    /*    public function bianji($id){
-
-            $edit = D('Event')->where(array('status' => 1, 'id' => $id))->find();
-            $this->assign('edit', $edit);
-            $this->display();
-        }*/
-
     public function add()
     {
         //查找人员名单
@@ -299,205 +343,29 @@ class IndexController extends BaseController
         $this->display();
     }
 
-    /*    //搜索页面
-       public function search(){
-            $keyword = $_POST["keyword"];
-           var_dump($keyword);
-           exit;
-            $model=D('Event');
-            $set=$model->where("'id','type','title','time','content','address' like '%{$keyword}%'")->select();
-            $this->assign('keyword',$keyword);
-            $this->assign('set',$set);
-            $this->display();
-
-        }*/
-    /*    public function doSign($event_id, $name, $phone)
-        {
-            if (!is_login()) {
-                $this->error('请登陆后再报名。');
-            }
-            if (!$event_id) {
-                $this->error('参数错误');
-            }
-            if (trim(op_t($name)) == '') {
-                $this->error('请输入姓名。');
-            }
-            if (trim($phone) == '') {
-                $this->error('请输入手机号码。');
-            }
-            $check = D('event_attend')->where(array('uid' => is_login(), 'event_id' => $event_id))->select();
-            $event_content = D('Event')->where(array('status' => 1, 'id' => $event_id))->find();
-            if (!$event_content) {
-                $this->error('活动不存在！');
-            }
-            /*      if ($event_content['attentionCount'] + 1 > $event_content['limitCount']) {
-                      $this->error('超过限制人数，报名失败');
-                  }*/
-    /*        if (time() > $event_content['deadline']) {
-                $this->error('报名已经截止');
-            }
-            if (!$check) {
-                $data['uid'] = is_login();
-                $data['event_id'] = $event_id;
-                $data['name'] = $name;
-                $data['phone'] = $phone;
-                $data['creat_time'] = time();
-                $res = D('event_attend')->add($data);
-                if ($res) {
-
-                    D('Message')->sendMessageWithoutCheckSelf($event_content['uid'], query_user('nickname', is_login()) . '报名参加了活动]' . $event_content['title'] . ']，请速去审核！', '报名通知', U('Event/Index/member', array('id' => $event_id)), is_login());
-
-                    D('Event')->where(array('id' => $event_id))->setInc('signCount');
-                    $this->success('报名成功。', 'refresh');
-                } else {
-                    $this->error('报名失败。', '');
-                }
-            } else {
-                $this->error('您已经报过名了。', '');
-            }
-        }*/
-
-    /**
-     * 审核
-     * @param $uid
-     * @param $event_id
-     * @param $tip
-     * autor:xjw129xjt
-     */
-    /*    public function shenhe($uid, $event_id, $tip)
-        {
-            $event_content = D('Event')->where(array('status' => 1, 'id' => $event_id))->find();
-            if (!$event_content) {
-                $this->error('活动不存在！');
-            }
-            if ($event_content['uid'] == is_login()) {
-                $res = D('event_attend')->where(array('uid' => $uid, 'event_id' => $event_id))->setField('status', $tip);
-                if ($tip) {
-                    D('Event')->where(array('id' => $event_id))->setInc('attentionCount');
-                    D('Message')->sendMessageWithoutCheckSelf($uid, query_user('nickname', is_login()) . '已经通过了您对活动' . $event_content['title'] . '的报名请求', '审核通知', U('Event/Index/detail', array('id' => $event_id)), is_login());
-                } else {
-                    D('Event')->where(array('id' => $event_id))->setDec('attentionCount');
-                    D('Message')->sendMessageWithoutCheckSelf($uid, query_user('nickname', is_login()) . '取消了您对活动[' . $event_content['title'] . ']的报名请求', '取消审核通知', U('Event/Index/member', array('id' => $event_id)), is_login());
-                }
-                if ($res) {
-                    $this->success('操作成功');
-                } else {
-                    $this->error('操作失败！');
-                }
-            } else {
-                $this->error('操作失败，非活动发起者操作！');
-            }
-        }*/
-
-    /**
-     * 取消报名
-     * @param $event_id
-     * autor:xjw129xjt
-     */
-    /*   public function unSign($event_id)
-       {
-
-           $event_content = D('Event')->where(array('status' => 1, 'id' => $event_id))->find();
-           if (!$event_content) {
-               $this->error('活动不存在！');
-           }
-
-           $check = D('event_attend')->where(array('uid' => is_login(), 'event_id' => $event_id))->find();
-
-           $res = D('event_attend')->where(array('uid' => is_login(), 'event_id' => $event_id))->delete();
-           if ($res) {
-               if ($check['status']) {
-                   D('Event')->where(array('id' => $event_id))->setDec('attentionCount');
-               }
-               D('Event')->where(array('id' => $event_id))->setDec('signCount');
-
-               D('Message')->sendMessageWithoutCheckSelf($event_content['uid'], query_user('nickname', is_login()) . '取消了对活动[' . $event_content['title'] . ']的报名', '取消报名通知', U('Event/Index/detail', array('id' => $event_id)), is_login());
-
-               $this->success('取消报名成功');
-           } else {
-               $this->error('操作失败');
-           }
-       }*/
-
-    /*    public function ajax_sign($event_id)
-        {
-
-            $event_content = D('Event')->where(array('status' => 1, 'id' => $event_id))->find();
-            if (!$event_content) {
-                $this->error('活动不存在！');
-            }
-
-            D('Event')->where(array('id' => $event_id))->setInc('view_count');
-            $event_content['user'] = query_user(array('id', 'username', 'nickname', 'space_url', 'space_link', 'avatar64', 'rank_html', 'signature'), $event_content['uid']);
-            $event_content['type'] = $this->getType($event_content['type_id']);
-
-            $menber = D('event_attend')->where(array('event_id' => $event_id, 'status' => 1))->select();
-            foreach ($menber as $k => $v) {
-                $event_content['member'][$k] = query_user(array('id', 'username', 'nickname', 'space_url', 'space_link', 'avatar64', 'rank_html', 'signature'), $v['uid']);
-
-            }
-
-            $this->assign('content', $event_content);
-            $this->display();
-        }*/
-
-    /**
-     * ajax删除活动
-     * @param $event_id
-     * autor:xjw129xjt
-     */
-    /*   public function doDelEvent($id)
-       {
-
-           $event_content = D('Event')->where(array('status' => 1, 'id' => $id))->find();
-           if (!$event_content) {
-               $this->error('活动不存在！');
-           }
-           if ($event_content['id'] == is_login() || is_administrator(is_login())) {
-               $res = D('Event')->where(array('status' => 1, 'id' => $id))->setField('status', 0);
-               if ($res) {
-                   $this->success('删除成功！', U('Event/Index/index'));
-               } else {
-                   $this->error('操作失败！');
-               }
-           } else {
-               $this->error('非活动发起者操作！');
-           }
-
-       }*/
-
-    /**
-     * ajax提前结束活动
-     * @param $event_id
-     * autor:xjw129xjt
-     */
-    /*  public function doEndEvent($event_id)
-      {
-
-          $event_content = D('Event')->where(array('status' => 1, 'id' => $event_id))->find();
-          if (!$event_content) {
-              $this->error('活动不存在！');
-          }
-          if ($event_content['uid'] == is_login() || is_administrator(is_login())) {
-              $res = D('Event')->where(array('status' => 1, 'id' => $event_id))->setField('eTime', time());
-              if ($res) {
-                  $this->success('操作成功！');
-              } else {
-                  $this->error('操作失败！');
-              }
-          } else {
-              $this->error('非活动发起者操作！');
-          }
-
-      }*/
 //删除活动
     public function doDel($id)
     {
+        //如果有人签到，则不允许删除
+        $map['event_id']=$id;
+        $map['status']=array('neq','0');
+        $is_jion=D("Event_attend")->where($map)->find();
+        if(!empty($is_jion)){
+            $this->error("该会议已有人进行参会操作，不能删除！", U('Event/Index/index'));
+        }
         $app = D("Event")->where("id={$id}")->delete();
         if ($app > 0) {
+            //删除attend表，删除marknum表，删除markset表删除，删除attendence请假率表
+            $temp_map['event_id']=$id;
+            D("Event_attend")->where($temp_map)->delete();
+            D("Event_marknum")->where($temp_map)->delete();
+            D("Event_markset")->where($temp_map)->delete();
+            $attendance_map['type']='event';
+            $attendance_map['record_id']=$id;
+            D("Attendance")->where($attendance_map)->delete();
             $this->success("删除成功");
         } else {
-            $this->error("删除失败", "{:U('Event/Index/index')}");
+            $this->error("删除失败", U('Event/Index/index'));
         }
 
     }
@@ -515,14 +383,14 @@ class IndexController extends BaseController
                 $map['status'] = $data['status'];
                 //按照名称和状态
             } elseif ((!empty(I('post.truename'))) && $data['status'] != 5) {
-                $map['truename'] = $data['truename'];
+                $map['name'] = $data['truename'];
                 $map['status'] = $data['status'];
                 //按照名称查询
             } elseif (I('post.truename') && $data['status'] == 5) {
-                $map['truename'] = $data['truename'];
+                $map['name'] = $data['truename'];
             }
             //查询全部数据
-            $attend = D('Event_marknum')->where($map)->select();
+            $attend = D('Event_attend')->where($map)->select();
             $number_attend=count($attend);
             switch ($data['status']){
                 case 0:
@@ -555,12 +423,12 @@ class IndexController extends BaseController
             $this->assign('search_status',$search_status);
         }else{
             $attend = D('Event_attend')->where(array('event_id' => $id))->select();
-            foreach ($attend as $key => $val) {
-                $truename = D('Field')->where(array('uid' => $val['uid'], 'field_id' => 38))->find();
-                $attend[$key]['truename'] = $truename['field_data'];
-                $company = D('Field')->where(array('uid' => $val['uid'], 'field_id' => 50))->find();
-                $attend[$key]['company'] = $company['field_data'];
-            }
+        }
+        foreach ($attend as $key => $val) {
+            $truename = D('Field')->where(array('uid' => $val['uid'], 'field_id' => 38))->find();
+            $attend[$key]['truename'] = $truename['field_data'];
+            $company = D('Field')->where(array('uid' => $val['uid'], 'field_id' => 50))->find();
+            $attend[$key]['company'] = $company['field_data'];
         }
         $total_count=count(D('Event_attend')->where(array('event_id' => $id))->select());
         $this->assign('total_count',$total_count);
@@ -633,6 +501,7 @@ class IndexController extends BaseController
                     break;
             }
             $search_total_num=$search_text."：".$number_attend."人";
+            $this->assign('search_mark_sort',intval(I('post.mark_sort')));
             $this->assign('search_name',I('post.truename'));
             $this->assign('search_total_num',$search_total_num);
             $this->assign('search_status',$search_status);
@@ -689,6 +558,12 @@ public function back($id){
         }
         $res = D('Event_marknum')->where(array('id' => $id))->save($data);
         if ($res) {
+            $data=D('Event_marknum')->where(array('id' => $id))->find();
+            if($data['status']>0){
+                D('Attendance')->where(array('uid'=>$data['uid'],'record_id'=>$data['event_id'],'type'=>'event'))->setInc('s_mark',1);
+            }else{
+                D('Attendance')->where(array('uid'=>$data['uid'],'record_id'=>$data['event_id'],'type'=>'event'))->setDec('s_mark',1);
+            }
             $exit = json_encode(array('code' => 1, 'msg' => $msg . '成功!'));
         } else {
             $exit = json_encode(array('code' => 0, 'msg' => $msg . '失败!'));
@@ -712,11 +587,12 @@ public function back($id){
             'remark' => '点击详情即可进入在线报名'
         );
         $map['id'] = array('in', $data['people']);
-        $userdata = D('Ucenter_member')->where($map)->field('openid')->select();
+        $userdata = D('Ucenter_member')->where($map)->field('username,openid')->select();
         $wxapi = new WeixinApi();
         $time = 0;
         foreach ($userdata as $key => $val) {
-            $res = $wxapi->sendTempMsg_Event_Event($val['openid'], $arr,$tempid);
+            $res = $wxapi->sendTempMsg_Event_Meet($val['openid'], $arr,$tempid);
+            self::$sms->send($val['username'],$data['explain']);
             if ($res['rt']) $time++;
         }
         echo json_encode(array('time' => $time));
@@ -770,12 +646,45 @@ public function back($id){
         $data['status'] = I('post.status');
         $data['back'] = I('post.back');
         $id = D('Event_attend')->where(array('id' => $id))->save($data);
-        if($id && $data['status']==4){
-            //如果是批准请假，签到中标明请假，状态为6
+        if($id){
             $user=D('Event_attend')->where(array('id' => I('post.id')))->find();
-            $map['uid']=$user['uid'];
-            $map['event_id']=$user['event_id'];
-            D('Event_marknum')->where($map)->save(array('status'=>6));
+            $openid=D('Ucenter_member')->where(array('id'=>$user['uid']))->getField('openid'); //查找openid
+            $eventdata=D('Event')->where(array('id'=>$user['event_id']))->find();
+            if($data['status']==4){
+                //如果是批准请假，签到中标明请假，状态为6
+                $map['uid']=$user['uid'];
+                $map['event_id']=$user['event_id'];
+                D('Event_marknum')->where($map)->save(array('status'=>6));
+                //被批准在更改签到数据
+                $atten_map['uid']=$user['uid'];
+                $atten_map['record_id']=$user['event_id'];
+                $atten_map['type']='event';
+                $atten_data=D('Attendance')->where($atten_map)->find();
+                D('Attendance')->where(array('id'=>$atten_data['id']))->save(array('s_mark'=>$atten_data['y_mark']));
+                //发送通知模板
+                $tempid='C28HkUceHbqV-K1AizUCypfQYImEGgl5AP5Fvtp1eX8';
+                $arr = array(
+                    'href' => 'http://zxlz.daifayuan.com' . U('Wap/Weixin/jion/type/event', array('id' => $eventdata['id'])),
+                    'first' => '您的' . $eventdata['title'] . '活动请假已被审核批准',
+                    'keyword1' => date('Y-m-d H:i:s', $eventdata['sTime']),
+                    'keyword2' => $eventdata['address'],
+                    'keyword3' => $eventdata['title'],
+                    'remark' => '点击查看详情'
+                );
+            }else{
+                $tempid='5ktf-tXzSw76ciFPTMZ7ZXkdBGnn0ncKBbGA_6RgWEU';
+                $arr = array(
+                    'href' => 'http://zxlz.daifayuan.com' . U('Wap/Weixin/jion/type/event', array('id' => $eventdata['id'])),
+                    'first' => '您的' . $eventdata['title'] . '活动请假已被拒绝',
+                    'keyword1' => date('Y-m-d H:i:s', $eventdata['sTime']),
+                    'keyword2' => $eventdata['address'],
+                    'keyword3' => $eventdata['title'],
+                    'keyword4' => $data['back'],
+                    'remark' => '点击查看详情'
+                );
+            }
+            $wxapi = new WeixinApi();
+            $wxapi->sendTempMsg_Event_Meet($openid, $arr,$tempid);
         }
         $exit = return_exit_arr($id, '成功！', '提交失败');
         echo $exit;

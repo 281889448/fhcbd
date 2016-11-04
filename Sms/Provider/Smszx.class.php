@@ -226,7 +226,7 @@ XML;
     private function parse_xml($xml_doc_str)
     {
         $xml_ele = simplexml_load_string($xml_doc_str);
-        print_r($xml_ele);
+
         if ($xml_ele instanceof \SimpleXMLElement) {
             return $xml_ele;
         } else {

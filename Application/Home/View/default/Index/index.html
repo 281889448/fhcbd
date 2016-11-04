@@ -137,7 +137,7 @@
                      </div>
                         
                         <div class="col-sm-12">
-                           <div class="col-sm-3">
+                           <!--<div class="col-sm-3">
                         <h4 class="pull-left">待审核列表</h4>
                             <small class="fr" style="line-height: 30px;"><a href="">&nbsp;</a></small>
                             <table class="table table-hover table-bordered">
@@ -195,14 +195,27 @@
 
 
                             </table>
-                        </div>
-                      <div class="col-sm-9">
+                        </div>-->
+
+                            <div class="col-sm-6">
+                                <h4 class="pull-left">调研报告</h4>
+                                <small class="fr" style="line-height: 30px;"><a href="{:U('Home/Index/survey')}">更多》</a></small>
+                                <table class="table table-hover table-bordered">
+                                    <tr><th class="text-center">标题</th><th class="text-center" style="width:100px">发布日期</th><th class="text-center">发布人</th></tr>
+                                    <volist name="surveys" id="survey">
+
+                                        <tr><td><a href="{:U('Survey/Index/prepare',array('id'=>$survey[id]))}" class="text_derection_hover">{$survey.title}</a></td><td>{$survey.time|date='Y-m-d',###}</td><td>{$survey.author}</td> </tr>
+                                    </volist>
+
+                                </table>
+                            </div>
+                      <div class="col-sm-6">
                       <h4 class="pull-left">社情民意</h4>
                               <small class="fr" style="line-height: 30px;"><a href="{:U('Home/Index/polls')}">更多》</a></small>
                             <table class="table table-hover table-bordered">
-                                <tr><th class="text-center">类型</th><th class="text-center">标题</th><th class="text-center" style="width:100px">创建日期</th><th class="text-center">发布人</th> </tr>
+                                <tr><th class="text-center">标题</th><th class="text-center" style="width:100px">创建日期</th><th class="text-center">发布人</th> </tr>
                                <volist name="polls" id="p">
-                                <tr><td>{$p.type.title}</td><td><a href="{:U('Polls/Index/prepare',array('id'=>$p['id']))}" class="text_derection_hover">{$p.title}</a></td><td>{$p.time|date='Y-m-d',###}</td><td>{$p.author}</td> </tr>
+                                <tr><td><a href="{:U('Polls/Index/prepare',array('id'=>$p['id']))}" class="text_derection_hover">{$p.title}</a></td><td>{$p.time|date='Y-m-d',###}</td><td>{$p.author}</td> </tr>
                                </volist>
 
 

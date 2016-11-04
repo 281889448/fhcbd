@@ -36,8 +36,13 @@ class UserController extends AdminController
             $map['nickname'] = array('like', '%' . (string)$nickname . '%');
         }
         $list = $this->lists('Member', $map);
-	      foreach($list as &$v){
+
+        $list_u = $this->lists('UcenterMember',$map);
+
+
+	      foreach($list as $k=>&$v){
 	      	  $v['group'] = implode(',',get_group($v['uid']));
+              $v['openid'] = $list_u[$k]['openid'];
 	      }
 	 
 	    
@@ -87,7 +92,27 @@ class UserController extends AdminController
         }
 
     }
-	
+
+    /**
+     * @param int $uid
+     * @author MR.Z<327778155@qq.com>
+     * create: 2016/11/03
+     */
+    public function clear_openid($uid=0){
+        $flag = D('UcenterMember')->where('id='.$uid)->setField('openid','');
+
+        if($flag){
+            $rdata['info'] =  "openid清除成功！";
+            $rdata['status'] = 1;
+            $rdata['url'] = '';
+
+        }else{
+            $rdata['status'] = 0;
+            $rdata['info'] =  "openid清除失败！";
+            $rdata['url'] = '';
+        }
+        $this->ajaxReturn($rdata);
+    }
 	
 	/**委员信息页
      * @param null $uid
@@ -119,7 +144,7 @@ class UserController extends AdminController
             }
             $member[$key] = $field_data;
         }
-	    $this->assign('profile_group_id',WEIYUAN);
+	     $this->assign('profile_group_id',WEIYUAN);
 			$this->assign('member',$member);
 			$this->display();
 
@@ -921,7 +946,7 @@ str;
                     $password = date('Ymd',strtotime($carts['birthday']));
 
 
-                    $email = $objExcel->getActiveSheet()->getCell('O'.$i)->getValue();
+                    $email =(string) $objExcel->getActiveSheet()->getCell('O'.$i)->getValue();
                     $uid = $User->register($username, $username, $password, $email);
 
 

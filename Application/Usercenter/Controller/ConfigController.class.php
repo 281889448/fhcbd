@@ -86,7 +86,9 @@ class ConfigController extends BaseController
     }
 
     public function user($id){
+
         $this->getExpandInfo($id);
+        $this->assign('profile_group_id',WEIYUAN);
         $this->display('index');
     }
 
@@ -136,24 +138,28 @@ class ConfigController extends BaseController
      * @author 郑钟良<zzl@ourstu.com>
      */
     public function getExpandInfo($uid = null)
-    {   $uid = $uid ? $uid : get_uid();
+    {
+        $uid = $uid ? $uid : get_uid();
 
         $profile_group_list = $this->_profile_group_list($uid);
 
 
-        if(get_group(get_uid(),['委员'])){
+        if(get_permission(get_uid(),['委员'])){
             $expand_id = WEIYUAN;
-        }elseif(get_group(get_uid(),['集体'])){
+        }elseif(get_permission(get_uid(),['集体'])){
             $expand_id = TEAM;
-        }elseif(get_group(get_uid(),['办理单位'])){
+        }elseif(get_permission(get_uid(),['办理单位'])){
             $expand_id = UNIT;
+        }elseif(get_permission(get_uid(),['专委会信息员'])){
+            $expand_id = ZWHXX;
         }
 
 
         if ($profile_group_list) {
             $info_list = $this->_info_list($expand_id, $uid);
-            // 查询是否有历史记录
+            // 查询是否有已提交未审核历史记录
             $newflag= D('UserHistory')->where(['is_now'=>1,'is_review'=>0])->find();
+            //如果有记录review 则为1  就表示不显示保存按钮
             if($newflag){ $this->assign('review',1);}
             $this->assign('uid',$uid);
             $this->assign('info_list', $info_list);
@@ -262,41 +268,46 @@ class ConfigController extends BaseController
         }
         $map['uid'] = is_login();
         $is_success = false;
+        //当为姓名属性时，才走审核流程
 
-    /*    foreach ($data as $dl) {
-            $map['field_id'] = $dl['field_id'];
-            $res = D('field')->where($map)->find();
-            if (!$res) {
-                if ($dl['field_data'] != '' && $dl['field_data'] != null) {
-                    $dl['createTime'] = $dl['changeTime'] = time();
-                    if (!D('field')->add($dl)) {
-                        $this->error('信息添加时出错！');
+        if($profile_group_id != WEIYUAN){
+
+            foreach ($data as $dl) {
+                $map['field_id'] = $dl['field_id'];
+                $res = D('field')->where($map)->find();
+                if (!$res) {
+                    if ($dl['field_data'] != '' && $dl['field_data'] != null) {
+                        $dl['createTime'] = $dl['changeTime'] = time();
+                        if (!D('field')->add($dl)) {
+                            $this->error('信息添加时出错！');
+                        }
+                        $is_success = true;
+                    }
+                } else {
+                    $dl['changeTime'] = time();
+                    if (!D('field')->where('id=' . $res['id'])->save($dl)) {
+                        $this->error('信息修改时出错！');
                     }
                     $is_success = true;
                 }
-            } else {
-                $dl['changeTime'] = time();
-                if (!D('field')->where('id=' . $res['id'])->save($dl)) {
-                    $this->error('信息修改时出错！');
-                }
-                $is_success = true;
+                unset($map['field_id']);
             }
-            unset($map['field_id']);
-        }
-    */
-        //当前用户信息存入历史记录
-        $map_od['is_now'] = 1;
-        $map_od['uid'] = get_uid();
-        $old_data = M('UserHistory')->where( $map_od)->getField('data');
+            $this->success("保存成功！");
+        }else{
+            //当前用户信息存入历史记录
+            $map_od['is_now'] = 1;
+            $map_od['uid'] = get_uid();
+            $old_data = M('UserHistory')->where( $map_od)->getField('data');
 
 
-        //委员资料入库历史记录
-        $rs = $this->insertHistory(get_uid(),$data,$old_data);
-        clean_query_user_cache(is_login(), 'expand_info');
-        if ($rs) {
-            $this->success('信息申请中！');
-        } else {
-            $this->error('没有要保存的信息！');
+            //委员资料入库历史记录
+            $rs = $this->insertHistory(get_uid(),$data,$old_data);
+            clean_query_user_cache(is_login(), 'expand_info');
+            if ($rs) {
+                $this->success('信息申请中！');
+            } else {
+                $this->error('没有要保存的信息！');
+            }
         }
     }
 
@@ -317,6 +328,8 @@ class ConfigController extends BaseController
         $data['pre_data'] = $old_data;
         $data['uid'] = $uid;
         $data['create_time'] = time();
+        $data['is_now'] = 1;
+        $data['is_review'] = 0;
         $hid = M('UserHistory')->add($data);
         return $hid;
 

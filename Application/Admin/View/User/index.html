@@ -59,6 +59,7 @@
                 <th class="">最后登录时间</th>
                 <th class="">最后登录IP</th>
                 <th class="">状态</th>
+                <th class="">openid</th>
                 <th class="">操作</th>
             </tr>
             </thead>
@@ -69,11 +70,11 @@
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.uid}"/></td>
                         <td>{$vo.uid}</td>
                         <td>
-                            <if condition="$vo[group]=='委员'">
+                            <if condition="get_permission($vo['uid'],['委员'])">
                             <a href="{:U('Admin/User/expandinfo_details',array('uid'=>$vo['uid']))}" >{$vo.nickname|op_t}</a>
-                                <elseif condition="$vo['group']=='集体'"/>
+                                <elseif condition="get_permission($vo['uid'],['集体'])"/>
                                 <a href="{:U('Admin/User/team_details',array('uid'=>$vo['uid']))}" >{$vo.nickname|op_t}</a>
-                                <elseif condition="$vo[group]=='办理单位'"/>
+                                <elseif condition="get_permission($vo['uid'],['办理单位'])"/>
                                 <a href="{:U('Admin/User/unit_details',array('uid'=>$vo['uid']))}" >{$vo.nickname|op_t}</a>
 
                                 <else/>
@@ -87,7 +88,7 @@
                         <td><a href="http://ip138.com/ips138.asp?ip={$vo['last_login_ip']|long2ip}">{$vo['last_login_ip']|long2ip}</a>
                         </td>
                         <td>{$vo.status_text}</td>
-
+                        <td><if condition="$vo['openid']"><a href="{:U('Admin/User/clear_openid',['uid'=>$vo['uid']])}" class="ajax-get">清除</a></if></td>
                         <td>
                             <eq name="vo.status" value="1">
                                 <a href="{:U('User/changeStatus?method=forbidUser&id='.$vo['uid'])}"

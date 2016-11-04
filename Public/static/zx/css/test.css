@@ -1,0 +1,14 @@
+body {
+  height: 100px;
+  width: 100px;
+  background-color: red;
+}
+body ul li {
+  color: red;
+  background: red;
+  height: 300px;
+  width: auto;
+  border-width: inherit;
+  word-break: break-all;
+  white-space: inherit;
+}

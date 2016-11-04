@@ -9,6 +9,8 @@
 define('WEIYUAN',13);
 define('UNIT',14);
 define('TEAM',15);
+//专委会信息员
+define('ZWHXX',16);
 
 return array(
 'CONTACT_GROUP' => array(

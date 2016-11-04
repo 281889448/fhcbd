@@ -1,0 +1,87 @@
+<if condition="$uid == is_login()">
+    <script type="text/javascript" src="__JS__/expandinfo-form.js"></script>
+    <form action="{:U('Config/edit_expandinfo')}" method="post" class="ajax-form">
+        <input type="hidden" name="profile_group_id" value="{$profile_group_id}">
+        <div>
+           
+                   
+           <!--委员信息start-->
+		
+ <div class="ar_content">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div id="tableWrap">
+                            <table class="table table-bordered table-responsive table-condensed table-box" style="width: 1000px;">
+                                
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            名称
+                                        </td>
+                                        <td>
+										
+										                    {:W('InputRender/inputRender',array(getExtend(16,'名称'),'personal'))}
+                                            <!--input class="form-control input-sm" name="realname" type="text" /-->
+                                        </td>
+                                        <td>
+                                            手机
+                                        </td>
+                                        <td>
+                                            {:W('InputRender/inputRender',array(getExtend(16,'手机号'),'personal'))}
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            姓名                                      </td>
+                                        <td>
+                                            {:W('InputRender/inputRender',array(getExtend(16,'姓名'),'personal'))}
+                                        </td>
+
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                          <if condition="$info_list neq null">
+                            <input type="submit" value="保存" id="submit_btn"
+                                   class="btn btn-primary expandinfo-sumbit">
+                            <else/>
+                            <span class="expandinfo-noticeinfo">该扩展信息分组没有信息！</span>
+                          </if>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		 <!--委员信息end-->  
+        </div>
+
+    </form>
+    <else/>
+    <div>
+        <volist name="info_list" id="vll">
+            <dl>
+                {:W('InputRender/inputRender',array($vll,'other'))}
+            </dl>
+        </volist>
+        <if condition="$info_list eq null">
+            <span class="expandinfo-noticeinfo">该扩展信息分组没有信息！</span>
+        </if>
+    </div>
+</if>

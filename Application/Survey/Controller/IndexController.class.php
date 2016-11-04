@@ -44,8 +44,8 @@ class IndexController extends BaseController
               $where['time'] =array('lt',$etime);
           }
 
-
       }
+      $where['uid'] = get_uid();
       $count= $model->where($where)->count();
       $Page= new \Think\Page($count,10);
       $list = $model->where($where)->order('time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
@@ -89,6 +89,15 @@ class IndexController extends BaseController
     public function detail($id){
         $content = D('Survey')->where(array('id' =>$id))->find();
         $this->assign('content',$content);
+        $this->display();
+    }
+
+    public function prepare($id){
+        $content = D('Survey')->where(array('id' =>$id))->find();
+        $back_url = I('server.HTTP_REFERER');
+        $this->assign('back_url',$back_url);
+        $this->assign('content',$content);
+
         $this->display();
     }
 

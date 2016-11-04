@@ -16,34 +16,28 @@
                         <table class="table table-bordered table-responsive table-condensed detail_right" style="width: 1000px;">
 
                             <tbody>
-                            <php>if($group!='办理单位' || $result['status']==2 )$htmlstatus=1;</php>
+                            <php>
+                                $htmlstatus = 0;
+                                if(!get_permission(get_uid(),['办理单位']) || $result['status']==2 )$htmlstatus=1;</php>
                             <tr>
                                 <td >
-                                    案号
+                                案号
                                 </td>
 
-                                <td>
+                                <td colspan="3">
                                     {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'code','id'=>$result['proposal_id'],1))}
                                 </td>
-                                <td>文号</td>
-                                <td> {:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'wenhao','id'=>$result['id'],$htmlstatus))}</td>
+
 
 
                             <tr>
                                 <td>
                                     案由
                                 </td>
-                                <td>
+                                <td colspan="3">
                                     {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title','id'=>$result['proposal_id'],1))}
                                 </td>
-                                <td >
-                                    办理日期
-                                </td>
-                                <td >
-                                    {:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'end_time','id'=>$result['id'],$htmlstatus))}
 
-                                  
-                                </td>
 
                             </tr>
                             <tr>
@@ -59,8 +53,15 @@
                             <tr>
                                 <td>办理单位</td>
                                 <td>{:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'unit','id'=>$result['id'],1))}</td>
-                                <td>办理结果</td>
-                                <td>{:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'rate','id'=>$result['id'],$htmlstatus))}</td>
+                                <td >
+                                    办理日期
+                                </td>
+                                <td >
+                                    {:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'end_time','id'=>$result['id'],$htmlstatus))}
+
+
+                                </td>
+
                             </tr>
                             <tr>
                                 <td>分管负责人</td>
@@ -74,6 +75,12 @@
                                 <td>{:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'contact','id'=>$result['id'],$htmlstatus))}</td>
                                 <td>联系方式</td>
                                 <td>{:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'telephone','id'=>$result['id'],$htmlstatus))}</td>
+                            </tr>
+                            <tr>
+                                <td>文号</td>
+                                <td> {:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'wenhao','id'=>$result['id'],$htmlstatus))}</td>
+                                <td>办理结果</td>
+                                <td>{:W('Common/InputRender/InputRender',array('modelid'=>6,'name'=>'rate','id'=>$result['id'],$htmlstatus))}</td>
                             </tr>
                             <tr>
                                 <td>

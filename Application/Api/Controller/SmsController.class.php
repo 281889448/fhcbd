@@ -27,7 +27,7 @@ class SmsController extends Controller
         $mobile = '13971609049';
         $content = '我就是想测试一下，看是不是正常的啊!';
         $smsSendRs = $sms->send($mobile, $content );
-        print_r($smsSendRs);
+
 
 
     }

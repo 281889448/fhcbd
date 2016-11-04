@@ -1,4 +1,4 @@
-<if condition="$uid == is_login() || get_premisson(get_uid(),['政协工作人员'])">
+<if condition="$uid == is_login() || get_permission(get_uid(),['政协工作人员']) || true">
     <script type="text/javascript" src="__JS__/expandinfo-form.js"></script>
     <form action="{:U('Config/edit_expandinfo')}" method="post" class="ajax-form">
         <input type="hidden" name="profile_group_id" value="{$profile_group_id}">
@@ -36,7 +36,7 @@
                                         </td>
                                         <td rowspan="4" class="up_pic">
 
-                                          {:hook('weiyuanAvatar')}
+                                          {:hook('weiyuanAvatar',$uid)}
                                             </span>
                                         </td>
                                     </tr>
@@ -347,13 +347,14 @@
                                     
                                 </tbody>
                             </table>
+
                           <if condition="$info_list neq null && $review!=1">
 
                             <input type="submit" value="保存" id="submit_btn"
                                    class="btn btn-primary expandinfo-sumbit">
 
                             <else/>
-                            <span class="expandinfo-noticeinfo"></span>
+                            <span class="expandinfo-noticeinfo">审核中...</span>
                           </if>
                         </div>
                     </div>

@@ -106,5 +106,32 @@ return array(
 ),
 'LOAD_EXT_CONFIG' => 'proposal.status,proposal_group,polls_config',
     /* 命名空间 */
-
+    'SMS' => array(
+        'VERIFY_TIMEOUT' => 300, //认证超时时间(单位：秒)
+        'MIN_TIME_SPAN'   => 60, //最小重复发送间隔，单位秒,不限制则设置为0
+        'SINGLE_IP_LIMIT' => 30, //单个IP 在SINGLE_IP_LIMIT_TIME规定的时间内允许发送的最多条数,不限制则设置为0
+        'SINGLE_IP_LIMIT_TIME' => 3600, //单个IP灌水检测时间限制，单位秒
+        //主短信服务商设置（名称为ClassName), 通道为验证码通道
+        'SP' => 'Montnets',
+        //备用短信服务商设置（名称为ClassName), 通道为验证码通道
+        'SP_BAK' => '',
+        //短信服务商设置（名称为ClassName), 通知类通道
+        'SP_NOTICE' => '',
+        //备用短信服务商设置（名称为ClassName), 通知类通道
+        'SP_NOTICE_BAK' => '',
+        'Montnets' => array(
+            'API_URL'  => 'http://61.145.229.29:9006/MWGate/wmgw.asmx/',
+            'USERNAME' => '用户名',
+            'PASSWORD' => '密码',
+        ),
+        'Smszx' => array(
+            'API_URL'  => 'http://www.hb-mas.cn/web/service/ExternalService',
+            'UserLoginID' => 'whjh1993',
+            'FirstPassword' => 'whjh19931234',
+            'UserSecondID' => 'admin',
+            'SecondPassword' => '1234qwer',
+            'spNumber' => '503184',
+            'srcID' =>  '10657309266201',
+        )
+    ),
 );

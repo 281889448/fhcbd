@@ -652,18 +652,31 @@ class IndexController extends BaseController
 	    
 	    
 	    $user_ids = explode(',',$userstr);
-	    
-	    
-	    
+
+
+
 	        $member = D('User/User');
 					$member->setModel(WEIYUAN);
 					$members = $member->getUsers(array(),array('名称'));
+
+            $member->setModel(TEAM);
+        $members_jt = $member->getUsers([],array('姓名'));
+
+        $member->setModel(ZWHXX);
+        $members_zwhxx = $member->getUsers([],array('姓名'));
 	   
 				$group = array();
 					foreach($members as $v){
 						$user[$v['id']] = $v['名称'];
 					}
-	      
+                    foreach($members_jt as $v){
+                        $user[$v['id']] = $v['姓名'];
+                    }
+                    foreach($members_zwhxx as $v){
+                        $user[$v['id']] = $v['姓名'];
+                    }
+
+
 					foreach($user_ids as $u){
 						if(preg_match('/^(\d+)\_(\d+|0)\_(\d+)$/',$u,$match)){
 							$group[$match[1]][$match[2]][] = $match[3];
@@ -675,8 +688,9 @@ class IndexController extends BaseController
 						}
 				
 					}
+
 					
-					$this->getUids($group);
+
 	    
 					$uids = $this->getUids($group);
 	

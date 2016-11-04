@@ -30,9 +30,11 @@
                                             类别
                                         </td>
                                         <td>
-                                            <php>if(get_permission(get_uid(),['委员'])){$group = '委员';}
-                                                if(get_permission(get_uid(),['集体'])){$group = '集体';}
+                                            <php>
+                                                if(get_permission(get_uid(),['委员']))$group = '委员';
+                                                if(get_permission(get_uid(),['集体']))$group = '集体';
                                             </php>
+
                                             {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'leibie','id'=>$content['id'],1,$group))}
                                         </td>
                                         <td>
@@ -66,7 +68,7 @@
                                             人数
                                         </td>
                                         <td>
-                                            {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'renshu'))}
+                                            {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'renshu','',0,1))}
                                         </td>
                                     </tr>
                                     <tr>

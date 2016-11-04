@@ -9,7 +9,6 @@
                         <table border="0" style="margin-bottom:15px">
                             <tr>
                                 <td  style="width:200px">
-
                                     <select name="status" class="form-control input-sm" >
                                         <option value="5"<if condition="$search_status eq ''">selected</if>>所有类型</option>
                                         <option value="0"<if condition="$search_status eq '0'">selected</if>>未选择</option>
@@ -42,7 +41,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <volist name="data" id="vo" empty="暂时没有参家会议人员数据">
+                            <volist name="data" id="vo" empty="暂时没有数据">
                                 <tr>
                                     <td>{$vo.truename}</td>
                                     <td>{$vo.company}</td>

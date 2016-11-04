@@ -25,12 +25,19 @@ class SearchController extends BaseController {
     }
 
     public function index($page = 1){
-		$map = I('post.');
 
+        $map = I('get.');
+
+
+        if(IS_POST){
+            $map = I('post.');
+            redirect(U('Home/Search/Index',$map));
+        }
+        $this->assign('map',$map);
         if(!empty($map['meet'])){
           $map['meet'] = ['like',"%{$map['meet']}%"];
         }
-		
+
 		if(!empty($map['sTime']) && !empty($map['eTime'])){
 			$map['create_time'] = array('between',strtotime($map['sTime']).','.(strtotime($map['eTime'])+ 3600 * 24));
 			unset($map['sTime']);
@@ -58,7 +65,8 @@ class SearchController extends BaseController {
 		if(!empty($map['title'])){
 			$map['title'] = array('like',"%{$map['title']}%");
 		}
-		
+
+
 		$mu = D('User/User');
 		$mu->setModel(WEIYUAN);
 		$user = $mu->getUser(get_uid());
@@ -84,23 +92,23 @@ class SearchController extends BaseController {
 		$m = D('Proposal');
 		$tree = D('ProposalType')->where(array('status' => 1))->select();
 		$this->assign('tree', $tree);
-		if(IS_POST){
-		$proposals = $m->where($map)->order('create_time desc')->page($page,16)->select();
 
-		$totalCount = $m->where($map)->count();
-		
-		foreach($proposals as &$v){
-			$v['type'] = $this->getProposalType($v[type_id]);
+            $proposals = $m->where($map)->order('create_time desc')->page($page,16)->select();
 
-			$map['proposal_id'] = $v['id'];
-			$units = D('ProposalResult')->where($map)->getField('unit',true);
-			$v['units'] = implode(',',$units);
-		}
-		}
+            $totalCount = $m->where($map)->count();
+
+            foreach($proposals as &$v){
+                $v['type'] = $this->getProposalType($v[type_id]);
+
+                $map['proposal_id'] = $v['id'];
+                $units = D('ProposalResult')->where($map)->getField('unit',true);
+                $v['units'] = implode(',',$units);
+            }
+
 
 		$this->assign('totalPageCount', $totalCount);
 		$this->assign('proposals',$proposals);
-		$this->display();
+
 			
 		
 

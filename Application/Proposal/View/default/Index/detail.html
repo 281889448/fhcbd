@@ -28,10 +28,11 @@
 									</thead>
 						<php>
 										if($content[status]==2){
-										$htmlstatus = 0;
+											$htmlstatus = 0;
 										}else{
-										$htmlstatus = 1;
+											$htmlstatus = 1;
 										}
+
 									if($content[status] == 17 || $content[status] == 2){
 										$htmlstatus_9 = 0;
 									}else{
@@ -44,7 +45,7 @@
 												提出期间
 											</td>
 											<td>
-												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet_type','id'=>$content['id'],$html_status))}
+												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet_type','id'=>$content['id'],$htmlstatus))}
 											</td>
 											<td style="width: 100px">
 												类别
@@ -62,7 +63,7 @@
 											</td>
 											<td>
 												<php>$time = date('Y-m-d H:i:s',NOW_TIME); </php>
-												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'create_time','id'=>$content['id'],$html_status,'defval'=>$time))}
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'create_time','id'=>$content['id'],$htmlstatus,'defval'=>$time))}
 											</td>
 										</tr>
 										<tr>
@@ -98,7 +99,7 @@
 												人数
 											</td>
 											<td>
-												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'renshu','id'=>$content['id'],$html_status))}
+												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'renshu','id'=>$content['id'],$htmlstatus))}
 											</td>
 										</tr>
 										
@@ -108,7 +109,7 @@
 											</td>
 											<td colspan="3">
 
-													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title','id'=>$content['id'],$html_status))}
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title','id'=>$content['id'],$htmlstatus))}
 
 
 											</td>
@@ -117,7 +118,7 @@
 											</td>
 											<td class="text-align:left">
 											<div class="pull-left">
-												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'is_public','id'=>$content['id'],$html_status))}
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'is_public','id'=>$content['id'],$htmlstatus))}
 											</div>
 												
 											</td>
@@ -129,7 +130,7 @@
 											内容
 											</td>
 											<td colspan="5">
-												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'content','id'=>$content['id'],$html_status))}
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'content','id'=>$content['id'],$htmlstatus))}
 
 
 											</td>
@@ -141,7 +142,7 @@
 											<td colspan="5">
 												<div class="pull-left text-align:left">
 													
-													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'fujian','id'=>$content['id'],$html_status))}
+													{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'fujian','id'=>$content['id'],$htmlstatus))}
 												</div>
 												
 												
@@ -346,26 +347,26 @@
 												提案人
 											</td>
 											<td>
-												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'author','id'=>$content['id'],$html_status))}
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'author','id'=>$content['id'],$htmlstatus))}
 											</td>
 											<td>
 												联系人
 											</td>
 											<td>
 
-												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'contact','id'=>$content['id'],$html_status,$member['名称']))}
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'contact','id'=>$content['id'],$htmlstatus,$member['名称']))}
 											</td>
 											<td>联系方式</td><td>
-												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'telephone','id'=>$content['id'],$html_status,$member['办公电话']))}</td>
+												{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'telephone','id'=>$content['id'],$htmlstatus,$member['办公电话']))}</td>
 											<tr>
 											<td>
 												界别组
 											</td>
 											<td>
-												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'jiebie','id'=>$content['id'],$html_status))}
+												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'jiebie','id'=>$content['id'],$htmlstatus))}
 											</td>
 											<td>联系人单位</td><td colspan="3">
-								{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'contact_unit','id'=>$content['id'],$html_status))}</td>
+								{:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'contact_unit','id'=>$content['id'],$htmlstatus))}</td>
 						
 											</td>
 											</tr>
@@ -524,8 +525,7 @@
 
 												<in name="content.status" value="19">
 
-													<!--button class="btn btn-primary btn-sm"  onClick="document.proposal.action='{:U('Proposal/Index/setDo',array('proposal_id'=>$content[id]))}'">已办理</button-->
-													<button class="btn btn-primary btn-sm" onclick="document.proposal.action='{:U('Proposal/Index/handAgain',array('proposal_id'=>$content[id]))}'">退回重办</button>																																														<!--针对这个操作会更改 //TODO-->
+																																																<!--针对这个操作会更改 //TODO-->
 													<button class="btn btn-primary btn-sm" onclick="document.proposal.action='{:U('Proposal/Index/handOver',array('proposal_id'=>$content[id]))}'">申请退回办理</button>
 
 												</in>

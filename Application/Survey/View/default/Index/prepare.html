@@ -1,0 +1,116 @@
+<extend name="Base/common"/>
+
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <form name="frme" method="post" action="{:U('Survey/Index/inseter',array('id'=>$sur[id]))}">
+                            <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                                <thead>
+                                <tr>
+                                    <th colspan="6">
+                                        调研添加
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td style="width: 120px">
+                                        日期
+                                    </td>
+                                    <td>
+                                        <input size="16" type="text" value="{:date('Y-m-d H:i:s',$content['time'])}" readonly="readonly" name="time" class="form_datetime form-control" required>
+                                    </td>
+                                    <td class="text-right">
+                                        类别
+                                    </td>
+                                    <td colspan="3">
+                                        <select name="type_id" class="form-control input-sm" disabled>
+                                            <volist name="tree" id="top">
+                                                <option value="{$top.id}" <if condition="$top[id]==$content[type_id]">selected</if> >
+                                                    {$top.title}
+                                                </option>
+                                            </volist>volist
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                <td>
+                                    作者
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="author" value="{$content.author}" readonly="readonly"/>
+                                </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        发言或报告题目
+                                    </td>
+                                    <td colspan="5">
+                                        {:W('Common/InputRender/InputRender',array('modelid'=>9,'name'=>'title','id'=>$content['id'],1))}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        参与人
+                                    </td>
+                                    <td colspan="5">
+                                        {:W('Common/InputRender/InputRender',array('modelid'=>9,'name'=>'people_view','id'=>$content['id'],1))}
+                                    </td>
+                                </tr>
+
+                                </tr>
+                                <tr>
+                                <tr>
+                                    <td>
+                                        内容
+                                    </td>
+                                    <td colspan="5">
+                                        {:W('Common/InputRender/InputRender',array('modelid'=>9,'name'=>'content','id'=>$content['id'],1))}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        发言交流情况
+                                    </td>
+                                    <td colspan="5">
+
+                                            {:W('Common/InputRender/InputRender',array('modelid'=>9,'name'=>'speak','id'=>$content['id'],1))}
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>附件</td>
+                                    <td colspan="5">
+                                        <div class="col-sm-6">
+                                        <label>{:W('Common/InputRender/InputRender',array('modelid'=>9,'name'=>'upload','id'=>$content['id'],1))}</label>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="6">
+                                        <a class="btn btn-default" href="{$back_url}">返回</a>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script>
+        var s =$content['adopt'];
+        s=','+s+',';
+        var adopt = document.getElementsByName('adopt');
+        for (var i = 0; i < adopt.length; i++)
+            if (s.indexOf(',' + cb[i].value + ',') != -1) cb[i].checked = true;
+    </script>
+
+</block>

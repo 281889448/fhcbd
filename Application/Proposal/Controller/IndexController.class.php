@@ -4,8 +4,10 @@
 namespace Proposal\Controller;
 
 use Common\Controller\BaseController;
+use Sms\Sms;
 use Weibo\Api\WeiboApi;
 use User\Model\User;
+use Common\Api\WeixinApi;
 
 
 /*
@@ -59,7 +61,7 @@ class IndexController extends BaseController
     public function index($page = 1, $type_id = 0, $norh = 'new')
     {
 
-   
+        C('TOKEN_ON',false);
 			$status_p = I('get.status','');
 	    if(strlen($status_p)>2 && !stripos($status_p,',')){
 	    	$status = substr($status_p,0,2);
@@ -71,9 +73,10 @@ class IndexController extends BaseController
 	    //固定的状态下才会有匹配user_id
 			$uid_array = C('UID_FILTER');
 	    $group = get_group(get_uid());
-        if(array_intersect($group,['委员'])){
+        if(array_intersect($group,['委员','集体'])){
             if(in_array($status,$uid_array['委员'])){
                 $map['p.uid'] = array('eq',get_uid());
+
             }
         }
 
@@ -101,6 +104,7 @@ class IndexController extends BaseController
 		     $map_search =   array_filter($map_search);
 		      
 		      $map = array_merge($map,$map_search);
+
 	    }
 	   
 	    if(empty($substatus)){
@@ -609,6 +613,15 @@ class IndexController extends BaseController
 			      $data['recommend'] = implode(',',I('post.recommend'));
 						$map_9['id'] = $ids;
 			      $flag = D('Proposal')->where($map_9)->save($data);
+
+                  $proposal = D('Proposal')->find($ids);
+                  $member = D('UcenterMember')->where(['id'=>$proposal['uid']])->find();
+
+                  $wxapi = new WeixinApi();
+                  $msg = "您的“".$proposal['title']."”提案已结案";
+                  $wxapi->sendTempMsg_proposal($member['openid'],$proposal['title'],$msg);
+                  self::$sms->send($member['username'],$msg);
+                  action_log('weiyuan_proposal_do','proposal',$ids,$proposal['uid']);
 			      
 			      break;
 
@@ -623,8 +636,58 @@ class IndexController extends BaseController
 		
 			    $proposal = D('Proposal')->find($ids);
 			    if($status == 8){
+
+                    $member = D('UcenterMember')->where(['id'=>$proposal['uid']])->find();
+
+                    $wxapi = new WeixinApi();
+                    $msg = "您的“".$proposal['title']."”提案经审核已立案";
+                    $wxapi->sendTempMsg_proposal($member['openid'],$proposal['title'],$msg);
+                    self::$sms->send($member['username'],$msg);
 				    action_log('weiyuan_proposal_do','proposal',$ids,$proposal['uid']);
 			    }
+
+
+                $member = D('UcenterMember')->where(['id'=>$proposal['uid']])->find();
+                //退回的通知
+                switch($status){
+                    case 3:
+
+                        $wxapi = new WeixinApi();
+                        $msg = "您的“".$proposal['title']."”提案经审核被退回，请登陆系统查看！";
+
+                        $wxapi->sendTempMsg_proposal($member['openid'],$proposal['title'],$msg);
+                        self::$sms->send($member['username'],$msg);
+                        break;
+                    case 4:
+                        $wxapi = new WeixinApi();
+                        $msg = "您的“".$proposal['title']."”提案经审核不予立案";
+
+                        $wxapi->sendTempMsg_proposal($member['openid'],$proposal['title'],$msg);
+                        self::$sms->send($member['username'],$msg);
+                        break;
+                    case 5:
+                        $wxapi = new WeixinApi();
+                        $msg = "您的“".$proposal['title']."”提案经审核被撤案";
+
+                        $wxapi->sendTempMsg_proposal($member['openid'],$proposal['title'],$msg);
+                        self::$sms->send($member['username'],$msg);
+                        break;
+                    case 6:
+                        $wxapi = new WeixinApi();
+                        $msg = "您的“".$proposal['title']."”提案经审核不予立案，因不在管辖区";
+
+                        $wxapi->sendTempMsg_proposal($member['openid'],$proposal['title'],$msg);
+                        self::$sms->send($member['username'],$msg);
+                        break;
+                    case 7:
+                        $wxapi = new WeixinApi();
+                        $msg = "您的“".$proposal['title']."”提案经审核不予立案，转委员来信";
+
+                        $wxapi->sendTempMsg_proposal($member['openid'],$proposal['title'],$msg);
+                        self::$sms->send($member['username'],$msg);
+                        break;
+                }
+
 			    if($status == 9){
 			    	$adopt = end(explode(',',$proposal['adopt']));
 				    $write = end(explode(',',$proposal['write']));
@@ -749,6 +812,23 @@ class IndexController extends BaseController
 			}
 
 			$flag = $m->setStatus($ids,$status);
+
+
+        foreach($ids as $v){
+            //获取当前提案对应的所有办理单位
+            $proposals = D('ProposalResult')->alias('pr')->join('left join __PROPOSAL__ p ON pr.proposal_id=p.id')->where(['pr.proposal_id'=>$v])->select();
+
+            foreach($proposals as $pr){
+                $member = D('UcenterMember')->where(['id'=>$pr['uid']])->find();
+
+                $wxapi = new WeixinApi();
+                $msg = "您的“".$pr['title']."”提案已交".$pr['unit']."单位，办理单位工作人员会与您联系";
+
+                $wxapi->sendTempMsg_proposal($member['openid'],$pr['title'],$msg);
+                self::$sms->send($member['username'],$msg);
+
+            }
+        }
 
 			if($flag){
 					$this->success('交办成功，未进行选办的提案请选办');
@@ -1096,6 +1176,8 @@ class IndexController extends BaseController
 
     public function add()
     {
+     //   $sms = Sms::instance('Smszx', C('SMS.Smszx'));
+
 
         $mu = D('User/User');
         $user_id = get_uid();
@@ -1268,7 +1350,7 @@ class IndexController extends BaseController
 	 *  autor: MR.Z <327778155@qq.com>
 	 */
 	public function mergeIndex($id){
-		
+        C('TOKEN_ON',false);
 		if(IS_POST){
 			$map = I('post.');
 			$map['title'] = array('like',"%{$map[title]}%");
@@ -1279,7 +1361,7 @@ class IndexController extends BaseController
 			$map['is_merge'] = array('not in',array(1,2));   //排除已经并案的提案进入搜索列表
 			$map['id'] = array('neq',$id);
 			$content = $m->where($map)->select();
-			
+
 			
 			foreach($content as &$v){
 				$v['type'] = $this->getType($v['type_id']);
@@ -1714,7 +1796,8 @@ class IndexController extends BaseController
 			$mu = D('User/User');
 			$mu->setModel(UNIT);
 			$unit = $mu->getUser($user_id);
-	
+            $m->duban_leader = $duban_leader;
+	        $m->proposal_id = $proposal_id;
 			$m->unit = $unit['名称'];
 			$m->user_id = $user_id;
 			$m->group_id = M('AuthGroupAccess')->where('uid='.$user_id)->getField('group_id');

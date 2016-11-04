@@ -37,8 +37,8 @@ class ProposalController extends BaseController
         //固定的状态下才会有匹配user_id
         $uid_array = C('UID_FILTER');
         $group = get_group(get_uid());
-        if(get_permission(get_uid(),['委员'])){
-            if(in_array($status,$uid_array[$group])){
+        if(get_permission(get_uid(),['委员','集体'])){
+            if(in_array($status,$uid_array['委员'])){
                 $map['p.uid'] = array('eq',get_uid());
             }
         }
@@ -331,6 +331,7 @@ class ProposalController extends BaseController
                 $user = query_user(array('username', 'nickname'), is_login());
                 D('Common/Message')->sendMessage(C('USER_ADMINISTRATOR'), "{$user['nickname']}发布了一个活动，请到后台审核。", $title = '活动发布提醒', U('Admin/Proposal/verify'), is_login(), 2);
             }
+
             $rs = M('Proposal')->add($content);
 
             //更新附件
@@ -347,7 +348,7 @@ class ProposalController extends BaseController
                 //积分记录
                 action_log('weiyuan_basic_proposal_add','proposal',$rs,$content['uid']);
             }else{
-                $back_url = U('Wap/Proposal/detail',array('id'=> $rs ));
+                $back_url = U('Wap/Proposal/edit',array('proposal_id'=> $rs ));
             }
 
 //同步到微博

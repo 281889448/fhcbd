@@ -20,8 +20,8 @@ class UserModel extends Model
 {
 
 		private $group_id,$expand_id;
-		//委员 办理单位 集体的组与扩展属性ID对应关系
-		private $grouptoexpand = array(WEIYUAN=>array(5,13),UNIT=>array(8,14),TEAM=>array(6,15));
+		//委员 办理单位 集体 专委会信息员的组与扩展属性ID对应关系
+		private $grouptoexpand = array(WEIYUAN=>array(5,13),UNIT=>array(8,14),TEAM=>array(6,15),ZWHXX=>[19,16]);
     /**
      * 虚拟模型
      */

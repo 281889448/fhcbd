@@ -196,7 +196,7 @@ class ResultController extends BaseController
 
 					$flag = M('ProposalResult')->save($data);
 					$map['proposal_id'] = array('eq',$result['proposal_id']);
-					$map['status'] = array('in',array(1,5));
+					$map['status'] = array('in',array(1,5,6));
 					$count = M('ProposalResult')->where($map)->count();
 		
 					if($count == 0){

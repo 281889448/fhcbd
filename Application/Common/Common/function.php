@@ -982,8 +982,8 @@ function execute_action($rules = false, $action_id = null, $user_id = null)
 	    //判断时间周期传入的字符来确定结点时间
 		   if(is_numeric($rule['cycle'])){
 			     $map['create_time'] = array('gt', NOW_TIME - intval($rule['cycle']) * 3600);
-		    }elseif($rule['cycle'] == 'END_DATE'){
-		    	  $map['create_time'] == array('lt',strtotime(C('END_DATE')));
+		    }elseif($rule['cycle'] == 'STOCKTAK_DATE'){
+		    	  $map['create_time'] == array('lt',strtotime(C('STOCKTAK_DATE')));
 		    }
 
 

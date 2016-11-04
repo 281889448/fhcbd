@@ -1,0 +1,127 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                        <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
+                            <thead>
+                            <tr>
+                                <th colspan="6">
+                                    会议详情
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="span2">
+                                    会议类型
+                                </td>
+                                <td colspan="5">
+                                    <select name="type" class="form-control input-sm" valu="{$meet.type}">
+                                        <option value="区政协组织">区政协组织</option>
+                                        <option value="专委会组织">专委会组织</option>
+                                        <option value="其他活动">其他活动</option>
+                                        <option value="街乡组织">街乡组织</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    会议名称
+                                </td>
+                                <td colspan="5">
+                                    <input type="text" class="form-control" name="title" value="{$meet.title}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    开始时间
+                                </td>
+                                <td colspan="5">
+                                    <div class="col-sm-2">
+                                        <input size="16" type="text" value="{$meet.sTime}" name="sTime" readonly="readonly" class="form_datetime form-control" required/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    结束时间
+                                </td>
+                                <td colspan="5">
+                                    <div class="col-sm-2">
+                                        <input size="16" type="text" value="{$meet.eTime}" name="sTime" readonly="readonly" class="form_datetime form-control" required/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    会议地点
+                                </td>
+                                <td colspan="5">
+                                    <input type="text" class="form-control input-sm" name="address" value="address"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    参与人员
+                                </td>
+                                <td colspan="5">
+                                    <textarea name="people" rows="" cols="" class="form-control">{$meet.people}</textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    会议内容
+                                </td>
+                                <td colspan="5">
+                                    <div class="col-sm-10">
+                                        <php>$config='toolbar:[\'bold italic underline fontsize forecolor justifyleft | map image emotion link \']';
+                                        </php>
+                                        {:W('UeditorMini/editor',array('myeditor_edit','content',$meet['content'],'100%','200px',$config))}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>签到次数</td>
+                                <td colspan="5">
+
+                                    <div class="col-sm-6">
+                                        <table border="" cellspacing="" cellpadding="" id="time-table" value="{$meet.qdcount}">
+                                            <tr>
+                                                <th class="col-sm-2">签到次数</th>
+                                                <th class="col-sm-2">签到开始时间</th>
+                                                <th class="col-sm-2">签到结束时间</th>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td><input size="16" type="text" value="{$meet.qdsTime}" class="form_datetime form-control" required></td>
+                                                <td><input size="16" type="text" value="{$meet.qdeTime}" class="form_datetime form-control" required></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+                                    <a class="btn btn-default" href="{:U('Meet/Index/index')}">返回</a>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="6">
+                                    <a href="{:U('Meet/Index/qddetail')}" class="btn btn-default">查看签到详情</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+

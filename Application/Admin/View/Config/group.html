@@ -56,6 +56,9 @@
 			</div>
 		</div>
 		</volist>
+		<if condition="$group=='提案'">
+			<a href="{:U('Admin/Proposal/makeScore')}"  class="btn submit-btn" >盘点积分</a>
+		</if>
 		<div class="form-item">
 			<label class="item-label"></label>
 			<div class="controls">
