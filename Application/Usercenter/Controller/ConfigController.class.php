@@ -89,6 +89,8 @@ class ConfigController extends BaseController
 
         $this->getExpandInfo($id);
         $this->assign('profile_group_id',WEIYUAN);
+        //委员管理的状态进入
+        $this->assign('view_type',1);
         $this->display('index');
     }
 
@@ -152,6 +154,12 @@ class ConfigController extends BaseController
             $expand_id = UNIT;
         }elseif(get_permission(get_uid(),['专委会信息员'])){
             $expand_id = ZWHXX;
+        }elseif(get_permission(get_uid(),['政府督查室'])){
+            $expand_id = DCS;
+        }elseif(get_permission(get_uid(),['秘书长'])){
+            $expand_id = MSZ;
+        }elseif(get_permission(get_uid(),['政协工作人员'])){
+            $expand_id = ZXGZRY;
         }
 
 
@@ -298,7 +306,11 @@ class ConfigController extends BaseController
             $map_od['is_now'] = 1;
             $map_od['uid'] = get_uid();
             $old_data = M('UserHistory')->where( $map_od)->getField('data');
-
+            //如果没有历史记录 则取当前委员表里的信息
+            if(!$old_data){
+                $old_data = M('Field')->where('uid='.get_uid())->getField('field_id,field_data');
+                $old_data  = serialize($old_data);
+            }
 
             //委员资料入库历史记录
             $rs = $this->insertHistory(get_uid(),$data,$old_data);

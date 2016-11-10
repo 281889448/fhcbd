@@ -35,16 +35,53 @@ class StatisticsController extends BaseController {
 	 *
 	 */
 	public function weiyuan(){
-		$user_id = get_uid();
 
-        //从当年1月1号开始
-        $year['stime'] =  strtotime(date('Y',time()).'-01-01');
+        //获取会议次数列表
+        $meets = M('ConfigMeet')->where('status=1')->order('id desc')->select();
+        $this->assign('meets',$meets);
+        $map = I('get.');
+
+        if(IS_POST){
+            $map = I('post.');
+            //不得已而为之 ，TP3 不支持GET方法提交参数
+            redirect(U('Home/Statistics/weiyuan',$map));
+        }
+        $this->assign('map',$map);
+		$user_id = get_uid();
+        $time = explode('~',C('STOCKTAK_DATE'));
+        if($map['meet']){
+            $configmeet =  M('ConfigMeet')->where("meet='{$map['meet']}'")->find();
+
+            $year = ['stime'=>$configmeet['start_time'],'etime'=>$configmeet['end_time']];
+        }
+
+       $year = $map['meet'] ?  $year : ['stime'=>strtotime($time[0]),'etime'=>strtotime($time[1])];
 		
 
 		$m = D('User/User');
 		$m->setModel(WEIYUAN);
 		$member = $m->getUser($user_id);
 		$this->getStatisticsResult($member['proposal'],$user_id,$year);
+
+
+        //查找三个需要盘点的信息
+        $map_st['create_time'] = ['between',$year['stime'].','.$year['etime']];
+        $map_st['uid'] = $user_id;
+
+        $stocktak_data = D('StocktakMeet')->where($map_st)->getField('id,uid,type,mark,score,create_time');
+
+        $stock_tmp = [];
+        foreach($stocktak_data as $v){
+            $stock_tmp[$v['uid']][$v['type']]['mark'] = $v['mark'];
+            $stock_tmp[$v['uid']][$v['type']]['score'] = $v['score'];
+        }
+
+
+            $member['qh'] = ($stock_tmp[$user_id]['qh']['mark'] && $stock_tmp[$user_id]['qh']['score']) ? $stock_tmp[$user_id]['qh']['mark'].'/'.$stock_tmp[$user_id]['qh']['score'] : '';
+            $member['qzx'] = ($stock_tmp[$user_id]['qzx']['mark'] && $stock_tmp[$user_id]['qzx']['score']) ? $stock_tmp[$user_id]['qzx']['mark'].'/'.$stock_tmp[$user_id]['qzx']['score'] : '';
+            $member['zwhjdllw'] = ($stock_tmp[$user_id]['zwhjdllw']['mark'] && $stock_tmp[$user_id]['zwhjdllw']['score']) ? $stock_tmp[$user_id]['zwhjdllw']['mark'].'/'.$stock_tmp[$v['uid']]['zwhjdllw']['score']:'';
+
+
 
 		//出席区全体委员会议
 		
@@ -74,6 +111,11 @@ class StatisticsController extends BaseController {
 	 *  TODO 当前起始时间暂时不起作用
 	 */
 	public function weiyuans($page = 1){
+
+	    //获取会议次数列表
+        $meets = M('ConfigMeet')->where('status=1')->order('id desc')->select();
+        $this->assign('meets',$meets);
+
 		$m = D('User/User');
 		$m->setModel(WEIYUAN);
 		$proposal_weiyuan = $m->getUsers(array(),array('名称','手机号','专委会','街道联络委'));
@@ -82,17 +124,25 @@ class StatisticsController extends BaseController {
         if(IS_POST){
             $map = I('post.');
 
-            $year = ['stime'=>strtotime($map['stime']),'etime'=>strtotime($map['etime'])];
+
+            //不得已而为之 ，TP3 不支持GET方法提交参数
             redirect(U('Home/Statistics/weiyuans',$map));
         }
         $this->assign('map',$map);
             $data = page_array($pagesize,$page,$proposal_weiyuan);
             $totalCount = count($proposal_weiyuan);
 
+        $time = explode('~',C('STOCKTAK_DATE'));
+        if($map['meet']){
+            $configmeet =  M('ConfigMeet')->where("meet='{$map['meet']}'")->find();
 
-            $time = explode('~', C('STOCKTAK_DATE'));
+            $year = ['stime'=>$configmeet['start_time'],'etime'=>$configmeet['end_time']];
+        }
 
-            $map_st['create_time'] = ['between',strtotime($time[0]).','.strtotime($time[1])];
+        $year = $map['meet'] ?  $year : ['stime'=>strtotime($time[0]),'etime'=>strtotime($time[1])];
+
+
+            $map_st['create_time'] = ['between',$year['stime'].','.$year['etime']];
 
             $stocktak_data = D('StocktakMeet')->where($map_st)->getField('id,uid,type,mark,score,create_time');
 

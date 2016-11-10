@@ -31,10 +31,8 @@
                                         <td>
                                              {:W('InputRender/inputRender',array(getExtend(13,'手机号',$uid),'personal'))}
                                         </td>
-                                        <td rowspan="4">
-                                            照片
-                                        </td>
-                                        <td rowspan="4" class="up_pic">
+
+                                        <td rowspan="4" colspan="2" class="up_pic">
 
                                           {:hook('weiyuanAvatar',$uid)}
                                             </span>
@@ -143,12 +141,15 @@
                                              {:W('InputRender/inputRender',array(getExtend(13,'兴趣爱好',$uid),'personal'))}
                                         </td>
                                     </tr>
+
+                                    {/********************此处判断权限显示********************************/}
+
                                      <tr>
                                         <td>
                                             简历附件
                                         </td>
                                         <td colspan="5">
-                                          {:W('InputRender/inputRender',array(getExtend(13,'简历',$uid),'personal'))}
+                                          {:W('InputRender/inputRender',array(getExtend(13,'简历',$uid)))}
                                         </td>
                                          
                                        
@@ -158,19 +159,19 @@
                                             出生日期
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'生日',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'生日',$uid)))}
                                         </td>
                                         <td>
                                             性别
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'性别',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'性别',$uid)))}
                                         </td>
                                         <td>
                                             身份证号
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'身份证号',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'身份证号',$uid)))}
                                         </td>
                                     </tr>
                                     <tr>
@@ -178,19 +179,19 @@
                                             民族
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'民族',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'民族',$uid)))}
                                         </td>
                                         <td>
                                             籍贯
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'籍贯',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'籍贯',$uid)))}
                                         </td>
                                         <td>
                                             参加工作时间
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'入职时间',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'入职时间',$uid)))}
                                         </td>
                                         
                                     </tr>
@@ -199,20 +200,20 @@
                                             文化程度
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'文化程度',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'文化程度',$uid)))}
                                         </td>
                                          <td>
                                             社会阶级
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'社会身份',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'社会身份',$uid)))}
                                         </td>
                                         
                                         <td>
                                             属地
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'属地',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'属地',$uid)))}
                                         </td>
                                     </tr>
                                     <tr>
@@ -220,19 +221,19 @@
                                             政治面貌
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'政治面貌',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'政治面貌',$uid)))}
                                         </td>
                                         <td>
                                             党派职务
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'党派职务',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'党派职务',$uid)))}
                                         </td>
                                          <td>
                                             宗教
                                         </td>
                                         <td>
-                                            {:W('InputRender/inputRender',array(getExtend(13,'宗教',$uid),'personal'))}
+                                            {:W('InputRender/inputRender',array(getExtend(13,'宗教',$uid)))}
                                         </td>
                                     </tr>
                                     <tr>
@@ -240,19 +241,19 @@
                                             加入党派日期
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'入党时间',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'入党时间',$uid)))}
                                         </td>
                                         <td>
                                             加入政协日期
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'加入政协日期',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'加入政协日期',$uid)))}
                                         </td>
                                         <td>
                                             退出政协日期
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'退出政协日期',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'退出政协日期',$uid)))}
                                         </td>
                                         
                                     </tr>
@@ -263,19 +264,19 @@
                                             委员状态
                                         </td>
                                         <td>
-                                            {:W('InputRender/inputRender',array(getExtend(13,'委员状态',$uid),'personal'))}
+                                            {:W('InputRender/inputRender',array(getExtend(13,'委员状态',$uid)))}
                                         </td>
                                        <td>
                                             界别
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'界别',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'界别',$uid)))}
                                         </td>
                                         <td >
                                            推荐单位
                                         </td>
                                         <td >
-                                             {:W('InputRender/inputRender',array(getExtend(13,'推荐单位',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'推荐单位',$uid)))}
                                         </td>
                                     </tr>
                                     
@@ -286,14 +287,14 @@
                                             专委会
                                         </td>
                                         <td>
-                                             {:W('InputRender/inputRender',array(getExtend(13,'专委会',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'专委会',$uid)))}
                                         </td>
-                                         <td>专委会组</td><td>{:W('InputRender/inputRender',array(getExtend(13,'专委会组',$uid),'personal'))}</td>
+                                         <td>专委会组</td><td>{:W('InputRender/inputRender',array(getExtend(13,'专委会组',$uid)))}</td>
                                         <td>
                                             街道联络委
                                         </td>
                                         <td >
-                                            {:W('InputRender/inputRender',array(getExtend(13,'街道联络委',$uid),'personal'))}
+                                            {:W('InputRender/inputRender',array(getExtend(13,'街道联络委',$uid)))}
                                         </td>
                                          
                                         
@@ -304,30 +305,30 @@
                                             是否省委员
                                         </td>
                                         <td>
-                                            {:W('InputRender/inputRender',array(getExtend(13,'是否省委员',$uid),'personal'))}
+                                            {:W('InputRender/inputRender',array(getExtend(13,'是否省委员',$uid)))}
                                         </td>
                                         <td>
                                             是否区委员
                                         </td>
                                         <td >
-                                            {:W('InputRender/inputRender',array(getExtend(13,'是否区委员',$uid),'personal'))}
+                                            {:W('InputRender/inputRender',array(getExtend(13,'是否区委员',$uid)))}
                                         </td>
                                       <td>
                                         	是否常委
                                         </td>
                                         <td>
-                                        	 {:W('InputRender/inputRender',array(getExtend(13,'是否常委',$uid),'personal'))}
+                                        	 {:W('InputRender/inputRender',array(getExtend(13,'是否常委',$uid)))}
                                         </td>
                                     </tr>
 
                                    
                                     <tr>
                                     <td>届别</td>
-                                        <td>{:W('InputRender/inputRender',array(getExtend(13,'届别',$uid),'personal'))}</td>
+                                        <td>{:W('InputRender/inputRender',array(getExtend(13,'届别',$uid)))}</td>
                                         <td>调整、变动时间</td>
-                                        <td> {:W('InputRender/inputRender',array(getExtend(13,'调整变动时间',$uid),'personal'))}</td>
+                                        <td> {:W('InputRender/inputRender',array(getExtend(13,'调整变动时间',$uid)))}</td>
                                         <td>调整、变动原因</td>
-                                        <td>{:W('InputRender/inputRender',array(getExtend(13,'调整变动原因',$uid),'personal'))}</td>
+                                        <td>{:W('InputRender/inputRender',array(getExtend(13,'调整变动原因',$uid)))}</td>
                                     </tr>
                                    
                                     <tr>
@@ -335,7 +336,7 @@
                                             其他
                                         </td>
                                         <td colspan="5">
-                                             {:W('InputRender/inputRender',array(getExtend(13,'备注',$uid),'personal'))}
+                                             {:W('InputRender/inputRender',array(getExtend(13,'备注',$uid)))}
                                         </td>
                                     </tr>
                                     <tr>
@@ -352,7 +353,7 @@
 
                             <input type="submit" value="保存" id="submit_btn"
                                    class="btn btn-primary expandinfo-sumbit">
-
+                            <elseif condition="$view_type==1"/>
                             <else/>
                             <span class="expandinfo-noticeinfo">审核中...</span>
                           </if>

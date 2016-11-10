@@ -14,10 +14,18 @@
         </div>
    
     <else/>
-    <dt class="expandinfo-dt">
-        {$field_name}：
-    </dt>
-    <dd class="expandinfo-dd">
-        {$selected|htmlspecialchars}
-    </dd>
+
+    <div  >
+        <select class="form-control input-sm" id="expand_{$field_id}" name="expand_{$field_id}" readonly>
+            <option  disabled selected hidden>{$input_tips}</option>
+            <volist name="items" id="vl">
+                <option value="{$vl.value}" {$vl.selected}>{$vl.value|htmlspecialchars}</option>
+            </volist>
+        </select>
+        <div class="clearfix"></div>
+
+    </div>
+
+
+
 </eq>

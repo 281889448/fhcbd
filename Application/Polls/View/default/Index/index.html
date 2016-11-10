@@ -12,10 +12,10 @@
                        </if>
 
                         <form name="frme" method="post" action="{:U('Polls/Index/index',array('status'=>$status))}">
-                            <div class="col-sm-1" style="padding:0">
+                            <div  class="pull-left" style="padding:0;width: 200px">
                             {:W('Common/InputRender/InputRender',array('modelid'=>7,'name'=>'title'))}
                             </div>
-                            <div class="col-sm-1" style="padding:0">
+                            <div class="pull-left" style="padding:0;width: 200px">
                                 <select name="type_id" class="form-control input-sm">
                                     <option disabled="" selected="" hidden="">--类别--</option>
                                     <volist name="tree" id="top">

@@ -36,7 +36,8 @@ class UserController extends AdminController
             $map['nickname'] = array('like', '%' . (string)$nickname . '%');
         }
         $list = $this->lists('Member', $map);
-
+        //清除这个筛选条件，字段不一至
+        unset($map['uid|nickname']);
         $list_u = $this->lists('UcenterMember',$map);
 
 
@@ -44,7 +45,7 @@ class UserController extends AdminController
 	      	  $v['group'] = implode(',',get_group($v['uid']));
               $v['openid'] = $list_u[$k]['openid'];
 	      }
-	 
+
 	    
         int_to_string($list);
         $this->assign('_list', $list);
@@ -712,6 +713,18 @@ str;
 
         $Api = new UserApi();
         $res = $Api->updateInfo(UID, $password, $data);
+        if ($res['status']) {
+            $this->success('修改密码成功！');
+        } else {
+            $this->error($res['info']);
+        }
+    }
+
+    public function submitUserPwd($user_id){
+        $password = '12345678';
+        $data['password'] = $password;
+        $Api = new UserApi();
+        $res = $Api->updateInfos($user_id, $data);
         if ($res['status']) {
             $this->success('修改密码成功！');
         } else {

@@ -8,8 +8,22 @@
 
           <div id="tableWrap" style="overflow-x:auto ;">
             <h4 style="padding: 5px;">委员量化统计</h4>
+              <hr style="margin: 5px">
+              <form method="post">
+              <div class="clearfix" style="margin-bottom: 10px">
+                  <select name="meet">
+                      <volist name="meets" id="meet">
+                          <option value="{$meet['meet']}" <eq name="map.meet" value="$meet.meet">selected</eq>   >{$meet['meet']}</option>
+                      </volist>
+                  </select>
+                  <button class="btn btn-default btn-sm" style="margin-left: 5px"> 搜索</button>
+                  </div>
+                  </form>
             <table border="" cellspacing="" cellpadding="" class="table table-bordered " >
-              <tr><th colspan="5" class="text-center">基本信息 </th><th colspan="6" class="text-center">基础分</th><th colspan="5" class="text-center">提案统计</th><th colspan="8" class="text-center">社情民意</th><th colspan="5" class="text-center">调研报告</th><th class="text-center">文史资料</th><th colspan="2" class="text-center">其他</th></tr>
+              <tr>
+
+
+                  <th colspan="5" class="text-center">基本信息 </th><th colspan="6" class="text-center">基础分</th><th colspan="5" class="text-center">提案统计</th><th colspan="8" class="text-center">社情民意</th><th colspan="5" class="text-center">调研报告</th><th class="text-center">文史资料</th><th colspan="2" class="text-center">其他</th></tr>
               <tr><td>手机号</td><td style="white-space: nowrap">姓名</td><td style="white-space: nowrap">专委会</td><td style="white-space: nowrap">街道联络委</td><td>总积分</td>
 
 
@@ -31,9 +45,9 @@
 
                 <tr><td>{$member['手机号']}</td><td>{$member['名称']}</td><td>{$member['专委会']}</td><td>{$member['街道联络委']}</td><td>{$member['score']}</td>
 
-                    <td><if condition="$member['proposal']['action18']['count']">{$member['proposal']['action18']['count']}/{$member['proposal']['action18']['total_score']}</if></td>
-                    <td><if condition="$member['proposal']['action43']['count']">{$member['proposal']['action43']['count']}/{$member['proposal']['action43']['total_score']}</if></td>
-                    <td><if condition="$member['proposal']['action19']['count']">{$member['proposal']['action19']['count']}/{$member['proposal']['action19']['total_score']}</if></td>
+                    <td><if condition="$member['qh']">{$member['qh']}</if></td>
+                    <td><if condition="$member['qzx']">{$member['qzx']}</if></td>
+                    <td><if condition="$member['zwhjdllw']">{$member['zwhjdllw']}</if></td>
                     <td><if condition="$member['proposal']['action17']['count']">{$member['proposal']['action17']['count']}/{$member['proposal']['action17']['total_score']}</if></td>
                     <td><if condition="$member['proposal']['action20']['count']">{$member['proposal']['action20']['count']}/{$member['proposal']['action20']['total_score']}</if></td>
                     <td><if condition="$member['proposal']['action21']['count']">{$member['proposal']['action21']['count']}/{$member['proposal']['action21']['total_score']}</if></td>

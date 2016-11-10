@@ -105,6 +105,7 @@ class ConfigController extends AdminController {
      * @author 麦当苗儿 <zuojiazi@vip.qq.com>
      */
     public function save($config){
+
         if($config && is_array($config)){
             $Config = M('Config');
             foreach ($config as $name => $value) {
@@ -113,6 +114,27 @@ class ConfigController extends AdminController {
             }
         }
         S('DB_CONFIG_DATA',null);
+
+        //处理盘点时间的更新加入到历史记录中   补丁
+        if($config['PROPOSAL_MEET'] && $config['STOCKTAK_DATE']){
+            $rs = M('ConfigMeet')->where('meet=\''.$config['PROPOSAL_MEET'].'\' and status=1 ')->find();
+
+            $meetTime = explode('~',$config['STOCKTAK_DATE']);
+            $data['start_time'] =  strtotime( $meetTime[0]);
+            $data['end_time'] = strtotime($meetTime[1]);
+            $data['meet'] = $config['PROPOSAL_MEET'];
+            $data['status'] = 1;
+
+            if($rs){
+                $data['id'] = $rs['id'];
+                M('ConfigMeet')->save($data);
+            }else{
+
+
+                M('ConfigMeet')->add($data);
+            }
+
+        }
         $this->success('保存成功！');
     }
 

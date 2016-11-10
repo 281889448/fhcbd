@@ -19,8 +19,6 @@ class ResultController extends BaseController
     {   parent::_initialize();
         $tree = D('ProposalType')->where(array('status' => 1))->select();
         $this->assign('tree', $tree);
-
-
         $this->assign('current', 'proposal');
     }
 	

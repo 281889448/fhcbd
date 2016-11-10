@@ -105,8 +105,8 @@
 											}else{
 												$m->setModel(WEIYUAN);
 											}
-
-											$users = $m->getUsers($map,array('名称','界别','街道联络委','专委会','七党一联主委','主席会议成员','是否常委','主任')); $map = array();</php>
+											$map['委员状态'] = '当前届';
+											$users = $m->getUsers($map,array('名称','界别','街道联络委','专委会','七党一联主委','主席会议成员','是否常委','主任','委员状态')); $map = array();</php>
 										<volist name="users" id="u">
 											<label><input type="checkbox" value="{$u['id']}"/>{$u['名称']}</label>
 										</volist>
@@ -164,8 +164,9 @@
 													$users = $m->getUsers($map,['名称','姓名']);
 
 												}else{
+													$map['委员状态'] = '当前届';
 													$m->setModel(WEIYUAN);
-														$users = $m->getUsers($map,array('名称','界别','街道联络委','专委会','七党一联主委','主席会议成员','是否常委','主任'));
+														$users = $m->getUsers($map,array('名称','界别','街道联络委','专委会','七党一联主委','主席会议成员','是否常委','主任','委员状态'));
 											}
 											}
 

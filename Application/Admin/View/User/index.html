@@ -76,6 +76,15 @@
                                 <a href="{:U('Admin/User/team_details',array('uid'=>$vo['uid']))}" >{$vo.nickname|op_t}</a>
                                 <elseif condition="get_permission($vo['uid'],['办理单位'])"/>
                                 <a href="{:U('Admin/User/unit_details',array('uid'=>$vo['uid']))}" >{$vo.nickname|op_t}</a>
+                                <elseif condition="get_permission($vo['uid'],['政府督查室'])"/>
+                                <a href="{:U('Admin/User/dcs_details',array('uid'=>$vo['uid']))}" >{$vo.nickname|op_t}</a>
+
+                                <elseif condition="get_permission($vo['uid'],['秘书长'])"/>
+                                <a href="{:U('Admin/User/msz_details',array('uid'=>$vo['uid']))}" >{$vo.nickname|op_t}</a>
+                                <elseif condition="get_permission($vo['uid'],['政协工作人员'])"/>
+                                <a href="{:U('Admin/User/zxgzry_details',array('uid'=>$vo['uid']))}" >{$vo.nickname|op_t}</a>
+                                <elseif condition="get_permission($vo['uid'],['专委会信息员'])"/>
+                                <a href="{:U('Admin/User/zwhxx_details',array('uid'=>$vo['uid']))}" >{$vo.nickname|op_t}</a>
 
                                 <else/>
                                 {$vo.nickname|op_t}
@@ -100,6 +109,7 @@
                             <a href="{:U('AuthManager/group?uid='.$vo['uid'])}" class="authorize">授权</a>
                             <a href="{:U('User/changeStatus?method=deleteUser&id='.$vo['uid'])}"
                                class="confirm ajax-get">删除</a>
+                            <a href="{:U('User/submitUserPwd?user_id='.$vo['uid'])}" class="confirm ajax-get">密码重置</a>
                         </td>
 
                     </tr>

@@ -188,7 +188,25 @@ class UserController extends BaseController
     public function passed($id){
         //更新当前记录为is_now ，并is_review = 1  取消用户之前的is_now标记
         if(IS_POST){
+            $status = I('post.status');
+
+
+
+
             $m = D('UserHistory');
+
+            if($status==2){
+                $data['is_review'] =2 ;
+                $data['is_now'] = 0;
+                $flag = $m->where('id='.$id)->save($data);
+                if($flag){
+                    $this->success('退回成功');
+                }else{
+                    $this->error('退回审核失败');
+                }
+                exit();
+            }
+
             $user_history = $m->find($id);
             //取消之前的用户is_now标记
             $m->where(['uid'=>$user_history['uid']])->setField('is_now',0);
@@ -202,16 +220,19 @@ class UserController extends BaseController
 
 
             $user = unserialize($user_history['data']);
+
             //获取扩展资料数据
             $field_setting_list = D('field_setting')->where(array('profile_group_id' => WEIYUAN, 'status' => '1'))->order('sort asc')->select();
+
             foreach ($field_setting_list as $key => $val) {
-                $data[$key]['uid'] = $user_history['uid'];
-                $data[$key]['field_id'] = $val['id'];
+                if(isset($user[$val['id']])){
+                    $data[$key]['uid'] = $user_history['uid'];
+                    $data[$key]['field_id'] = $val['id'];
 
 
 
-                 $data[$key]['field_data'] = $user[$val['id']];
-
+                     $data[$key]['field_data'] = $user[$val['id']];
+                }
 
             }
 

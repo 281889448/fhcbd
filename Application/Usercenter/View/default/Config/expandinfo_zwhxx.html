@@ -21,14 +21,14 @@
                                         </td>
                                         <td>
 										
-										                    {:W('InputRender/inputRender',array(getExtend(16,'名称'),'personal'))}
+										                    {:W('InputRender/inputRender',array(getExtend(16,'名称')))}
                                             <!--input class="form-control input-sm" name="realname" type="text" /-->
                                         </td>
                                         <td>
                                             手机
                                         </td>
                                         <td>
-                                            {:W('InputRender/inputRender',array(getExtend(16,'手机号'),'personal'))}
+                                            {:W('InputRender/inputRender',array(getExtend(16,'手机号')))}
                                         </td>
 
                                     </tr>
@@ -36,7 +36,7 @@
                                         <td>
                                             姓名                                      </td>
                                         <td>
-                                            {:W('InputRender/inputRender',array(getExtend(16,'姓名'),'personal'))}
+                                            {:W('InputRender/inputRender',array(getExtend(16,'姓名')))}
                                         </td>
 
                                     </tr>
@@ -44,12 +44,7 @@
 
                                 </tbody>
                             </table>
-                          <if condition="$info_list neq null">
-                            <input type="submit" value="保存" id="submit_btn"
-                                   class="btn btn-primary expandinfo-sumbit">
-                            <else/>
-                            <span class="expandinfo-noticeinfo">该扩展信息分组没有信息！</span>
-                          </if>
+
                         </div>
                     </div>
                 </div>

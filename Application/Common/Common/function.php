@@ -165,7 +165,7 @@ function return_changwei_uid(){
 function return_weiyuan_uid(){
     $m = D('User/User');
     $m->setModel(WEIYUAN);
-    $arr_uid=$m->getUsers(['是否常委'=>'否']);
+    $arr_uid=$m->getUsers(['是否常委'=>'否'],['是否常委']);
     $arr_uid=array_column($arr_uid,'uid');
     return $arr_uid;
 }
@@ -173,26 +173,31 @@ function return_weiyuan_uid(){
 function auth_apply($type,$uid)
 {
     //普通用户 委员 集体 政府督查室 提案委 办理单位 政协工作人员 秘书长
-    // 文史委工作人员 专委会工作人员 秘书长 委工委主任 主席
+    // 文史委工作人员 专委会工作人员 秘书长 主席
 
     //查询扩展
     $findmembers=false;
+    $m = D('User/User');
+    $m->setModel(WEIYUAN);
+    $user = $m->getUser(get_uid());
+    $street_director_type=$user['主任'];
     if ($type == 'event') {
-
-            if(get_permission($uid,['委工委主任'])){
-
-                $type=array('区政协组织', '其它形式政协活动');
-            }elseif(get_permission($uid,['秘书长'])){
-                $type=array('其它形式政协活动', '公益活动', '其它形式政协活动');
-            }elseif(get_permission($uid,['委员'])){
-                $type=array('专委会组织','街道联络委组织', '其它形式政协活动');
-                $findmembers=true;//需要单独判断
+            if($street_director_type){
+                if(strstr($street_director_type,'委工委')){
+                    $type=array('区政协组织','其它形式活动');
+                }elseif(strstr($street_director_type,'街道联络委会')){
+                    $type=array('街道联络委组织');
+                    $findmembers=true;//需要单独判断
+                }else{
+                    $type=array('专委会组织');
+                    $findmembers=true;//需要单独判断
+                }
+            }
+            if(get_permission($uid,['秘书长'])){
+                $type=array('公益活动', '其它形式活动');
             }
 
-
-
     } else {
-
         if(get_permission($uid,['主席'])){
             $type=array('全会');
             $uids=return_changwei_uid();
@@ -200,13 +205,14 @@ function auth_apply($type,$uid)
             $type=array('全会','常委会','主席会','临时会','专题协商会');
             $uids=return_weiyuan_uid();
         }elseif(get_permission($uid,['委员'])){
-            $type=array('对口协商会','部门协商会','专委会','街道联络委');
+            $type=array('对口协商会','部门协商会','专委会','街道联络委会');
             $findmembers=true;//需要单独判断
-        }elseif(get_permission($uid,['委工委主任'])){
+        }
+        if(strstr($street_director_type,'委工委')){
             $type=array('全会', '常委会');
+            $findmembers=false;
             $uids=return_weiyuan_uid();
         }
-
     }
     return array('type'=>$type,'findmembers'=>$findmembers,'ArrUid'=>$uids);
 }
@@ -1714,5 +1720,47 @@ function sp_is_mobile() {
     return $sp_is_mobile;
 }
 require_once(APP_PATH . 'Common/Conf/config_ucenter.php');
+/**
+ * @return mixed 根据登陆者身份，返回其能新建的会议类型
+ */
+function get_meet_type(){
+    $m = D('User/User');
+    $m->setModel(WEIYUAN);
+    $user = $m->getUser(get_uid());
+    $street_director_type=$user['主任'];
+    if($street_director_type){
+        if(strstr($street_director_type,'街联络委员会')){
+            $meet_type_arr=array(10);
+        }else{
+            $meet_type_arr=array(6,7,9);
+        }
+    }else{
+        $meet_type_arr=array(1,2,3,4,5,6,7,9,10);
+    }
+    $map['id']=array('in',$meet_type_arr);
+    $map['status']=1;
+    $meet_type = D('Meet_type')->where($map)->select();
+    return $meet_type;
+}
+
+function get_event_type(){
+    $m = D('User/User');
+    $m->setModel(WEIYUAN);
+    $user = $m->getUser(get_uid());
+    $street_director_type=$user['主任'];
+    if($street_director_type){
+        if(strstr($street_director_type,'街联络委员会')){
+            $event_type_arr=array(10);
+        }else{
+            $event_type_arr=array(2);
+        }
+    }else{
+        $event_type_arr=array(1,2,10,11,12);
+    }
+    $map['id']=array('in',$event_type_arr);
+    $map['status']=1;
+    $event_type = D('Event_type')->where($map)->select();
+    return $event_type;
+}
 
 

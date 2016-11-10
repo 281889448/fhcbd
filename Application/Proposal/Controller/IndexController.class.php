@@ -29,11 +29,16 @@ class IndexController extends BaseController
         $tree = D('ProposalType')->where(array('status' => 1))->select();
         $this->assign('tree', $tree);
 	
-
+        //用于给左侧菜单栏添加样式 为当前栏目
         $this->assign('current', 'proposal');
     }
-	
-	
+
+    /**
+     * @param string $name
+     * @param array $param
+     * 回调函数，主要处理changestatus 针对提案状态修改的操作
+     * create: 2016/08/31
+     */
 	public function __call($name,$param){
 
 		   if (!check_auth(ACTION_NAME)) {
@@ -155,30 +160,7 @@ class IndexController extends BaseController
     }
 
 
-    /** 集体下委员提案的提案，该流程仅限集体主任查看
-     *  author: MR.Z <327778155@qq.com>
-     * create : 2016/10/19
-     *
-     */
-   /* public function index_team(){
-        $map = I('post.');
 
-        $m = D('User/User');
-        $m->setModel(WEIYUAN);
-        $user = $m->getUser(get_uid());
-        $roler = $user['主任'];
-
-
-        $mp = D('Proposal');
-        $map['_string'] = " (jdllw='{$roler}' OR zwh='{$roler}') ";
-        $map['status'] = ['neq',1];
-
-        $contents = $mp->where($map)->select();
-
-        $this->assign('current','search');
-        $this->assign('contents',$contents);
-        $this->display();
-    }*/
 
 
 
@@ -337,24 +319,7 @@ class IndexController extends BaseController
 		}
 
 
-    /**
-     * 获取推荐活动数据
-     * autor:xjw129xjt
-     */
-    public function getRecommend()
-    {
-        $rec_proposal = D('Proposal')->where(array('is_recommend' => 1))->limit(2)->order('rand()')->select();
-        foreach ($rec_proposal as &$v) {
-            $v['user'] = query_user(array('id', 'username', 'nickname', 'space_url', 'space_link', 'avatar128', 'rank_html'), $v['uid']);
-            $v['type'] = $this->getType($v['type_id']);
-            $v['check_isSign'] = D('proposal_attend')->where(array('uid' => is_login(), 'proposal_id' => $v['id']))->select();
-        }
-        unset($v);
 
-        $this->assign('rec_proposal', $rec_proposal);
-
-
-    }
 
 
     /**
@@ -489,17 +454,13 @@ class IndexController extends BaseController
             
             
             $content['uid'] = $content_temp['uid']; //权限矫正，防止被改为管理员
-	          $content['id'] = $ids;
-						$content['recommend'] = implode(',',I('post.recommend'));
+	        $content['id'] = $ids;
+			$content['recommend'] = implode(',',I('post.recommend'));
 
 
             $rs = M('Proposal')->save($content);
 
-     /*       $postUrl = "http://$_SERVER[HTTP_HOST]" . U('Proposal/Index/detail', array('id' => $ids));
-            $weiboApi = new WeiboApi();
-            $weiboApi->resetLastSendTime();
-            $weiboApi->sendWeibo("我修改了活动【" . $title . "】：" . $postUrl);
-	*/
+
 
 		        if($content['status'] == 2 && (get_permission(get_uid(),['委员','集体']))){
 			        $back_url = U('Proposal/Index/index',array('status'=>2));
@@ -547,12 +508,7 @@ class IndexController extends BaseController
 	          	$back_url = U('Proposal/Index/detail',array('id'=> $rs ));
 	          }
 
-//同步到微博
- /*           $postUrl = "http://$_SERVER[HTTP_HOST]" . U('Proposal/Index/detail', array('id' => $rs));
-            $weiboApi = new WeiboApi();
-            $weiboApi->resetLastSendTime();
-            $weiboApi->sendWeibo("我发布了一个新的活动【" . $title . "】：" . $postUrl);
-	*/         $str = $content['status']==1 ? '保存': '提交';
+         $str = $content['status']==1 ? '保存': '提交';
 
             if ($rs) {
                 $this->success($str.'成功。' . $tip,   $back_url );
@@ -576,10 +532,7 @@ class IndexController extends BaseController
 	     $this->check_change($ids,$status);
     	  
 	     $content = I('post.content');
-		//    if (!check_auth('proposalSetStatus')) {
-			
-		//	    $this->error('抱歉，您不具备更改提案状态的权限。');
-		//    }
+
 	    
 	    //跳转回原状态的列表页面
 	      $id = is_array($ids) ? $ids[0]:$ids;
@@ -817,15 +770,29 @@ class IndexController extends BaseController
         foreach($ids as $v){
             //获取当前提案对应的所有办理单位
             $proposals = D('ProposalResult')->alias('pr')->join('left join __PROPOSAL__ p ON pr.proposal_id=p.id')->where(['pr.proposal_id'=>$v])->select();
+            $mu = D('User/User');
+            $mu->setModel(UNIT);
+
+            $m= D('User/User');
+            $m->setModel(WEIYUAN);
 
             foreach($proposals as $pr){
                 $member = D('UcenterMember')->where(['id'=>$pr['uid']])->find();
+                $unit = $mu->getUser($pr['user_id']);
+                $user = $m->getUser($pr['uid']);
 
                 $wxapi = new WeixinApi();
+                //给当前提案的委员发的信息
                 $msg = "您的“".$pr['title']."”提案已交".$pr['unit']."单位，办理单位工作人员会与您联系";
 
                 $wxapi->sendTempMsg_proposal($member['openid'],$pr['title'],$msg);
                 self::$sms->send($member['username'],$msg);
+
+                //给当前提案的办理单位发的信息
+                $msg_unit = "“{$pr['title']}”提案已由政府督查室已移交给您处理，请及时登录系统签收及联系委员{$member['名称']}，联系方式：{$member['username']}";
+
+                $wxapi->sendTempMsg_proposal($unit['openid'],$pr['title'],$msg_unit);
+                self::$sms->send($unit['手机号'],$msg_unit);
 
             }
         }
@@ -852,48 +819,7 @@ class IndexController extends BaseController
 			$this->error("退回重办处理失败，是否已经进行过退回重办处理");
 		}
 	}
-	/**
-	 * 提案状态批量设置
-	 * @param int $id
-	 * autor:MR.Z <327778155@qq.com>
-	 */
-	
-		//批量提交的可以省略掉，后面全用 changeStatus 代替
-/*	public function changeAllStatus($ids,$status){
-		
-		if (!check_auth('proposalSetStatus')) {
-			
-			$this->error('抱歉，您不具备批量更改提案状态的权限。');
-		}
-		
-		if(D('Proposal')->setStatus($ids,$status)){
-			$this->success("更新成功",U('index'));
-		}else{
-			$this->error("更新失败");
-		}
-		
-	}
-*/
-	
-	/**
-	 * 针对提案状态回复设置
-	 * @param int $id
-	 * autor:MR.Z <327778155@qq.com>
-	 */
-		//提交留言的逻辑统一在changStatus里处理
-/*    public function setSuggest($id ,$status ,$content){
-    	  if(!check_auth('proposalSetSuggest')){
-    	  	  $this->error('抱歉，您不具备回复提案的权限。');
-	      }
-	      D('Proposal')->setSuggest($id ,$status ,$content);
-	      if( D('Proposal')->setSuggest($id ,$status ,$content)){
-	      	  $this->success('回复成功');
-	      }else{
-	      	  $this->error('回复失败');
-	      }
-    	
-    }
-*/
+
 	/**
 	 * 提案浏览权限
 	 * @param int $id
@@ -918,7 +844,7 @@ class IndexController extends BaseController
 	
 	/**
 	 * 提案操作权限
-	 * @param int $id   //TODO  接收的status必须为单状态  接收的ids 可以为数组，数组默认取第一个元素
+	 * @param int $id     接收的status必须为单状态  接收的ids 可以为数组，数组默认取第一个元素
 	 * autor: MR.Z <327778155@qq.com>
 	 */
 		private function check_change($ids,$status){
@@ -1109,70 +1035,9 @@ class IndexController extends BaseController
     }
     
     
-    /**
-     * 联名提案成员
-     * @param int    $id
-     * @param string $tip
-     * autor:xjw129xjt
-     */
-    public function member($id = 0, $tip = 'all')
-    {
-        if ($tip == 'sign') {
-            $map['status'] = 0;
-        }
-        if ($tip == 'attend') {
-            $map['status'] = 1;
-        }
-        $check_isSign = D('proposal_attend')->where(array('uid' => is_login(), 'proposal_id' => $id))->select();
-        $this->assign('check_isSign', $check_isSign);
 
-        $proposal_content = D('Proposal')->where(array('status' => 1, 'id' => $id))->find();
-        if (!$proposal_content) {
-            $this->error('404 not found');
-        }
-        $map['proposal_id'] = $id;
-        $proposal_content['user'] = query_user(array('id', 'username', 'nickname', 'space_url', 'space_link', 'avatar64', 'rank_html', 'signature'), $proposal_content['uid']);
-        $menber = D('proposal_attend')->where($map)->select();
-        foreach ($menber as $k => $v) {
-            $proposal_content['member'][$k] = query_user(array('id', 'username', 'nickname', 'space_url', 'space_link', 'avatar64', 'avatar128', 'rank_html', 'signature'), $v['uid']);
-            $proposal_content['member'][$k]['name'] = $v['name'];
-            $proposal_content['member'][$k]['phone'] = $v['phone'];
-            $proposal_content['member'][$k]['status'] = $v['status'];
-        }
 
-        $this->assign('all_count', D('proposal_attend')->where(array('proposal_id' => $id))->count());
-        $this->assign('sign_count', D('proposal_attend')->where(array('proposal_id' => $id, 'status' => 0))->count());
-        $this->assign('attend_count', D('proposal_attend')->where(array('proposal_id' => $id, 'status' => 1))->count());
 
-        $this->assign('content', $proposal_content);
-        $this->assign('tip', $tip);
-        $this->setTitle('{$content.title|op_t}' . '——活动');
-        $this->setKeywords('{$content.title|op_t}' . ',活动');
-        $this->display();
-    }
-
-    /**
-     * 编辑提案
-     * @param $id
-     * autor:xjw129xjt
-     */
-    public function edit($id)
-    {
-        $proposal_content = D('Proposal')->where(array('status' => 1, 'id' => $id))->find();
-        if (!$proposal_content) {
-            $this->error('404 not found');
-        }
-        if (!is_administrator(is_login())) { //不是管理员则进行检测
-            if ($proposal_content['uid'] != is_login()) {
-                $this->error('404 not found');
-            }
-        }
-        $proposal_content['user'] = query_user(array('id', 'username', 'nickname', 'space_url', 'space_link', 'avatar64', 'rank_html', 'signature'), $proposal_content['uid']);
-        $this->assign('content', $proposal_content);
-        $this->setTitle('编辑活动' . '——活动');
-        $this->setKeywords('编辑' . ',活动');
-        $this->display();
-    }
 
     public function add()
     {
@@ -1527,38 +1392,15 @@ class IndexController extends BaseController
 		}
 		
 		$this->success("生成正式案号成功");
-/*		$content_pr = M('Proposal')->where($map_gr)->order($order)->select();
-		
-		
-		if($content[meet_type] == '会议期间'){
-			$map['meet_type'] = array('eq','会议期间');
-			$map['meet'] = array('eq',$content[meet]);
-			$lastycode = D('Proposal')->where($map)->order('id desc')->getField('ycode');
-			if(empty($lastycode)){
-				$content[ycode] = $content[meet].'001号';
-			}else{
-				$content[ycode] =  preg_replace_callback('/([0-9]+)/',function ($matches) {
-					return str_pad( $matches[0] + 1 , 3 , '0' , STR_PAD_LEFT );
-				},$lastycode);
-				
-			}
-		}elseif($content[meet_type] == '闭会期间'){
-			$map['meet_type'] = array('eq','闭会期间');
-			$map['ycode'] = array('like','闭'.date('Y',time()).'%');
-			$lastycode = D('Proposal')->where($map)->order('id desc')->getField('ycode');
-			if(empty($lastycode)){
-				$content[ycode] = '闭'.date('Y',time()).'001号';
-			}else{
-				$content[ycode] =  preg_replace_callback('/([0-9]+)/',function ($matches) {
-					return str_pad( $matches[0] + 1 , 3 , '0' , STR_PAD_LEFT );
-				},$lastycode);
-				
-			}
-		}
-*/	}
+	}
 
-	
-	//导出提案
+    /**
+     * @param $proposal_id
+     *  导出提案
+     * create: 2016/10/20
+     *
+     */
+
 	public function exportProposal($proposal_id){
 		$map['id'] = array('EQ',$proposal_id);
 
@@ -1841,12 +1683,7 @@ class IndexController extends BaseController
 	//移交办理  信息获取
 	public function handtransfer_ajax($result_id){
 		$status = 0;
-		//proposal_process
-	/*	$map['pr.id'] = $result_id;
-		$map['pp.to_status'] = 192;
-		
-		$result_p = D('ProposalResult')->alias('pr')->field('pr.id,pp.suggest')->join(' __PROPOSAL_PROCESS__ pp on pr.user_id=pp.user_id and pr.proposal_id=pp.proposal_id')->where($map)->order('pp.create_time desc')->find();
-*/
+
 	$result_p = D('ProposalProcess')->where(['result_id'=>$result_id,'to_status'=>193])->order('create_time desc')->find();
 
 		if($result_p ){

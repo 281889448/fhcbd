@@ -10,15 +10,26 @@
 
     </div>
     <else/>
-    <dt class="expandinfo-dt">
-        {$field_name}：
-    </dt>
+
 
     <dd class="expandinfo-dd">
-        <if condition="($field_data neq null)&&($field_data neq '')">
+
+
+        <div class="form-group">
+
+
+            <div  >
+                <textarea class="form-control input-sm" onblur="check_textarea(this,{$field_id})" require="{$required}" min_length="{$validation.min}" max_length="{$validation.max}" text_type="textarea" id="expand_{$field_id}" name="expand_{$field_id}"style="min-height: 100px;" disabled><if condition="($field_data neq null)&&($field_data neq '')">
             {$field_data|htmlspecialchars}
             <else/>
             无
-        </if>
+        </if></textarea>
+
+            </div><div class="clearfix"></div>
+
+        </div>
+
+
+
     </dd>
 </eq>

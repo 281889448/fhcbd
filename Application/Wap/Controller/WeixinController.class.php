@@ -199,6 +199,10 @@ class WeixinController extends BaseController {
                     $data['status']=1;//正常签到
                     $data['id']=$is_user['id'];
                     $id=D('Event_marknum')->where(array('id'=>$data['id']))->save($data);
+                    if($id){
+                        //增加一次签到
+                        D('Attendance')->where(array('uid'=>$this->uid,'record_id'=>$data['event_id']))->setInc('s_mark',1);
+                    }
                     $exit=$this->return_exit_arr($id,'签到成功！','签到失败');
                 }
                 //只要是签到了就算是可以加积分
@@ -236,6 +240,10 @@ class WeixinController extends BaseController {
                     $data['status']=1;//迟到状态
                     $data['id']=$is_user['id'];
                     $id=D('Meet_marknum')->where(array('id'=>$data['id']))->save($data);
+                    if($id){
+                        //增加一次签到
+                        $ss=D('Attendance')->where(array('uid'=>$this->uid,'record_id'=>$data['meet_id']))->setInc('s_mark',1);
+                    }
                     $exit=$this->return_exit_arr($id,'签到成功！','签到失败');
                 }
             }else{

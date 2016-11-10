@@ -12,15 +12,8 @@
 
 
 <else/>
-    <dt class="expandinfo-dt">
-        {$field_name}：
-    </dt>
+    <div >
+        <input type="text" onblur="check(this,{$field_id})" require="{$required}" min_length="{$validation.min}" max_length="{$validation.max}" text_type="{$child_form_type}" class="form-control input-sm" id="expand_{$field_id}" name="expand_{$field_id}" value="{$field_data|htmlspecialchars}" disabled>
+    </div>
 
-    <dd class="expandinfo-dd">
-        <if condition="($field_data neq null)&&($field_data neq '')">
-            {$field_data|htmlspecialchars}
-            <else/>
-            无
-        </if>
-    </dd>
 </eq>

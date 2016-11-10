@@ -12,6 +12,12 @@ define('TEAM',15);
 //专委会信息员
 define('ZWHXX',16);
 
+define('DCS',17);
+
+define('MSZ',18);
+
+define('ZXGZRY',19);
+
 return array(
 'CONTACT_GROUP' => array(
 	'1'=>array(
