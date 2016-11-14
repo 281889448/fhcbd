@@ -176,6 +176,7 @@ class ProposalController extends AdminController
             }
             $score_qh = $y_mark_qh ? (40 * $s_mark_qh / $y_mark_qh) : 0;
 
+
             //盘点 常委会 积分 20    有多次
             $meet_id_cwh = D('Meet')->where(['meet_type'=>'常委会'])->order('id desc')->getField('id',true);
 
@@ -219,14 +220,23 @@ class ProposalController extends AdminController
             $make_score = $score_qh + $score_cwh + $score_qzx + $score_zwhjdllw;
 
             //设置用户积分回到扣除盘点积分的初始值
-            $mm = D('Member');
-            $mm->where('uid='.$u['uid'])->find();
-            $mm->setDec('score',$mm->make_score);
-            $mm->setField('make_score',0);
+            $mm = M('Member');
+            $mm->find($u['uid']);
+
+
+           // $mm->setDec('score',$mm->make_score);
+            $mm->score = $mm->score - $mm->make_score;
+            $mm->make_score = 0;
+            $mm->save();
+         //   $mm->setField('make_score',0);
 
             //将盘点积分加到member数据库里
-            $mm->setInc('make_score',$make_score);
-            $mm->setInc('score',$make_score);
+        //    $mm->setInc('make_score',$make_score);
+         //   $mm->setInc('score',$make_score);
+            $mm->find($u['uid']);
+            $mm->make_score = $make_score + $mm->make_score;
+            $mm->score = $make_score + $mm->make_score;
+            $mm->save();
 
 
             $time = explode('~',C('STOCKTAK_DATE'));

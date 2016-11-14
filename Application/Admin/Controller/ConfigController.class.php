@@ -218,7 +218,7 @@ class ConfigController extends AdminController {
      */
     public function edit_expandinfo($profile_group_id,$uid){
 	    $field_setting_list = D('field_setting')->where(array('profile_group_id' => $profile_group_id, 'status' => '1'))->order('sort asc')->select();
-	
+
 	    if (!$field_setting_list) {
 		    $this->error('没有要修改的信息！');
 	    }
