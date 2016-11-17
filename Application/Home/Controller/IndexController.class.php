@@ -23,9 +23,12 @@ class IndexController extends BaseController
     //系统首页
    public function index()
     {
-
+		$redirect_uri 	= "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		
+		
         $default_url=C('DEFUALT_HOME_URL');//获得配置，如果为空则显示聚合，否则跳转
-
+        $redirect_uri 	= "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        
 			$this->assignProposalCount();
 	    $this->assignPollsCount();
 	    $this->assignWorkingCount();
@@ -393,12 +396,12 @@ class IndexController extends BaseController
 
 
     public function survey($page=1){
-        if(IS_POST){
+       if(IS_POST){
             $map = I('post.');
             $map['title'] = ['like',"%{$map['title']}%"];
         }
         $uid = get_uid();
-        $map['_string'] = "{$uid} in (author_id) or author_id =''";
+     //   $map['_string'] = "{$uid} in (author_id) or author_id =''";
         $surveys = D('Survey')->where($map)->order('time desc,id desc')->page($page,15)->select();
 
         $totalCount = D('Survey')->where($map)->count();

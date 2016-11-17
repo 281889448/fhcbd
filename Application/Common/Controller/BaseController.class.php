@@ -51,8 +51,8 @@ class BaseController extends Controller
                 $this->openid=get_user_openid();
             }
             //判断是否绑定
-            if($this->openid){ 
-                $user=D('Ucenter_member')->where(array('openid'=>$this->openid))->find();
+            if($this->openid){
+                $user=D('Ucenter_member')->where(array('openid'=>array('like',str_replace('-','%',$this->openid))))->find();
                 if(empty($user) && ACTION_NAME != 'binding' && ACTION_NAME != 'savebind'){
                     $this->redirect('Wap/Weixin/binding');
                 }else{

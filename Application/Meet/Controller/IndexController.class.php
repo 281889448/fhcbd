@@ -7,6 +7,7 @@ use Common\Controller\BaseController;
 use Common\Api\WeixinApi;
 use Weibo\Api\WeiboApi;
 use User\Model\User;
+use Sms\Sms;
 class IndexController extends BaseController
 {
     /**
@@ -34,12 +35,17 @@ class IndexController extends BaseController
      */
     public function index()
     {
+        $uid=get_uid();
+        $auth_group=array('秘书长','主席','政协工作人员');
+         if(!get_permission($uid,$auth_group)){
+             $map['uid']=$uid;
+         }
         if (IS_POST) {
             $map['title'] = array('like', '%' . $_POST['keyword'] . '%');
             $meet = D("meet")->where($map)->order('id desc')->select();
             $this->assign("lockback", 1);
         } else {
-            $meet = D("meet")->order('id desc')->select();
+            $meet = D("meet")->where($map)->order('id desc')->select();
         }
         $this->assign("meet", $meet);
         $this->display();
@@ -91,6 +97,7 @@ class IndexController extends BaseController
         $temp_arr = $this->uid_to_get_detail($edit['people']);
         $this->assign('people', $temp_arr);
         $this->assign('markset', $markset);
+        $this->assign('meet_type', get_meet_type());
         $this->assign('edit', $edit);
         $this->display();
     }
@@ -138,7 +145,7 @@ class IndexController extends BaseController
                 $this->error('第' . ($i + 1) . '次签到的时间要大于第' . $i . '次签到的时间至少2小时');
             }
         }
-        $data['uid'] = 1;
+        $data['uid'] = get_uid();
         $data['meet_type'] = $_POST['meet_type'];
         $data['sTime'] = strtotime($_POST['sTime']);
         $data['eTime'] = strtotime($_POST['eTime']);
@@ -146,6 +153,7 @@ class IndexController extends BaseController
         $data['explain'] = $_POST['explain'];
         $data['people'] = $_POST['people'];
         $data['address'] = $_POST['address'];
+        $data['people_view'] = I('post.people_view');
         $data['create_time'] = time();
         $result = D('Meet')->add($data);
         if ($result == null) {
@@ -191,7 +199,22 @@ class IndexController extends BaseController
     //获取人员详细信息公共函数 $str="1,2,3,4,5,6"格式
     public function uid_to_get_detail($str)
     {
-        $people_arr = explode(',', $str);
+        $m = D('User/User');
+
+        $m->setModel(TEAM);
+
+        $users_team = $m->getUsers(['m.uid '=>['in',$str]],['名称','联络员','联系方式']);
+        $users_team = $users_team ? $users_team : [];
+        $m->setModel(WEIYUAN);
+
+        $users_weiyuan = $m->getUsers(['m.uid '=>['in',$str]],['名称','工作单位','手机号']) ;
+        $users_weiyuan = $users_weiyuan ? $users_weiyuan : [];
+        $m->setModel(ZWHXX);
+        $users_zwhxx = $m->getUsers(['m.uid '=>['in',$str]],['名称','姓名','手机号']);
+        $users_zwhxx =  $users_zwhxx ?  $users_zwhxx : [];
+
+        return array_merge_recursive($users_weiyuan,$users_team,$users_zwhxx);
+        /*$people_arr = explode(',', $str);
         $temp_arr = array();
         foreach ($people_arr as $k => $v) {
             $truename = D('Field')->where(array('uid' => $v, 'field_id' => 38))->find();//38姓名
@@ -201,8 +224,8 @@ class IndexController extends BaseController
             $temp_arr[$k]['truename'] = $truename['field_data'];
             $temp_arr[$k]['company'] = $compay['field_data'];
             $temp_arr[$k]['phone'] = $phone['field_data'];
-        }
-        return $temp_arr;
+        }*/
+
     }
 
     //修改会议
@@ -248,20 +271,24 @@ class IndexController extends BaseController
                 $this->error('第' . ($i + 1) . '次签到的时间要大于第' . $i . '次签到的时间至少2小时');
             }
         }
-        $data['uid'] = 1;
+        $data['uid'] = get_uid();
         $data['meet_type'] = $_POST['meet_type'];
         $data['sTime'] = strtotime($_POST['sTime']);
         $data['eTime'] = strtotime($_POST['eTime']);
         $data['title'] = $_POST['title'];
         $data['explain'] = $_POST['explain'];
         $data['people'] = $_POST['people'];
+        $data['people_view'] =  I('post.people_view');
         $data['address'] = $_POST['address'];
         $data['create_time'] = time();
+
         $result = D('Meet')->where(array('id' => $id))->save($data);
+
         if ($result == null) {
             $this->error("修改失败", U('Meet/Index/add'));
         } else {
             $temp_arr = $this->uid_to_get_detail($data['people']);//签到名单人员
+
             //删除减少人员
             $people_arr = explode(',', $data['people']);
             $old_user=D('Meet_attend')->where(array('meet_id' => $id))->select();
@@ -297,20 +324,26 @@ class IndexController extends BaseController
                 }
 
             }
+
             //保存参会人员名单,保存参会率名单
+
             foreach ($temp_arr as $k => $v) {
                 $temp_arr[$k]['meet_id'] = $id;
                 $temp_arr[$k]['status'] = 0;
-                $temp_arr[$k]['name'] = $v['truename'];
+                $temp_arr[$k]['name'] = $v['名称'];
+                $temp_arr[$k]['phone'] = $v['手机号'] ? $v['手机号'] : $v['联系方式'];
                 $temp_arr[$k]['record_id'] = $id;//参会率
                 $temp_arr[$k]['type'] = 'meet';//参会率
-                $temp_arr[$k]['create_time'] = time();//参会率
+                $temp_arr[$k]['creat_time'] = time();//参会率
                 $temp_arr[$k]['y_mark'] = $count-1;//参会率
+                unset($temp_arr[$k]['id']);
                         //查找条件
                    $map['meet_id']=$id;
                    $map['uid']=$temp_arr[$k]['uid'];
-                $user = D('Meet_attend')->where($map)->find();
+                $user = D('MeetAttend')->where($map)->find();
+
                 if (!$user) D('Meet_attend')->add($temp_arr[$k]);
+
                     $attend_map['uid']=$temp_arr[$k]['uid'];
                     $attend_map['record_id']=$id;
                     $attend_map['type']='meet';
@@ -318,9 +351,11 @@ class IndexController extends BaseController
                 //更新应签总数
                 if($attend_user['y_mark']!=($count-1)){
                     D('Attendance')->where(array('id'=>$attend_user['id']))->save($temp_arr[$k]);
+
                 }
                 if(!$attend_user)D('Attendance')->add($temp_arr[$k]);//保存所有签到数据
             }
+
             $this->success("修改成功", U('Meet/Index/index'));
         }
     }
@@ -341,9 +376,7 @@ class IndexController extends BaseController
         }
         ksort($group);
         $this->assign('contact_group', $group);
-
-        $meet_type = D('Meet_type')->where('status=1')->select();
-        $this->assign('meet_type', $meet_type);
+        $this->assign('meet_type', get_meet_type());
         $this->display();
     }
 
@@ -430,11 +463,32 @@ class IndexController extends BaseController
         }else{
             $attend = D('Meet_attend')->where(array('meet_id' => $id))->select();
         }
+        $m = D('User/User');
+
         foreach ($attend as $key => $val) {
-            $truename = D('Field')->where(array('uid' => $val['uid'], 'field_id' => 38))->find();
-            $attend[$key]['truename'] = $truename['field_data'];
-            $company = D('Field')->where(array('uid' => $val['uid'], 'field_id' => 50))->find();
-            $attend[$key]['company'] = $company['field_data'];
+            if(get_permission($val['uid'],['委员'])){
+                $m->setModel(WEIYUAN);
+                $user =  $m->getUser($val['uid']);
+                $attend[$key]['truename'] = $user['名称'];
+                $attend[$key]['company'] = $user['工作单位'];
+                $attend[$key]['phone'] = $user['手机号'];
+            }elseif(get_permission($val['uid'],['集体'])){
+                $m->setModel(TEAM);
+                $user =  $m->getUser($val['uid']);
+                $attend[$key]['truename'] = $user['联络员'];
+                $attend[$key]['company'] = $user['名称'];
+                $attend[$key]['phone'] = $user['联系方式'];
+            }elseif(get_permission($val['uid'],['专委会信息员'])){
+                $m->setModel(ZWHXX);
+                $user =  $m->getUser($val['uid']);
+                $attend[$key]['truename'] = $user['姓名'];
+                $attend[$key]['company'] = $user['名称'];
+                $attend[$key]['phone'] = $user['手机号'];
+            }
+           $user =  $m->getUser($val['uid']);
+
+
+
         }
         $total_count=count(D('Meet_attend')->where(array('meet_id' => $id))->select());
         $this->assign('total_count',$total_count);
@@ -569,21 +623,25 @@ class IndexController extends BaseController
         $tempid='XGCR0O9UVy1WNZ0TjLvO78gZg9FK9Z-0JnesVNlDp1I';
         $data = D('Meet')->where(array('id' =>$id ))->find();
         $arr = array(
-            'href' => 'http://zxlz.daifayuan.com' . U('Wap/Weixin/jion/type/meet', array('id' => $id)),
+            'href' => C('WX_CALLBACK_URL') . U('Wap/Weixin/jion/type/meet', array('id' => $id)),
             'first' => '关于' . $data['title'] . '通知',
             'keyword1' => date('Y-m-d H:i:s', $data['sTime']),
             'keyword2' => $data['title'],
             'keyword3' => $data['address'],
             'remark' => '点击详情即可进入在线报名'
         );
-        $map['id'] = array('in', $data['people']);
-        $userdata = D('Ucenter_member')->where($map)->field('username,openid')->select();
+        //清楚已经参加或者请假人员
+        $last_uids=D('MeetAttend')->where(array('meet_id'=>$id,'status'=>0))->getField('uid',true);
+        $map['id'] = array('in', $last_uids);
+        $userdata = D('UcenterMember')->where($map)->field('username,openid')->select();
+
         $wxapi = new WeixinApi();
         $time = 0;
         foreach ($userdata as $key => $val) {
             $res = $wxapi->sendTempMsg_Event_Meet($val['openid'], $arr,$tempid);
             //发送短信消息
             self::$sms->send($val['username'],$data['explain']);
+           
             if ($res['rt']) $time++;
         }
         echo json_encode(array('time' => $time));
@@ -594,20 +652,13 @@ class IndexController extends BaseController
         //审核活动或者会议类型
         $meet_type=auth_apply('meet',get_uid());
         $mapp['meet_type']=array('in',$meet_type['type']);
-        $meetdb=D('Meet')->where($mapp)->getField('id',true);
-
-        $map['status']=2;
-     //   $map['meet_id']=array('in',$meetdb);
-        //是否需要查看管理成员
         if($meet_type['findmembers']){
-            $members=return_director_members(get_uid());
-            //成员不为空或者false
-            if($members){
-                $map['uid']=array('in',$members);
-            }
+            $mapp['uid']=get_uid();//谁建的会议会谁审核
         }
+        $meetdb=D('Meet')->where($mapp)->getField('id',true);
+        $map['status']=2;
+        $map['meet_id']=array('in',$meetdb);
         $attend = D('Meet_attend')->where($map)->select();
-
         foreach ($attend as $key => $val) {
             //$val['uid'];
             $truename = D('Field')->where(array('uid' => $val['uid'], 'field_id' => 38))->find();
@@ -652,7 +703,7 @@ class IndexController extends BaseController
                 //发送通知模板
                 $tempid='C28HkUceHbqV-K1AizUCypfQYImEGgl5AP5Fvtp1eX8';
                 $arr = array(
-                    'href' => 'http://zxlz.daifayuan.com' . U('Wap/Weixin/jion/type/meet', array('id' => $meetdata['id'])),
+                    'href' => C('WX_CALLBACK_URL') . U('Wap/Weixin/jion/type/meet', array('id' => $meetdata['id'])),
                     'first' => '您的' . $meetdata['title'] . '会议请假已被审核批准',
                     'keyword1' => date('Y-m-d H:i:s', $meetdata['sTime']),
                     'keyword2' => $meetdata['address'],
@@ -662,7 +713,7 @@ class IndexController extends BaseController
             }else{
                 $tempid='5ktf-tXzSw76ciFPTMZ7ZXkdBGnn0ncKBbGA_6RgWEU';
                 $arr = array(
-                    'href' => 'http://zxlz.daifayuan.com' . U('Wap/Weixin/jion/type/meet', array('id' => $meetdata['id'])),
+                    'href' => C('WX_CALLBACK_URL') . U('Wap/Weixin/jion/type/meet', array('id' => $meetdata['id'])),
                     'first' => '您的' . $meetdata['title'] . '会议请假已被拒绝',
                     'keyword1' => date('Y-m-d H:i:s', $meetdata['sTime']),
                     'keyword2' => $meetdata['address'],

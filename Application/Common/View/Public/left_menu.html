@@ -64,10 +64,10 @@
 			   {/*-------------------------usercenter end---------------------------------------*/}
 
 			   {/*-------------------------meet start---------------------------------------*/}
-			   <if condition="get_permission(get_uid(),['秘书长','主席'])  || $roler">
+			   <if condition="get_permission(get_uid(),['秘书长','主席','政协工作人员'])  || $roler">
 	           <h3 <if condition="$current == 'meet'">class="on"</if>>会议管理</h3>
 	           <ul>
-				   <if condition="get_permission(get_uid(),['秘书长','主席']) || $roler">
+				   <if condition="get_permission(get_uid(),['秘书长','主席','政协工作人员']) || $roler">
 		            <li><a href="{:U('Meet/Index/index')}">会议列表</a></li>
 				   </if>
 				   <if condition="get_permission(get_uid(),['秘书长','主席']) || $roler">
@@ -80,10 +80,10 @@
 
 
 			   {/*-------------------------event start---------------------------------------*/}
-			   <if condition="get_permission(get_uid(),['秘书长','主席']) || $roler">
+			   <if condition="get_permission(get_uid(),['秘书长','主席','政协工作人员']) || $roler">
 	           <h3 <if condition="$current == 'event'">class="on"</if>>活动管理</h3>
 	           <ul>
-				   <if condition="get_permission(get_uid(),['秘书长','主席']) || $roler">
+				   <if condition="get_permission(get_uid(),['秘书长','主席','政协工作人员']) || $roler">
 		           <li><a href="{:U('Event/Index/index')}">活动列表</a></li>
 				   </if>
 				   <if condition="get_permission(get_uid(),['秘书长','主席']) || $roler">

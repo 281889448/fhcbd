@@ -73,10 +73,10 @@
                                         <div id="Groups" class="btn btn-primary" data-toggle="modal" data-target="#myModalx">
                                             选择参与人员
                                         </div>
-                                        <textarea name="" readonly id="contact_user" class="form-control" style="margin-top: 10px">
-                                             <volist name="people" id="vo">
+                                        <textarea  readonly id="contact_user" class="form-control" name="people_view" style="margin-top: 10px">{$edit.people_view}
+                                           {/*  <volist name="people" id="vo">
                                                  {$vo.truename};&nbsp;&nbsp;
-                                             </volist>
+                                             </volist> */}
                                         </textarea>
                                     </td>
                                 </tr>
@@ -99,7 +99,7 @@
                                             <div class="btn btn-default add-time">添加签到次数</div>
                                         </div>
 
-                                        <div style="width:500px" class="pull-left">
+                                        <div style="width:500px;padding-bottom:250px" class="pull-left"  >
                                             <table border="" cellspacing="" cellpadding="" id="time-table" name="qdchishu">
                                                 <tr>
                                                     <th class="col-sm-2">签到顺序</th>

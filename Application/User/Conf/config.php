@@ -14,5 +14,6 @@
 
 define('UC_APP_ID', 1); //应用ID
 define('UC_API_TYPE', 'Model'); //可选值 Model / Service
-define('UC_DB_DSN', 'mysqli://root:Aa1s2d3f4!@#@127.0.0.1:3306/lxlz'); // 数据库连接，使用Model方式调用API必须配置此项
+define('UC_AUTH_KEY', '.,3lA:u;T0wBPi[}C5>F6g^xy_(2hz4IU]tfasd9'); //加密KEY
+define('UC_DB_DSN', 'mysqli://root:root59244@127.0.0.1:3306/zxlz'); // 数据库连接，使用Model方式调用API必须配置此项
 define('UC_TABLE_PREFIX', 'thinkox_'); // 数据表前缀，使用Model方式调用API必须配置此项

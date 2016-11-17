@@ -72,12 +72,14 @@
             }
         }
         function sendmsg(id){
+            $('#sending').show();
            $.ajax({
                 type: "POST",
                 url: "{:U('Event/Index/sendtemplateMsg')}",
                 data:{'id':id},
                 success: function(data) {
                     data = $.parseJSON(data);
+                    $('#sending').hide();
                     alert('成功通知'+data.time+'位人员');
                 }
             })

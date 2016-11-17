@@ -115,10 +115,10 @@
                            <h4 class="pull-left">公告</h4>
                            <small class="fr" style="line-height: 30px;"><a href="{:U('Home/Index/message')}">更多》</a></small>
                             <table class="table table-hover table-bordered">
-                                <tr><th class="text-center">标题</th><th>类型</th><th class="text-center" style="width:100px">发布日期</th><th class="text-center">发布人</th></tr>
+                                <tr><th class="text-center">标题</th><th>类型</th><th class="text-center" style="width:100px">发布日期</th></tr>
                               <volist name="msgs" id="msg">
 
-                                <tr><td><a href="{:U('Message/Index/detail',array('id'=>$msg[id]))}" class="text_derection_hover">{$msg.title}</a></td><td>{$msg.type}</td><td>{$msg.stime|date='Y-m-d',###}</td><td>{$msg.author}</td> </tr>
+                                <tr><td><a href="{:U('Message/Index/detail',array('id'=>$msg[id]))}" class="text_derection_hover">{$msg.title}</a></td><td>{$msg.type}</td><td>{$msg.stime|date='Y-m-d',###}</td> </tr>
                               </volist>
 
                             </table>
@@ -127,9 +127,9 @@
                         <h4 class="pull-left">工作动态</h4>
                              <small class="fr" style="line-height: 30px;"><a href="{:U('Home/Index/working')}">更多》</a></small>
                             <table class="table table-hover table-bordered">
-                                <tr><th class="text-center">标题</th><th class="text-center" style="width:100px">发布日期</th><th class="text-center">发布人</th></tr>
+                                <tr><th class="text-center">标题</th><th class="text-center" style="width:100px">发布日期</th></tr>
                               <volist name="works" id="w">
-                                <tr><td><a href="{:U('Working/Index/prepare',array('id'=>$w['id']))}" class="text_derection_hover">{$w.title}</a></td><td>{$w.time|date='Y-m-d',###}</td><td>{$w['user']['名称']}</td></tr>
+                                <tr><td><a href="{:U('Working/Index/prepare',array('id'=>$w['id']))}" class="text_derection_hover">{$w.title}</a></td><td>{$w.time|date='Y-m-d',###}</td></tr>
                               </volist>
 
                             </table>
@@ -201,10 +201,10 @@
                                 <h4 class="pull-left">调研报告</h4>
                                 <small class="fr" style="line-height: 30px;"><a href="{:U('Home/Index/survey')}">更多》</a></small>
                                 <table class="table table-hover table-bordered">
-                                    <tr><th class="text-center">标题</th><th class="text-center" style="width:100px">发布日期</th><th class="text-center">发布人</th></tr>
+                                    <tr><th class="text-center">标题</th><th class="text-center" style="width:100px">发布日期</th></tr>
                                     <volist name="surveys" id="survey">
 
-                                        <tr><td><a href="{:U('Survey/Index/prepare',array('id'=>$survey[id]))}" class="text_derection_hover">{$survey.title}</a></td><td>{$survey.time|date='Y-m-d',###}</td><td>{$survey.author}</td> </tr>
+                                        <tr><td><a href="{:U('Survey/Index/prepare',array('id'=>$survey[id]))}" class="text_derection_hover">{$survey.title}</a></td><td>{$survey.time|date='Y-m-d',###}</td> </tr>
                                     </volist>
 
                                 </table>
@@ -213,9 +213,9 @@
                       <h4 class="pull-left">社情民意</h4>
                               <small class="fr" style="line-height: 30px;"><a href="{:U('Home/Index/polls')}">更多》</a></small>
                             <table class="table table-hover table-bordered">
-                                <tr><th class="text-center">标题</th><th class="text-center" style="width:100px">创建日期</th><th class="text-center">发布人</th> </tr>
+                                <tr><th class="text-center">标题</th><th class="text-center" style="width:100px">发布日期</th> </tr>
                                <volist name="polls" id="p">
-                                <tr><td><a href="{:U('Polls/Index/prepare',array('id'=>$p['id']))}" class="text_derection_hover">{$p.title}</a></td><td>{$p.time|date='Y-m-d',###}</td><td>{$p.author}</td> </tr>
+                                <tr><td><a href="{:U('Polls/Index/prepare',array('id'=>$p['id']))}" class="text_derection_hover">{$p.title}</a></td><td>{$p.time|date='Y-m-d',###}</td> </tr>
                                </volist>
 
 

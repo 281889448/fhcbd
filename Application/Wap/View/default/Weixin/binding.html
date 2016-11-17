@@ -50,7 +50,7 @@
 			<div id="scroller">
 				<div class="mark">
 					<div class="login_box">
-						<h3  id="title">账户绑定</h3>
+						<h3  id="title">账户绑定{$openid}</h3>
 						<if condition="$id eq 'ok'">
 							<div style="padding: 30px;">
 								<span style='color: red;'>已经绑定，如需解绑，请联系系统管理员！</span>
@@ -61,7 +61,7 @@
 								<input type="password" class="pw"  id="pwd">
 								<button class="btn" onclick="submit()">绑定</button>
 							</div>
-							<div id="status" style="display: none;padding: 30px;">帮定中...</div>
+							<div id="status" style="display: none;padding: 30px;">绑定中...</div>
 						</if>
 					</div>
 				</div>			

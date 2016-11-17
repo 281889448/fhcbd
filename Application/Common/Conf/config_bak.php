@@ -20,7 +20,7 @@ return array(
 //'MODULE_ALLOW_LIST'  => array('Home','Admin'),
 
 /* 系统数据加密设置 */
-'DATA_AUTH_KEY' => ',*B;8WDi_TsLcvUtIEXp{-20"9/:1^}Ah#4b@<dG', //默认数据加密KEY
+'DATA_AUTH_KEY' => 'aHxFAw@vesm;C%Z,2<>WUobihr!#O_1Q|{8XqjD)', //默认数据加密KEY
 
 /* 调试配置 */
 'SHOW_PAGE_TRACE' => false,
@@ -103,5 +103,4 @@ return array(
 'hash'     => true, //是否生成hash编码
 'callback' => false, //检测文件是否存在回调函数，如果存在返回文件信息数组
 ),
-'LOAD_EXT_CONFIG' => 'proposal.status,proposal_group',
 );

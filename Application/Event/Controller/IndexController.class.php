@@ -34,12 +34,17 @@ class IndexController extends BaseController
      */
     public function index()
     {
+        $uid=get_uid();
+        $auth_group=array('秘书长','主席','政协工作人员');
+        if(!get_permission($uid,$auth_group)){
+            $map['uid']=$uid;
+        }
         if (IS_POST) {
             $map['title'] = array('like', '%' . $_POST['keyword'] . '%');
             $event = D("event")->where($map)->order('id desc')->select();
             $this->assign("lockback", 1);
         } else {
-            $event = D("event")->order('id desc')->select();
+            $event = D("event")->where($map)->order('id desc')->select();
         }
         $this->assign("event", $event);
         $this->display();
@@ -83,10 +88,9 @@ class IndexController extends BaseController
         //查找mark_time
         $markset = D('Event_markset')->where(array('event_id' => $id))->select();
         $edit = D('Event')->where(array('id' => $id))->find();
-        $event_type = D('Event_type')->where(array('status' => 1))->select();
         //查找参会名称
         $temp_arr = $this->uid_to_get_detail($edit['people']);
-        $this->assign('event_type', $event_type);
+        $this->assign('event_type', get_event_type());
         $this->assign('people', $temp_arr);
         $this->assign('markset', $markset);
         $this->assign('edit', $edit);
@@ -136,7 +140,7 @@ class IndexController extends BaseController
                 $this->error('第' . ($i + 1) . '次签到的时间要大于第' . $i . '次签到的时间至少2小时');
             }
         }
-        $data['uid'] = 1;
+        $data['uid'] = get_uid();
         $data['event_type'] = $_POST['event_type'];
         $data['sTime'] = strtotime($_POST['sTime']);
         $data['eTime'] = strtotime($_POST['eTime']);
@@ -246,7 +250,7 @@ class IndexController extends BaseController
                 $this->error('第' . ($i + 1) . '次签到的时间要大于第' . $i . '次签到的时间至少2小时');
             }
         }
-        $data['uid'] = 1;
+        $data['uid'] = get_uid();
         $data['event_type'] = $_POST['event_type'];
         $data['sTime'] = strtotime($_POST['sTime']);
         $data['eTime'] = strtotime($_POST['eTime']);
@@ -337,9 +341,7 @@ class IndexController extends BaseController
         }
         ksort($group);
         $this->assign('contact_group', $group);
-
-        $event_type = D('Event_type')->where('status=1')->select();
-        $this->assign('event_type', $event_type);
+        $this->assign('event_type', get_event_type());
         $this->display();
     }
 
@@ -579,14 +581,15 @@ public function back($id){
         $tempid="Peo-p-dtXVASb0zppGuqIM-YePwz2zUmK6egJLLP43U";
         $data = D('Event')->where(array('id' =>$id ))->find();
         $arr = array(
-            'href' => 'http://zxlz.daifayuan.com' . U('Wap/Weixin/jion/type/event', array('id' => $id)),
+            'href' => C('WX_CALLBACK_URL') . U('Wap/Weixin/jion/type/event', array('id' => $id)),
             'first' => '关于' . $data['title'] . '通知',
             'keyword1' => date('Y-m-d H:i:s', $data['sTime']),
             'keyword2' => $data['title'],
             'keyword3' => $data['address'],
             'remark' => '点击详情即可进入在线报名'
         );
-        $map['id'] = array('in', $data['people']);
+        $last_uids=D('Event_attend')->where(array('event_id'=>$id,'status'=>0))->getField('uid',true);
+        $map['id'] = array('in', $last_uids);
         $userdata = D('Ucenter_member')->where($map)->field('username,openid')->select();
         $wxapi = new WeixinApi();
         $time = 0;
@@ -612,18 +615,24 @@ public function back($id){
     public function leave(){
         //审核活动或者会议类型
         $event_type=auth_apply('event',get_uid());
+        print_r($event_type);
         $mapp['event_type']=array('in',$event_type['type']);
+        if($event_type['findmembers']){
+            $mapp['uid']=get_uid();//谁建的会议会谁审核
+            echo get_uid();
+        }
         $eventdb=D('Event')->where($mapp)->getField('id',true);
+        print_r($eventdb);
         $map['status']=2;
         $map['event_id']=array('in',$eventdb);
         //是否需要查看管理成员
-        if($event_type['findmembers']){
+       /* if($event_type['findmembers']){
             $members=return_director_members(get_uid());
             //成员不为空或者false
             if($members){
                 $map['uid']=array('in',$members);
             }
-        }
+        }*/
         $attend = D('Event_attend')->where($map)->select();
         foreach ($attend as $key => $val) {
             //$val['uid'];
@@ -664,7 +673,7 @@ public function back($id){
                 //发送通知模板
                 $tempid='C28HkUceHbqV-K1AizUCypfQYImEGgl5AP5Fvtp1eX8';
                 $arr = array(
-                    'href' => 'http://zxlz.daifayuan.com' . U('Wap/Weixin/jion/type/event', array('id' => $eventdata['id'])),
+                    'href' => C('WX_CALLBACK_URL') . U('Wap/Weixin/jion/type/event', array('id' => $eventdata['id'])),
                     'first' => '您的' . $eventdata['title'] . '活动请假已被审核批准',
                     'keyword1' => date('Y-m-d H:i:s', $eventdata['sTime']),
                     'keyword2' => $eventdata['address'],
@@ -674,7 +683,7 @@ public function back($id){
             }else{
                 $tempid='5ktf-tXzSw76ciFPTMZ7ZXkdBGnn0ncKBbGA_6RgWEU';
                 $arr = array(
-                    'href' => 'http://zxlz.daifayuan.com' . U('Wap/Weixin/jion/type/event', array('id' => $eventdata['id'])),
+                    'href' => C('WX_CALLBACK_URL') . U('Wap/Weixin/jion/type/event', array('id' => $eventdata['id'])),
                     'first' => '您的' . $eventdata['title'] . '活动请假已被拒绝',
                     'keyword1' => date('Y-m-d H:i:s', $eventdata['sTime']),
                     'keyword2' => $eventdata['address'],

@@ -9,7 +9,7 @@
 
 namespace Home\Controller;
 use Common\Controller\BaseController;
-
+use Think\Log;
 /**
  * 前台公共控制器
  * 为防止多分组Controller名称冲突，公共Controller名称统一使用分组名称
@@ -26,12 +26,13 @@ class SearchController extends BaseController {
 
     public function index($page = 1){
 
+
         $map = I('get.');
 
 
         if(IS_POST){
             $map = I('post.');
-            redirect(U('Home/Search/Index',$map));
+            redirect(U('Home/Search/index',$map));
         }
         $this->assign('map',$map);
         if(!empty($map['meet'])){
@@ -116,6 +117,100 @@ class SearchController extends BaseController {
 
 		
 	}
+
+    /**
+     * @param int $page
+     * MR.Z <327778155@qq.com>
+     * create: 2016/11/15
+     */
+	public function export_list($page=1){
+        $map = I('get.');
+        $map  = array_filter($map);
+
+        $m = D('Proposal');
+        $tree = D('ProposalType')->where(array('status' => 1))->select();
+        $this->assign('tree', $tree);
+
+        $proposals = $m->where($map)->order('create_time desc')->page($page,16)->select();
+
+        $totalCount = $m->where($map)->count();
+
+        foreach($proposals as &$v){
+            $v['type'] = $this->getProposalType($v[type_id]);
+
+            $map['proposal_id'] = $v['id'];
+            $units = D('ProposalResult')->where($map)->getField('unit',true);
+            $v['units'] = implode(',',$units);
+        }
+
+        $filename = date('Y-m-d H:i:s',time()).'.xls';
+
+
+
+
+        $this->_getExcel($filename,$proposals);
+
+
+
+
+
+    }
+
+
+    private function _getExcel($filename,$data){
+        import("Org.Util.PHPExcel");
+        import("Org.Util.PHPExcel.Writer.Excel5");
+        import("Org.Util.PHPExcel.IOFactory.php");
+        $objReader = \PHPExcel_IOFactory::createReader ( 'Excel5' );
+
+         $objPHPExcel = $objReader->load ("./Public/templates.xls" );
+
+        $objActSheet = $objPHPExcel->getActiveSheet ();
+        $objActSheet->setTitle('提案列表');
+
+
+
+        $baserow = 5;
+        $status_proposal = C('PROPOSAL_STATUS');
+        foreach($data as $k=>$v){
+            $row = $baserow + $k;
+            $objActSheet->setCellValue('A'.$row,$v['type']['title']);
+            $objActSheet->setCellValue('B'.$row,$v['code'] ? $v['code'] : $v['ycode']);
+            $objActSheet->setCellValue('C'.$row,$v['title']);
+            $objActSheet->setCellValue('D'.$row,$v['author']);
+            $objActSheet->setCellValue('E'.$row,$v['telephone']);
+            $objActSheet->setCellValue('F'.$row,$v['units']);
+            $objActSheet->setCellValue('G'.$row,$status_proposal[$v['status']]);
+            $objActSheet->setCellValue('H'.$row,$v['mark']);
+            $objActSheet->getRowDimension($row)->setRowHeight(30);
+
+        }
+        //边框样式
+        $styleArray = array(
+            'borders' => array(
+                'allborders' => array(
+                    //'style' => PHPExcel_Style_Border::BORDER_THICK,//边框是粗的
+                    'style' => 'thick',//组边框
+                    'color' => array('argb' => 'FFFF0000'),
+                ),
+            ),
+        );
+
+        $objActSheet->getStyle('A4:G'.$row)->applyFromArray($styleArray);
+        $filename = iconv("utf-8", "gb2312", $filename);
+        //设置活动单指数到第一个表,所以Excel打开这是第一个表
+        $objPHPExcel->setActiveSheetIndex(0);
+        header('Content-Type: application/vnd.ms-excel');
+        header("Content-Disposition: attachment;filename=\"$filename\"");
+        header('Cache-Control: max-age=0');
+
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output'); //文件通过浏览器下载
+        exit;
+
+
+
+    }
 
 	/*
 	 * 提案展示详情页

@@ -156,7 +156,7 @@ class ResultController extends BaseController
 		$result = D('ProposalResult')->getResultById($result_id);
 		$flag = D('ProposalResult')->setAjain($result_id);
 		if($flag){
-			process_log( 'handagain','proposalresult', $result['proposal_id'], $result['user_id'],$result_id);
+			process_log( 'handagain','proposalresult', $result['proposal_id'], get_uid(),$result_id);
 			$this->success("退回重办处理成功，等待办理单位处理");
 		}else{
 			$this->error("退回重办处理失败，是否已经进行过退回重办处理");
@@ -169,7 +169,7 @@ class ResultController extends BaseController
 	 *
 	 * autor:MR.Z <327778155@qq.com>
 	 */
-	public function handReply($result_id){
+	public function handreply($result_id){
 			$m = D('ProposalResult');
 			$data = I('post.');
 			$data['id'] = $result_id;
@@ -205,9 +205,10 @@ class ResultController extends BaseController
 					}
 				
 					if($flag){
-							$this->success('提案填办成功',U('Proposal/Index/result',array('status'=>19)));
+                        process_log( 'handreply','proposalresult', $result['proposal_id'], get_uid(),$result_id);
+						$this->success('提案填办成功',U('Proposal/Index/result',array('status'=>19)));
 					}else{
-							$this->error('提案填办失败,可能您未对提案填办信息作更改');
+						$this->error('提案填办失败,可能您未对提案填办信息作更改');
 					}
 			}else{
 				$back_url = U('Proposal/result/handcheck',array('proposal_id'=>$proposal['id']));
@@ -224,7 +225,7 @@ class ResultController extends BaseController
 	 *  create: 2016/8/18
 	 * author: MR.Z <327778155@qq.com>
 	 */
-	public function handCheck($proposal_id){
+	public function handcheck($proposal_id){
 			$map['proposal_id'] = array('eq',$proposal_id);
 		
 		//查办共用 一个模板，当当前用户组是办理单位时，才以UID作为条件
@@ -277,6 +278,7 @@ class ResultController extends BaseController
             $flag = $m->save();
 
             if($flag){
+                process_log( 'accepthand','proposalresult', $id , get_uid());
                 $this->success('接收成功');
                 exit;
             }else{

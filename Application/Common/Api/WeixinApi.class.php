@@ -34,6 +34,10 @@ class WeixinApi{
                     "value"=>urlencode($dataArr['keyword3']),
                     "color"=>"#173177"
                 ),
+                "keyword4"=>array(
+                    "value"=>urlencode($dataArr['keyword4']),
+                    "color"=>"#173177"
+                ),
                 "remark"=>array(
                     "value"=>urlencode($dataArr['remark']),
                     "color"=>"#173177"
@@ -44,7 +48,38 @@ class WeixinApi{
         return $res;
 
     }
-
+    public function sendTempMsg_proposal($openid,$name,$content,$url){
+        $requestUrl = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='.$this->access_token;
+        $tempid='voC9EYqqxBQXyVHHnQUXiZ6RWB1-vHk0JlV08_y4aqw';
+        $first='关于“'.$name.'”提案办理提醒';
+        $keyword2=$content;
+        $remark='';
+        $sendData=array(
+            'touser'=>$openid,
+            "template_id"=>$tempid,
+            "url"=>'',
+            "data"=>array(
+                "first"=>array(
+                    "value"=>urlencode($first),
+                    "color"=>"#173177"
+                ),
+                "keyword1"=>array(
+                    "value"=>urlencode(date('Y-m-d H:i:s',time())),
+                    "color"=>"#173177"
+                ),
+                "keyword2"=>array(
+                    "value"=>urlencode($keyword2),
+                    "color"=>"#173177"
+                ),
+                "remark"=>array(
+                    "value"=>urlencode($remark),
+                    "color"=>"#173177"
+                )
+            )
+        );
+        $res= $this->postCurl($requestUrl,urldecode(json_encode($sendData)));
+        return $res;
+    }
 // Post Request
     function postCurl($url, $data){
         $ch = curl_init();
@@ -60,6 +95,7 @@ class WeixinApi{
         curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         $tmpInfo = curl_exec($ch);
         $errorno=curl_errno($ch);
         if ($errorno){
@@ -90,13 +126,26 @@ class WeixinApi{
         curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
         //curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         $temp = curl_exec($ch);
         return $temp;
     }
 
+    function curl_getinfo($url){
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        curl_exec($ch);
+// Check if any error occurred
+        if (!curl_errno($ch)) {
+            $info = curl_getinfo($ch);
+            return $info;
+        }
+// Close handle
+        curl_close($ch);
+    }
     function get_access_token() {
-        $subtraction=time()-$_SESSION['access_token_time'];
-        if($subtraction>7200 || !$_SESSION['access_token_time']){
+        $subtraction=time()-session('access_token_time');
+        if($subtraction>7200 || !session('access_token_time')){
             $url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$this->appid."&secret=".$this->appsecret;
             $res=$this->https_request($url);
             if($res['errcode']){
@@ -107,7 +156,7 @@ class WeixinApi{
                 Return ($res['access_token']);
             }
         }else{
-            Return ($_SESSION['access_token']);
+            Return (session('access_token'));
         }
     }
     //获取用户openid
@@ -151,6 +200,7 @@ class WeixinApi{
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         }
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         $output = curl_exec($curl);//执行curl会话
         $errorno= curl_errno($curl);//获取执行错误信息
         if ($errorno) {

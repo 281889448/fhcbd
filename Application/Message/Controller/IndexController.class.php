@@ -123,7 +123,7 @@ class IndexController extends BaseController
         $tempid='iHR1nEK2XcDLzGFhbskC7AfONuFJkvkmSM5MpdArRas';
         $data = D('Message')->where(array('id' =>$id ))->find();
         $arr = array(
-            'href' => 'http://zxlz.daifayuan.com' . U('Home/Weixin/tongzhi', array('id' => $id)),
+            'href' => C('WX_CALLBACK_URL'). U('Home/Weixin/tongzhi', array('id' => $id)),
             'first' => '关于' . $data['title'] . '通知',
             'keyword1' => date('Y-m-d H:i:s', $data['stime']),
             'keyword2' => $data['title'],

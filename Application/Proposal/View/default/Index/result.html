@@ -27,25 +27,25 @@
               <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:15px">
 
                 <tr>
-                  <td> {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet_type'))}</td>
-                  <td> {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'jiebie'))}</td>
+                  <td> {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet_type','',0,$map['meet_type']))}</td>
+                  <td> {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'jiebie','',0,$map['jiebie']))}</td>
                   <td>
                      <select name="type_id" class="form-control input-sm">
                                                 <option disabled="" selected="" hidden="">--请选择提案类型--</option>
                                                 <volist name="tree" id="top">
-                        <option value="{$top.id}" >
+                        <option value="{$top.id}" <eq name="map.type_id" value="$top.id">selected</eq> >
                         {$top.title}
                         </option>
                         </volist>
                                             </select></td>
                   <td>
 
-                    {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'author'))}</td>
+                    {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'author','',0,$map['author']))}</td>
 
 
                   <td>
 
-                    {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title'))}
+                    {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'title','',0,$map['title']))}
                   </td>
                   <td> <button class="btn btn-default input-sm" onClick="document.search_proposal.action='{:U('result',array('status'=>$status))}';document.search_proposal.submit();">搜索</button></td>
                 </tr>
@@ -136,7 +136,7 @@
                     <a href="{:U('Proposal/index/detail_result',array('result_id'=>$c[result_id]))}" class="btn btn-primary btn-sm">详情</a>
                     <in name="status" value="13">
 
-                      <a href="{:U('Proposal/Result/handCheck',array('proposal_id'=>$c[proposal_id]))}"  class="btn btn-primary btn-sm">查办</a>
+                      <a href="{:U('Proposal/Result/handcheck',array('proposal_id'=>$c[proposal_id]))}"  class="btn btn-primary btn-sm">查办</a>
                     </in>
 
                     <in name="status" value="19,14">
@@ -152,7 +152,7 @@
                         </if>
 
                         <elseif condition="$c[rstatus] == 6 || $c[rstatus] == 5"/>
-                        <a href="{:U('Proposal/Result/handReply',array('result_id'=>$c[result_id]))}" class="btn btn-primary btn-sm">答复</a>
+                        <a href="{:U('Proposal/Result/handreply',array('result_id'=>$c[result_id]))}" class="btn btn-primary btn-sm">答复</a>
 
 
                       </if>

@@ -7,6 +7,9 @@
                 <div id="tableWrap">
                     <form name="frme" method="post" action="{:U('Polls/Index/upload')}" enctype="multipart/form-data">
                         <input type="hidden" name="status"/>
+                        <input type="hidden" name="zwh" value="{$member.zwh}"/>
+                        <input type="hidden" name="jdllw" value="{$member.jdllw}"/>
+                        <input type="hidden" name="jiebie" value="{$member.jiebie}"/>
                     <table class="table table-bordered table-responsive table-condensed" style="width: 1000px;">
                         <thead>
                         <tr>

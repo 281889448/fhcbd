@@ -67,9 +67,14 @@ class UserController extends AdminController
             $map['nickname'] = array('like', '%' . (string)$nickname . '%');
         }
         $list = $this->lists('Member', $map);
+        $list  = array_combine(array_column($list,'uid'),$list);
         //清除这个筛选条件，字段不一至
         unset($map['uid|nickname']);
         $list_u = $this->lists('UcenterMember',$map);
+        $list_u  = array_combine(array_column($list_u,'id'),$list_u);
+
+
+
 
 
 	      foreach($list as $k=>&$v){

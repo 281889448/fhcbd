@@ -7,16 +7,27 @@
         <div class="span12">
           <div id="tableWrap">
             <table border="" cellspacing="" cellpadding="" class="table table-bordered">
-              <tr><th>请选择年份<select name="" id=""><option>2016</option><option>2015</option></select></th></tr>
-              <tr><td><a href="{:U('Home/Statistics/byMember')}">按集体或委员提案数统计</a></td></tr>
-              <tr><td><a href="{:U('Home/Statistics/byType')}">按提案类别统计</a></td></tr>
-              <tr><td><a href="{:U('Home/Statistics/byProposal')}">按立案、重点提案、优秀、建议案统计</a></td></tr>
-              <tr><td><a href="{:U('Home/Statistics/bysatisfy')}">按提案办理满意度统计</a></td></tr>
-              <tr><td><a href="{:U('Home/Statistics/byResult')}">按提案办理结果统计</a></td></tr>
-              <tr><td><a href="{:U('Home/Statistics/byUnitNumber')}">按办理单位办理数统计</a></td></tr>
-              <tr><td><a href="{:U('Home/Statistics/byZwh')}">按专委会统计</a></td></tr>
-              <tr><td><a href="{:U('Home/Statistics/byJdllw')}">按街道联络委统计</a></td></tr>
-              <tr><td><a href="{:U('Home/Statistics/byJiebie')}">按界别统计</a></td></tr>
+              <tr><th>请选择会议次数
+                <select  onchange="window.location=this.value;">
+                  <volist name="meets" id="m"> <option value="{:U('Home/Statistics/index',['meet_id'=>$m['id']])}" <eq name="m.id" value="$map.meet_id">selected</eq> >{$m.meet}</option></volist>
+
+
+                </select></th></tr>
+              <tr><td><a href="{:U('Home/Statistics/bymember',$map)}">按集体或委员提案数统计</a></td></tr>
+              <tr><td><a href="{:U('Home/Statistics/bytype',$map)}">按提案类别统计</a></td></tr>
+              <tr><td><a href="{:U('Home/Statistics/byproposal',$map)}">按立案、重点提案、优秀、建议案统计</a></td></tr>
+              <tr><td><a href="{:U('Home/Statistics/bysatisfy',$map)}">按提案办理满意度统计</a></td></tr>
+              <tr><td><a href="{:U('Home/Statistics/byresult',$map)}">按提案办理结果统计</a></td></tr>
+              <tr><td><a href="{:U('Home/Statistics/byunitnumber',$map)}">按办理单位办理数统计提案</a></td></tr>
+              <tr><td><a href="{:U('Home/Statistics/byzwh',$map)}">按专委会统计提案</a></td></tr>
+              <tr><td><a href="{:U('Home/Statistics/byjdllw',$map)}">按街道联络委统计提案</a></td></tr>
+              <tr><td><a href="{:U('Home/Statistics/byjiebie',$map)}">按界别统计提案</a></td></tr>
+              <tr><td><a href="{:U('Home/Statistics/bypolls_zwh',$map)}">按专委会统计社情民意</a></td></tr>
+              <tr><td><a href="{:U('Home/Statistics/bypolls_jdllw',$map)}">按街道联络委统计社情民意</a></td></tr>
+              <tr><td><a href="{:U('Home/Statistics/bypolls_jiebie',$map)}">按界别统计社情民意</a></td></tr>
+              <tr><td><a href="{:U('Home/Statistics/byworking_zwh',$map)}">按专委会统计工作动态</a></td></tr>
+              <tr><td><a href="{:U('Home/Statistics/byworking_jdllw',$map)}">按街道联络委统计工作动态</a></td></tr>
+              <tr><td><a href="{:U('Home/Statistics/byworking_jiebie',$map)}">按界别统计工作动态</a></td></tr>
 
             </table>
           </div>

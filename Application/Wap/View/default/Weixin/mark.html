@@ -43,7 +43,7 @@
 			})
 		</script>
 		<script src="Application/Wap/View/default/Weixin/static/jquery.min.js"></script>
-		<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=56639cec02ea140d82c468d3b987fab2"></script>
+		<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=f2e00acec810251d27d86e6146a9a006"></script>
 		<script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
 		<script type="text/javascript">
 			var map, geolocation;
@@ -75,12 +75,12 @@
 							_position=json.regeocode.formatted_address;
 							start_mark();
 						}else {
-							_position="地址位置获取失败";
+							_position="地址位置获取失败,失败原因"+json.info;
 							start_mark();
 						}
 					},
 					error: function (XMLHttpRequest, textStatus, errorThrown) {
-						_position="地址位置获取失败";
+						_position="获取位置请求失败";
 						start_mark();
 					}
 				})

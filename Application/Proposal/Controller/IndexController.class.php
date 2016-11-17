@@ -174,6 +174,18 @@ class IndexController extends BaseController
 		public function result($page = 1, $type_id = 0, $norh = 'new'){
 			//  $result_status = array('13','14','19');    //此为办理单位的三个状态
 			$status = I('get.status','');
+            if(IS_POST){
+                 $map = I('post.');
+                $map['status'] = I('get.status');
+
+                  redirect(U('Proposal/Index/result',$map));
+                exit;
+            }
+            $map_r = I('get.');
+            $this->assign('map',$map_r);
+
+
+
 			switch($status){
 				case 13:
 					$map['pr.status'] = array('in',"2");
@@ -188,21 +200,26 @@ class IndexController extends BaseController
 					$map['p.status'] = array('in',$status);
 					break;
 			}
+
+			$map['p.title'] = $map_r['title'] ? ['like',"%{$map_r['title']}%"] : '';
+            $map['p.author'] = $map_r['author'] ? ['like',"%{$map_r['author']}%"] : '';
+            $map['p.type_id'] = $map_r['type_id'] ? ['eq',$map_r['author']] : '';
+            $map['p.jiebie'] = $map_r['jiebie'] ? ['eq',$map_r['jiebie']] : '';
+            $map['p.meet_type'] = $map_r['meet_type'] ? ['eq',$map_r['meet_type']] : '';
 	
 			//$map[C('DB_PREFIX').'proposal.'.'status'] = array('in',"{$status}");
 			$map['pr.user_id'] = array('eq',get_uid());
+
+            $map = array_filter($map);
 			$this->check_view($status);
-			$type_id = intval($type_id);
-			if ($type_id != 0) {
-				$map['type_id'] = $type_id;
-			}
+
 			// $map['status'] = 1;
 			$order = 'pr.status=1 desc,pr.create_time desc';
 			$norh == 'hot' && $order = 'signCount desc';
 			$content = M('ProposalResult')->alias('pr')->field('pr.id as result_id,proposal_id,p.telephone,pr.status as rstatus,title as proposal_title,jiebie,type_id,author,is_merge,is_joint,p.code')->join('__PROPOSAL__ p ON pr.proposal_id=p.id')->where($map)->order($order)->page($page, 10)->select();
 
 
-			$totalCount = M('PorposalResult')->alias('pr')->join('LEFT JOIN __PROPOSAL__ ON __PROPOSAL_RESULT__.proposal_id=__PROPOSAL__.id')->where($map)->count();
+			$totalCount = M('PorposalResult')->alias('pr')->join('LEFT JOIN __PROPOSAL__ p ON pr.proposal_id=p.id')->where($map)->count();
 			
 			foreach($content as &$v){
 				$v['type'] = $this->getType($v['type_id']);
@@ -228,7 +245,7 @@ class IndexController extends BaseController
 			$this->assign('contents', $content);
 			$this->assign('norh', $norh);
 			$this->assign('totalPageCount', $totalCount);
-			$this->getRecommend();
+
 			$this->setTitle('提案交办办理单位首页');
 			$this->setKeywords('提案交办-办理单位');
 			$this->display();
@@ -311,7 +328,7 @@ class IndexController extends BaseController
 			$this->assign('content', $proposal_content);
 			$this->setTitle('{$content.title|op_t}' . '——提案详情');
 			
-			$this->getRecommend();
+
 			$this->display();
 			
 			
@@ -770,37 +787,55 @@ class IndexController extends BaseController
         foreach($ids as $v){
             //获取当前提案对应的所有办理单位
             $proposals = D('ProposalResult')->alias('pr')->join('left join __PROPOSAL__ p ON pr.proposal_id=p.id')->where(['pr.proposal_id'=>$v])->select();
-            $mu = D('User/User');
-            $mu->setModel(UNIT);
+
+            /*$mu = D('User/User');
+            $mu->setModel(UNIT);*/
+
 
             $m= D('User/User');
-            $m->setModel(WEIYUAN);
 
+
+
+            $units = [];
             foreach($proposals as $pr){
                 $member = D('UcenterMember')->where(['id'=>$pr['uid']])->find();
-                $unit = $mu->getUser($pr['user_id']);
+             //   $unit = $mu->getUser($pr['user_id']);
+                $unit = M('UcenterMember')->find($pr['user_id']);
+
+                if(get_permission($pr['uid'],['委员'])){
+                    $m->setModel(WEIYUAN);
+                }elseif(get_permission($pr['uid'],['集体'])){
+
+                    $m->setModel(TEAM);
+                }
                 $user = $m->getUser($pr['uid']);
 
                 $wxapi = new WeixinApi();
-                //给当前提案的委员发的信息
-                $msg = "您的“".$pr['title']."”提案已交".$pr['unit']."单位，办理单位工作人员会与您联系";
 
-                $wxapi->sendTempMsg_proposal($member['openid'],$pr['title'],$msg);
-                self::$sms->send($member['username'],$msg);
 
                 //给当前提案的办理单位发的信息
-                $msg_unit = "“{$pr['title']}”提案已由政府督查室已移交给您处理，请及时登录系统签收及联系委员{$member['名称']}，联系方式：{$member['username']}";
+                $msg_unit = "“{$pr['title']}”提案已由政府督查室已移交给您处理，请及时登录系统签收及联系委员{$user['名称']}，联系方式：{$member['username']}";
 
                 $wxapi->sendTempMsg_proposal($unit['openid'],$pr['title'],$msg_unit);
-                self::$sms->send($unit['手机号'],$msg_unit);
-
+                self::$sms->send($unit['username'],$msg_unit);
+                $units[] = $pr['unit'];
             }
+
+            //给当前提案的委员发的信息
+            $msg = "您的“".$pr['title']."”提案已交".implode(',',$units)."单位，办理单位工作人员会与您联系";
+
+            $wxapi->sendTempMsg_proposal($member['openid'],$pr['title'],$msg);
+            self::$sms->send($member['username'],$msg);
+
+            process_log( 'batchhandover','proposal', $v , get_uid());
+
         }
 
 			if($flag){
-					$this->success('交办成功，未进行选办的提案请选办');
+
+				$this->success('交办成功，未进行选办的提案请选办');
 			}else{
-					$this->error('交办失败，有提案未进行选办');
+				$this->error('交办失败，有提案未进行选办');
 			}
 	}
 	
@@ -810,15 +845,16 @@ class IndexController extends BaseController
 	 * @param int $id
 	 * autor:MR.Z <327778155@qq.com>
 	 */
-	public function handAgain($proposal_id){
+	/*public function handAgain($proposal_id){
 		$result = D('ProposalResult')->getResult($proposal_id);
 		$flag = D('ProposalResult')->setReturn($proposal_id);
 		if($flag){
+
 			$this->success("退回重办处理成功，等待办理单位处理");
 		}else{
 			$this->error("退回重办处理失败，是否已经进行过退回重办处理");
 		}
-	}
+	}*/
 
 	/**
 	 * 提案浏览权限
@@ -828,6 +864,7 @@ class IndexController extends BaseController
 		private function check_view($status){
 			$group = get_group(get_uid());
 			$view_status = C('VIEW_STATUS');
+
             $status_tmp = [];
             foreach($group as $v){
                 if($view_status[$v]){
@@ -923,8 +960,8 @@ class IndexController extends BaseController
 	      //不立案理由
 	      $map_p['to_status'] = array('in',array(3,4,5,6,7));
 	      $suggest = D('ProposalProcess')->where($map_p)->find();
-	    
-	    
+
+
 	    //办理单位集合
 	   //   $units = D('User/Unit')->getUnits();
 	    $mu = D('User/User');
@@ -944,8 +981,8 @@ class IndexController extends BaseController
         $this->assign('content', $proposal_content);
         $this->setTitle('{$content.title|op_t}' . '——提案详情');
 
-        $this->getRecommend();
         $this->display();
+
     }
 
     /*
@@ -1019,16 +1056,17 @@ class IndexController extends BaseController
      */
     public function joint_agree($id){
     	  $m = D('ProposalJoint');
-	    
+            $proposal_id = $m->where('id='.$id)->getField('proposal_id');
     	  $m->create();
 	      $m->suggest = I('post.suggest');
 	      $map['id'] = array('eq',$id);
 
 	      $flag = $m->where($map)->save();
 	      if($flag){
-	      	  $this->success('更新成功',U('pleaseJoint'));
+              process_log( 'agree_joint','proposaljoint', $proposal_id , get_uid(),$id);
+	      	  $this->success('更新成功',U('pleasejoint'));
 	      }else{
-	      	  $this->error('更新失败',U('pleaseJoint'));
+	      	  $this->error('更新失败',U('pleasejoint'));
 	      
 	      }
     	
@@ -1157,8 +1195,12 @@ class IndexController extends BaseController
 			$data['id'] = $proposal_id;
 		//状态只录入发起联名状态和未联名状态，方便联名总结后的筛选录入
 			$data['is_joint'] = $status ? 2 : 0;
+        process_log( 'do_joint','proposaljoint', $proposal_id, get_uid());
 			$flag = M('Proposal')->save($data);
+
 			if($flag){
+
+
 					$this->success("联名信息更新成功",U('Proposal/Index/index',array('status'=>1)));
 			}else{
 					$this->success("联名信息更新失败");
@@ -1171,7 +1213,7 @@ class IndexController extends BaseController
 	 *  create: 2016/8/17
 	 * author: MR.Z <327778155@qq.com>
 	 */
-		public function pleaseJoint(){
+		public function pleasejoint(){
 
 				$map['user_id'] = get_uid();
 				$proposal_ids = D('ProposalJoint')->where($map)->getField('proposal_id',true);
@@ -1179,7 +1221,7 @@ class IndexController extends BaseController
 				$map_p['p.status'] = array('eq',1);
 				$map_p['user_id'] = get_uid();
 				$map_p['p.id'] = array('in',$proposal_ids);
-				$contents = D('Proposal')->alias('p')->field('p.id,type_id,title,ycode,jiebie,author,contact,is_joint,is_merge,is_agree')->join('LEFT JOIN __PROPOSAL_JOINT__ pj ON p.id=pj.proposal_id')->where($map_p)->select();
+				$contents = D('Proposal')->alias('p')->field('p.id,type_id,p.telephone,title,ycode,jiebie,author,contact,is_joint,is_merge,is_agree')->join('LEFT JOIN __PROPOSAL_JOINT__ pj ON p.id=pj.proposal_id')->where($map_p)->select();
 
 			foreach($contents as &$v){
 				$v['type'] = $this->getType($v['type_id']);
@@ -1214,7 +1256,7 @@ class IndexController extends BaseController
 	 * 并案首页
 	 *  autor: MR.Z <327778155@qq.com>
 	 */
-	public function mergeIndex($id){
+	public function mergeindex($id){
         C('TOKEN_ON',false);
 		if(IS_POST){
 			$map = I('post.');
@@ -1275,9 +1317,10 @@ class IndexController extends BaseController
 					$flag = D('Proposal')->save($data);
 					//附加提案人更新   //TODO
 					if($flag){
-							$this->success('并案成功',U('Proposal/Index/detail',array('id'=>$ids)));
+                        process_log( 'merge','proposal', $ids, get_uid());
+						$this->success('并案成功',U('Proposal/Index/detail',array('id'=>$ids)));
 					}else{
-							$this->error('并案失败');
+						$this->error('并案失败');
 					}
 			}
 			
@@ -1532,6 +1575,7 @@ class IndexController extends BaseController
 			$data['proposal_id'] = $proposal_id;
 			$id = M('ProposalJoint')->add($data);
 			if($id){
+
 					$status = 1;
 					$data['id'] = $id;
 			}

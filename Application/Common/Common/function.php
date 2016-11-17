@@ -14,6 +14,7 @@ use Common\Api\WeixinApi;
 const ONETHINK_VERSION = '1.0.131218';
 const ONETHINK_ADDON_PATH = './Addons/';
 
+define('UC_AUTH_KEY', '3hBF$~UNkTDA>*-i1j69VKe?OcJ.R!lEq"g#5LnY'); //加密KEY
 /**
  * 系统公共库文件
  * 主要定义系统公共函数库

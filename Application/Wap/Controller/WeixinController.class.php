@@ -2,6 +2,7 @@
 namespace Wap\Controller;
 use Common\Controller\BaseController;
 use Common\Api\WeixinApi;
+define('UC_AUTH_KEY', '.,3lA:u;T0wBPi[}C5>F6g^xy_(2hz4IU]tfasd9'); //加密KEY
 class WeixinController extends BaseController {
     public $openid;
     public $uid;
@@ -12,7 +13,7 @@ class WeixinController extends BaseController {
         $this->uid=get_uid();
     }
     public function binding(){
-        $id=D('Ucenter_member')->where(array('openid'=>$this->openid))->find();
+        $id=D('Ucenter_member')->where(array('openid'=>array('like',str_replace('-','%',$this->openid))))->find();
         if($id){
             $this->assign('id','ok');
         }
@@ -20,7 +21,11 @@ class WeixinController extends BaseController {
     }
 
     public function savebind(){
+
         $password=think_ucenter_md5(I('post.pwd'),UC_AUTH_KEY);
+
+
+
         $username = I('post.mobile');
         $map['_string'] = "(username='{$username}' or mobile='{$username}')";
         $map['password'] = $password;
@@ -42,7 +47,7 @@ class WeixinController extends BaseController {
     }
     public function jion(){
             //查找用户
-            $userdb=D('Ucenter_member')->where(array('openid'=>$this->openid))->find();
+        $userdb=D('Ucenter_member')->where(array('openid'=>array('like',str_replace('-','%',$this->openid))))->find();
             $truename=D('Field')->where(array('uid'=>$userdb['id'],'field_id'=>38))->find();
             $userdb['truename']=$truename['field_data'];
             $this->assign('userdb',$userdb);
@@ -110,7 +115,7 @@ class WeixinController extends BaseController {
 
     public function mark() {
             //查找用户
-            $userdb = D('Ucenter_member')->where(array('openid' => $this->openid))->find();
+            $userdb = D('Ucenter_member')->where(array('openid' => array('like',str_replace('-','%',$this->openid))))->find();
             $truename = D('Field')->where(array('uid' => $userdb['id'], 'field_id' => 38))->find();
             $userdb['truename'] = $truename['field_data'];
             $this->assign('userdb', $userdb);
@@ -313,8 +318,8 @@ class WeixinController extends BaseController {
     //高德获取地理位置
     public function lng_lat_get_address(){
         $lng=I('post.lng');
-        $lat=I('post.lat');
-        $url="http://restapi.amap.com/v3/geocode/regeo?key=8c067c208272ffc5b985ecb41e5adf71&location=".$lng.",".$lat."&poitype=&radius=50&extensions=all&batch=false&roadlevel=1";
+        $lat=I('post.lat');//key
+        $url="http://restapi.amap.com/v3/geocode/regeo?key=6d8f18c73be900086e2fdff750406d03&location=".$lng.",".$lat."&poitype=&radius=50&extensions=all&batch=false&roadlevel=1";
         $wxapi = new WeixinApi();
         $res=$wxapi->curlGet($url);
         $this->ajaxReturn( json_decode($res));

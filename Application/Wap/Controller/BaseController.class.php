@@ -99,6 +99,7 @@ class BaseController extends Controller
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         }
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         $output = curl_exec($curl);//执行curl会话
         $errorno= curl_errno($curl);//获取执行错误信息
         if ($errorno) {

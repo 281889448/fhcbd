@@ -33,7 +33,14 @@ function parse_field_attr($string) {
 
 function process_log( $action = null,$model = null, $proposal_id = null, $user_id = null,$record_id)
 {
-		
+	//初始化准备数据
+    $u = D('User/User');
+    $u->setModel(WEIYUAN);
+    $users = $u->getUsers([],['名称']);
+    $users = array_combine(array_column($users,'uid') , $users);
+
+
+
     //参数检查
     if ( empty($proposal_id)) {
         return '参数不能为空';
@@ -57,7 +64,7 @@ function process_log( $action = null,$model = null, $proposal_id = null, $user_i
 		$proposal_user = $mu->getUser($proposal['uid']);
 	
 		//执行人相关信息
-		$do_u = array('5'=>WEIYUAN,'6'=>TEAM,'8'=>UNIT);
+		$do_u = array('5'=>WEIYUAN,'6'=>TEAM,'8'=>UNIT,'9'=>DCS,'7'=>ZWHXX);
 		$group_id = D('Member')->alias('m')->join('__AUTH_GROUP_ACCESS__ aga ON m.uid=aga.uid')->where('m.uid='.$user_id)->getField('group_id');
 
 		$mu->setModel($do_u[$group_id]);
@@ -94,34 +101,43 @@ function process_log( $action = null,$model = null, $proposal_id = null, $user_i
 						$data['remark'] = "提案人【{$do_user['名称']}】向提案委提交了预案号【{$proposal['ycode']}】，案由【{$proposal['title']}】的提案";
 						break;
 				//被联名操作
-					case 'joint_agree':
+					/*case 'joint_agree':
 						
 
 						$status = $joint['is_agree'] == 1 ? '同意':'不同意';
 						$data['remark'] = "委员【{$do_user['名称']}】对提案人【{$proposal_user['名称']}】，案由【{$proposal['title']}】的提案执行{$status}联名操作";
-						break;
+						break;*/
 						
 					case 'changestatus':
 						$status = C('PROPOSAL_STATUS');
 						
 						//已交办，重回重办，结案
-						if(in_array($proposal['status'],array(19,14,9))) {
+						if(in_array($proposal['status'],array(19,14))) {
 							
 						//	$unit = D('User/Unit')->getUnit($user_id);
 
-							$data['remark'] = "政府督查室【{$do_user['名称']}】对办理单位【{$result['单位']}】，提案人【{$proposal['名称']}】，预案号【{$proposal['ycode']}】,案由【{$proposal['title']}】的提案执行了{$status[$proposal['status']]}操作";
+							$data['remark'] = "政府督查室【{$do_user['名称']}】对办理单位【{$result['unit']}】，提案人【{$proposal['名称']}】，案号【{$proposal['code']}】,案由【{$proposal['title']}】的提案执行了{$status[$proposal['status']]}操作";
 								//立案/退回/不立案/撤案/委员来信/不再管辖区
-						}elseif(in_array($proposal['status'],array(3,4,5,6,7,8))){
-							$data['remark'] = "提案委【{$do_user['nickname']}】对提案人【{$proposal_user['名称']}】，预案号【{$proposal['ycode']}】,案由【{$proposal['title']}】的提案执行了{$status[$proposal['status']]}操作";
-						}
+						}elseif(in_array($proposal['status'],[9])){
+                            $data['remark'] = "提案委【{$do_user['名称']}】对办理单位【{$result['unit']}】，提案人【{$proposal['名称']}】，案号【{$proposal['code']}】,案由【{$proposal['title']}】的提案执行了{$status[$proposal['status']]}操作";
+                        }elseif(in_array($proposal['status'],array(3,4,5,6,7,8))){
+							$data['remark'] = "提案委【{$do_user['名称']}】对提案人【{$proposal_user['名称']}】，预案号【{$proposal['ycode']}】,案由【{$proposal['title']}】的提案执行了{$status[$proposal['status']]}操作";
+						}elseif(in_array($proposal['status'],[18])){
+                            $data['remark'] = "提案委【{$do_user['名称']}】将提案人【{$proposal_user['名称']}】，案号【{$proposal['code']}】,案由【{$proposal['title']}】的提案批量移交到政府督查室";
+                        }
 						break;
 					case 'merge':
 						$proposal_merge = $m->find($proposal['merge_id']);
 						$mu->setModel(WEIYUAN);
 						$merge_user = $mu->getUser($proposal_merge['user_id']);
 						
-						$data['remark'] = "提案委【{$do_user['nickname']}】将提案人【{$proposal_user['名称']}】，预案号【{$proposal['ycode']}】,案由【{$proposal['title']}】的提案合并到提案人【{$merge_user['名称']}】，预案号【{$proposal_merge['ycode']}】,案由【{$proposal_merge['title']}】的提案";
+						$data['remark'] = "提案委【{$do_user['名称']}】将提案人【{$proposal_user['名称']}】，预案号【{$proposal['ycode']}】,案由【{$proposal['title']}】的提案合并到提案人【{$merge_user['名称']}】，预案号【{$proposal_merge['ycode']}】,案由【{$proposal_merge['title']}】的提案";
 						break;
+
+                    case 'batchhandover':
+                        $units = M('ProposalResult')->where('proposal_id='.$proposal_id)->getField('unit',true);
+                        $data['remark'] = "政府督查室【{$do_user['名称']}】将提案人【{$proposal_user['名称']}】，案号【{$proposal['code']}】,案由【{$proposal['title']}】的提案批量交办到办理单位【".join(',',$units)."】办理";
+                        break;
 					
 				
 					
@@ -152,20 +168,31 @@ function process_log( $action = null,$model = null, $proposal_id = null, $user_i
 					case 'handagain':
 						
 
-						$data['remark'] = "政府督查室【{$do_user['名称']}】对办理单位【{$result_user['名称']}】，案号【{$proposal['code']}】,案由【{$proposal['title']}】的提案执行了办理反馈操作";
+						$data['remark'] = "政府督查室【{$do_user['名称']}】将提案人【{$proposal_user['名称']}】，案号【{$proposal['code']}】,案由【{$proposal['title']}】的提案退回给办理单位【{$result['unit']}】重新办理";
 						break;
 
                     case 'denyback':
                        
                         $data['to_status'] = 193;
-                        $data['remark'] = "政府督查室【{$do_user['名称']}】对办理单位【{$proposal_user['名称']}】，案号【{$proposal['code']}】,案由【{$proposal['title']}】的提案执行了拒绝退回操作";
+                        $data['remark'] = "政府督查室【{$do_user['名称']}】对办理单位【{$result['unit']}】，案号【{$proposal['code']}】,案由【{$proposal['title']}】的提案执行了拒绝退回操作";
+                        break;
+
+                    case 'accepthand':
+                        $data['remark'] = "办理单位【{$do_user['名称']}】对提案人【{$proposal_user['名称']}】，案号【{$proposal['code']}】,案由【{$proposal['title']}】的提案执行了签收操作";
+                        break;
+                    case 'handreply':
+                        $data['remark'] = "办理单位【{$do_user['名称']}】对提案人【{$proposal_user['名称']}】，案号【{$proposal['code']}】,案由【{$proposal['title']}】的提案执行了答复操作";
                         break;
 				}
 				
 				M('ProposalProcess')->add($data);
 
-				break;
-					
+
+
+
+
+
+
 				
 				
 				//插入行为日志
@@ -173,6 +200,42 @@ function process_log( $action = null,$model = null, $proposal_id = null, $user_i
 			
 
 				break;
+            case 'proposaljoint':
+                $data['user_id'] = $user_id;
+                $data['proposal_id'] = $proposal_id;
+                $data['create_time'] = NOW_TIME;
+                //默认取第一个身份
+                $data['group'] = reset(get_group($user_id));
+                $data['to_status'] = $proposal['status'];
+                $data['result_id'] = $record_id;
+
+                switch (strtolower($action)){
+                    case 'do_joint':
+                        $user_ids = M('ProposalJoint')->where('proposal_id='.$proposal_id)->getField('user_id',true);
+                        $user_tmp = [];
+
+                        foreach($user_ids as $v){
+                            $user_tmp[] = $users[$v]['名称'];
+                        }
+                        $data['remark'] = "提案人【{$do_user['名称']}】邀请委员[".join('],[',$user_tmp)."]联名提交预案号【{$proposal['ycode']}】，案由【{$proposal['title']}】的提案";
+
+                    break;
+
+                    case 'agree_joint':
+                        if($joint['is_agree']==1){
+                            $joint_msg = '同意';
+                        }elseif($joint['is_agree']==2){
+                            $joint_msg = '退回';
+                        }else{
+                            $joint_msg = '未进行';
+                        }
+                        $data['remark'] = "联名人【{$do_user['名称']}】对提案人【{$proposal_user['名称']}】邀请联名的预案号【{$proposal['ycode']}】，案由【{$proposal['title']}】的提案进行了{$joint_msg}操作";
+                        break;
+
+                }
+                M('ProposalProcess')->add($data);
+                break;
+
 			case 'event':
 				
 				break;

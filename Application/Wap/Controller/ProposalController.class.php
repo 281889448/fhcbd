@@ -101,8 +101,9 @@ class ProposalController extends BaseController
         }
 
         unset($v);
-        if($status=='4,5,6,7'){$status_view=4;}
-        if($status=='8,11,13,14,17,18,19'){$status_view=8;}
+        if($status=='3,4,5,6,7'){$status_view=4;}
+        if($status=='8,9,11,13,14,17,18,19'){$status_view=8;}
+
         //所有状态集合
         $status_config = C('PROPOSAL_STATUS');
 
@@ -478,7 +479,7 @@ class ProposalController extends BaseController
         $flag = M('Proposal')->save($data);
 
         if($flag){
-            $this->success("联名信息更新成功",U('Proposal/Index/index',array('status'=>1)));
+            $this->success("联名信息更新成功",U('Wap/Proposal/index',array('status'=>1)));
         }else{
             $this->error("联名信息更新失败");
         }
@@ -533,9 +534,9 @@ class ProposalController extends BaseController
         $flag = $m->where($map)->save();
 
         if($flag){
-            $this->success('更新成功',U('pleaseJoint'));
+            $this->success('更新成功',U('pleasejoint'));
         }else{
-            $this->error('更新失败',U('pleaseJoint'));
+            $this->error('更新失败',U('pleasejoint'));
 
         }
     }
@@ -545,7 +546,7 @@ class ProposalController extends BaseController
 	 *  create: 2016/10/13
 	 * author: MR.Z <327778155@qq.com>
 	 */
-    public function pleaseJoint(){
+    public function pleasejoint(){
 
         $map['user_id'] = get_uid();
         $proposal_ids = D('ProposalJoint')->where($map)->getField('proposal_id',true);

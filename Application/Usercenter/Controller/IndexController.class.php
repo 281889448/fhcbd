@@ -656,21 +656,22 @@ class IndexController extends BaseController
 
 
 	        $member = D('User/User');
-					$member->setModel(WEIYUAN);
-					$members = $member->getUsers(array(),array('名称'));
+			$member->setModel(WEIYUAN);
+			$members = $member->getUsers([],array('名称'));
 
             $member->setModel(TEAM);
-        $members_jt = $member->getUsers([],array('姓名'));
+            $members_jt = $member->getUsers([],array('联络员'));
 
-        $member->setModel(ZWHXX);
-        $members_zwhxx = $member->getUsers([],array('姓名'));
+
+              $member->setModel(ZWHXX);
+             $members_zwhxx = $member->getUsers([],array('姓名'));
 	   
 				$group = array();
 					foreach($members as $v){
 						$user[$v['id']] = $v['名称'];
 					}
                     foreach($members_jt as $v){
-                        $user[$v['id']] = $v['姓名'];
+                        $user[$v['id']] = $v['联络员'];
                     }
                     foreach($members_zwhxx as $v){
                         $user[$v['id']] = $v['姓名'];
@@ -695,7 +696,7 @@ class IndexController extends BaseController
 					$uids = $this->getUids($group);
 	
 	        $uids = implode(',',array_unique($uids));
-	
+
 	    //如果点取的人数不大于5人，就只返回人名
 	    if(count($user_ids) <= 5){
 	    	$content = '';

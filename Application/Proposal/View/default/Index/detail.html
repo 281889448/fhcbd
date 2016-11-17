@@ -27,7 +27,7 @@
 										</tr>
 									</thead>
 						<php>
-										if($content[status]==2){
+										if($content[status]==2 || ($content['status']==3 && $content[uid] == get_uid())){
 											$htmlstatus = 0;
 										}else{
 											$htmlstatus = 1;
@@ -39,13 +39,14 @@
 										$htmlstatus_9 = 1;
 									}
 						</php>
+
 									<tbody>
 										<tr>
 											<td>
 												提出期间
 											</td>
 											<td>
-												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet_type','id'=>$content['id'],$htmlstatus))}
+												 {:W('Common/InputRender/InputRender',array('modelid'=>4,'name'=>'meet_type','id'=>$content['id'],1))}
 											</td>
 											<td style="width: 100px">
 												类别
@@ -164,7 +165,7 @@
 												办理单位
 
 											</td>
-										<if condition="$content[status] != 9 && (empty($result_list) || $content[status] == 18 || $count_pr)">
+										<if condition="$content[status] != 9 && (empty($result_list) || $content[status] == 18 || $count_pr) && get_permission(get_uid(),['政府督查室'])">
 											<td colspan="5">
 												<div class="col-sm-3" style="margin-left:0;padding-left:0">
 													
@@ -487,7 +488,7 @@
 
 												<if condition="get_permission(get_uid(),['提案委'])">
 											<in name="content.status" value="2">
-													<a class="btn btn-primary btn-sm"  href="{:U('Proposal/Index/mergeIndex',array('id'=>$content[id]))}">并案</a>
+													<a class="btn btn-primary btn-sm"  href="{:U('Proposal/Index/mergeindex',array('id'=>$content[id]))}">并案</a>
 													<a class="btn btn-primary btn-sm backbtn" data-toggle="modal" data-target="#myModal" onClick="document.return.action='{:U('Proposal/Index/changeStatus3')}'">退回</a>
 													<a class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#myModal" onClick="document.return.action='{:U('Proposal/Index/changeStatus4')}'">不立案</a>
 													<a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" onClick="document.return.action='{:U('Proposal/Index/changeStatus5')}'">撤案</a>
