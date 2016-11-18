@@ -411,7 +411,7 @@ class StatisticsController extends BaseController {
 												sum(case when comment = 2 then 1 else 0 end) as comment2,
 												sum(case when comment = 3 then 1 else 0 end) as comment3
 												 from __PROPOSAL_RESULT__ 
-												 and create_time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+												 where create_time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
 
 		$this->assign('data',$data);
 		
