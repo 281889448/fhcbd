@@ -472,7 +472,7 @@ class StatisticsController extends BaseController {
         $meet_id = I('get.meet_id') ?  I('get.meet_id') : $this->default_meet_id;
         $meet = M('ConfigMeet')->find($meet_id);
 
-		$zwhstr = D('FieldSetting')->where(array('field_name'=>'专委会','profile_group_id'=>WEIYUAN))->getField('form_default_value');
+		$zwhstr = D('FieldSetting')->where(array('field_name'=>'专委会组','profile_group_id'=>WEIYUAN))->getField('form_default_value');
 		$zwharr = array_filter(explode('|',$zwhstr));
 		$data = array();
 		foreach($zwharr as $k=>$z){
@@ -576,7 +576,14 @@ class StatisticsController extends BaseController {
     public function bypolls_zwh(){
         $meet_id = I('get.meet_id') ?  I('get.meet_id') : $this->default_meet_id;
         $meet = M('ConfigMeet')->find($meet_id);
-        $data = reset(M()->query("select sum(case when adopt like '%1%' then 1 else 0 end) as adopt_qzx,
+
+        $zwhstr = D('FieldSetting')->where(array('field_name'=>'专委会组','profile_group_id'=>WEIYUAN))->getField('form_default_value');
+        $zwharr = array_filter(explode('|',$zwhstr));
+
+        $data = array();
+        foreach($zwharr as $k=>$z){
+            $data[$k]['name'] = $z;
+            $data[$k]['count'] = reset(M()->query("select sum(case when adopt like '%1%' then 1 else 0 end) as adopt_qzx,
 												sum(case when adopt like '%2%' then 1 else 0 end) as adopt_szx,
 												sum(case when adopt like '%3%'  then 1 else 0 end) as adopt_shzx,
 												sum(case when adopt like '%4%'  then 1 else 0 end) as adopt_qgzx,
@@ -585,30 +592,154 @@ class StatisticsController extends BaseController {
 												sum(case when make like '%3%'  then 1 else 0 end) as make_shzx,
 												sum(case when make like '%4%'  then 1 else 0 end) as make_qgzx
 												 from __POLLS__ 
-												 where  time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+												 where zwh='{$z}'   time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+
+
+        }
+
+
+
+
+
 
         $this->assign('data',$data);
         $this->display();
     }
 
     public function bypolls_jdllw(){
+        $meet_id = I('get.meet_id') ?  I('get.meet_id') : $this->default_meet_id;
+        $meet = M('ConfigMeet')->find($meet_id);
 
+        $jdllwstr = D('FieldSetting')->where(array('field_name'=>'街道联络委','profile_group_id'=>WEIYUAN))->getField('form_default_value');
+        $jdllwarr = array_filter(explode('|',$jdllwstr));
+
+        $data = array();
+        foreach($jdllwarr as $k=>$z){
+            $data[$k]['name'] = $z;
+            $data[$k]['count'] = reset(M()->query("select sum(case when adopt like '%1%' then 1 else 0 end) as adopt_qzx,
+												sum(case when adopt like '%2%' then 1 else 0 end) as adopt_szx,
+												sum(case when adopt like '%3%'  then 1 else 0 end) as adopt_shzx,
+												sum(case when adopt like '%4%'  then 1 else 0 end) as adopt_qgzx,
+												sum(case when make like '%1%'  then 1 else 0 end) as make_qzx,
+												sum(case when make like '%2%'  then 1 else 0 end) as make_szx,
+												sum(case when make like '%3%'  then 1 else 0 end) as make_shzx,
+												sum(case when make like '%4%'  then 1 else 0 end) as make_qgzx
+												 from __POLLS__ 
+												 where jdllw='{$z}'   time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+
+
+        }
+
+
+
+
+
+
+        $this->assign('data',$data);
+        $this->display();
     }
 
     public function bypolls_jiebie(){
+        $meet_id = I('get.meet_id') ?  I('get.meet_id') : $this->default_meet_id;
+        $meet = M('ConfigMeet')->find($meet_id);
 
+        $jiebiestr = D('FieldSetting')->where(array('field_name'=>'界别','profile_group_id'=>WEIYUAN))->getField('form_default_value');
+        $jiebiearr = array_filter(explode('|',$jiebiestr));
+
+        $data = array();
+        foreach($jiebiearr as $k=>$z){
+            $data[$k]['name'] = $z;
+            $data[$k]['count'] = reset(M()->query("select sum(case when adopt like '%1%' then 1 else 0 end) as adopt_qzx,
+												sum(case when adopt like '%2%' then 1 else 0 end) as adopt_szx,
+												sum(case when adopt like '%3%'  then 1 else 0 end) as adopt_shzx,
+												sum(case when adopt like '%4%'  then 1 else 0 end) as adopt_qgzx,
+												sum(case when make like '%1%'  then 1 else 0 end) as make_qzx,
+												sum(case when make like '%2%'  then 1 else 0 end) as make_szx,
+												sum(case when make like '%3%'  then 1 else 0 end) as make_shzx,
+												sum(case when make like '%4%'  then 1 else 0 end) as make_qgzx
+												 from __POLLS__ 
+												 where jiebie='{$z}'   time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+
+
+        }
+
+
+        $this->assign('data',$data);
+        $this->display();
     }
 
     public function byworking_zwh(){
+        $meet_id = I('get.meet_id') ?  I('get.meet_id') : $this->default_meet_id;
+        $meet = M('ConfigMeet')->find($meet_id);
 
+        $zwhstr = D('FieldSetting')->where(array('field_name'=>'专委会组','profile_group_id'=>WEIYUAN))->getField('form_default_value');
+        $zwharr = array_filter(explode('|',$zwhstr));
+
+        $data = array();
+        foreach($zwharr as $k=>$z){
+            $data[$k]['name'] = $z;
+            $data[$k]['count'] = reset(M()->query("select count(*)
+												 from __POLLS__ 
+												 where zwh='{$z}'   time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+
+
+        }
+
+
+
+
+
+
+        $this->assign('data',$data);
+        $this->display();
     }
 
     public function byworking_jdllw(){
+        $meet_id = I('get.meet_id') ?  I('get.meet_id') : $this->default_meet_id;
+        $meet = M('ConfigMeet')->find($meet_id);
 
+        $jdllwstr = D('FieldSetting')->where(array('field_name'=>'街道联络委','profile_group_id'=>WEIYUAN))->getField('form_default_value');
+        $jdllwarr = array_filter(explode('|',$jdllwstr));
+
+        $data = array();
+        foreach($jdllwarr as $k=>$z){
+            $data[$k]['name'] = $z;
+            $data[$k]['count'] = reset(M()->query("select count(*)
+												 from __POLLS__ 
+												 where jdllw='{$z}'   time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+
+
+        }
+
+
+
+
+
+
+        $this->assign('data',$data);
+        $this->display();
     }
 
     public function byworking_jiebie(){
+        $meet_id = I('get.meet_id') ?  I('get.meet_id') : $this->default_meet_id;
+        $meet = M('ConfigMeet')->find($meet_id);
 
+        $jiebiestr = D('FieldSetting')->where(array('field_name'=>'界别','profile_group_id'=>WEIYUAN))->getField('form_default_value');
+        $jiebiearr = array_filter(explode('|',$jiebiestr));
+
+        $data = array();
+        foreach($jiebiearr as $k=>$z){
+            $data[$k]['name'] = $z;
+            $data[$k]['count'] = reset(M()->query("select count(*)
+												 from __POLLS__ 
+												 where jiebie='{$z}'   time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+
+
+        }
+
+
+        $this->assign('data',$data);
+        $this->display();
     }
 
 	

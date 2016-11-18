@@ -1,0 +1,26 @@
+<extend name="Base/common"/>
+
+<block name="body">
+ <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                    	<h4 style="padding: 5px;">按专委会统计</h4>
+                        <table border="" cellspacing="" cellpadding="" class="table table-bordered">
+                        	<tr><th>专委会</th><th>数量</th><th>被区政协采用</th><th>被市委、市政协或市级新闻媒体采用</th><th>被省委、省政协或省级新闻媒体采用</th><th>被全国政协或国家级新闻媒体采用</th>
+                                <th>被区级领导批示</th><th>被市级领导批示</th><th>被省级领导批示</th><th>被中央领导批示</th>
+                            </tr>
+	                        <volist name="data" id="d">
+                        	<tr><td>{$d.name}</td><td>{$d.count|count}</td><td>{$d.count.adopt_qzx}</td><td>{$d.count.adopt_szx}</td><td>{$d.count.adopt_shzx}</td><td>{$d.count.adopt_qgzx}</td>
+                            <td>{$d.count.make_qzx}</td><td>{$d.count.make_szx}</td><td>{$d.count.make_shzx}</td><td>{$d.count.make_qgzx}</td>
+                            </tr>
+	                        </volist>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>

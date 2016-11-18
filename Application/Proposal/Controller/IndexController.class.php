@@ -506,6 +506,7 @@ class IndexController extends BaseController
                 $user = query_user(array('username', 'nickname'), is_login());
                 D('Common/Message')->sendMessage(C('USER_ADMINISTRATOR'), "{$user['nickname']}发布了一个活动，请到后台审核。", $title = '活动发布提醒', U('Admin/Proposal/verify'), is_login(), 2);
             }
+
             $rs = M('Proposal')->add($content);
 
 	        //更新附件
