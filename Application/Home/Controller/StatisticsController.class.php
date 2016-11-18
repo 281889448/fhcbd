@@ -563,7 +563,7 @@ class StatisticsController extends BaseController {
 												sum(case when rate like 'B%' then 1 else 0 end) as rateB,
 												sum(case when rate like 'C%'  then 1 else 0 end) as rateC
 												 from __PROPOSAL_RESULT__ 
-												 and create_time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+												 where create_time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
 
 		$this->assign('data',$data);
 		
@@ -592,7 +592,7 @@ class StatisticsController extends BaseController {
 												sum(case when make like '%3%'  then 1 else 0 end) as make_shzx,
 												sum(case when make like '%4%'  then 1 else 0 end) as make_qgzx
 												 from __POLLS__ 
-												 where zwh='{$z}'   time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+												 where zwh='{$z}' AND  time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
 
 
         }
@@ -625,7 +625,7 @@ class StatisticsController extends BaseController {
 												sum(case when make like '%3%'  then 1 else 0 end) as make_shzx,
 												sum(case when make like '%4%'  then 1 else 0 end) as make_qgzx
 												 from __POLLS__ 
-												 where jdllw='{$z}'   time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+												 where jdllw='{$z}' AND  time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
 
 
         }
@@ -658,7 +658,7 @@ class StatisticsController extends BaseController {
 												sum(case when make like '%3%'  then 1 else 0 end) as make_shzx,
 												sum(case when make like '%4%'  then 1 else 0 end) as make_qgzx
 												 from __POLLS__ 
-												 where jiebie='{$z}'   time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+												 where jiebie='{$z}' AND  time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
 
 
         }
@@ -679,8 +679,8 @@ class StatisticsController extends BaseController {
         foreach($zwharr as $k=>$z){
             $data[$k]['name'] = $z;
             $data[$k]['count'] = reset(M()->query("select count(*)
-												 from __POLLS__ 
-												 where zwh='{$z}'   time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+												 from __WORKING__ 
+												 where zwh='{$z}'  AND time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
 
 
         }
@@ -705,8 +705,8 @@ class StatisticsController extends BaseController {
         foreach($jdllwarr as $k=>$z){
             $data[$k]['name'] = $z;
             $data[$k]['count'] = reset(M()->query("select count(*)
-												 from __POLLS__ 
-												 where jdllw='{$z}'   time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+												 from __WORKING__ 
+												 where jdllw='{$z}' AND  time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
 
 
         }
@@ -731,8 +731,8 @@ class StatisticsController extends BaseController {
         foreach($jiebiearr as $k=>$z){
             $data[$k]['name'] = $z;
             $data[$k]['count'] = reset(M()->query("select count(*)
-												 from __POLLS__ 
-												 where jiebie='{$z}'   time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
+												 from __WORKING__ 
+												 where jiebie='{$z}'  AND time between '{$meet['start_time']}' and '{$meet['end_time']}'"));
 
 
         }
