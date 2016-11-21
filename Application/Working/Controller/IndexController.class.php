@@ -401,11 +401,18 @@ class IndexController extends BaseController
         ksort($group);
         $this->assign('contact_group',$group);
         $m = D('User/User');
-        $m->setModel(WEIYUAN);
-        $member = $m->getUser(get_uid());
+        if(get_permission(get_uid(),['委员'])){
+            $m->setModel(WEIYUAN);
+            $member = $m->getUser(get_uid());
+        }elseif(get_permission(get_uid(),['集体'])){
+            $m->setModel(TEAM);
+            $member = $m->getUser(get_uid());
+            $member['jdllw'] = $member['名称'];
+        }
         $name = $member['名称'];
 
         $this->assign('name',$name);
+        $this->assign('member',$member);
        
         $time= time();
         $this->assign('time',$time);
