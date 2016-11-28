@@ -1606,20 +1606,48 @@ function tox_get_headers($url)
     return $r;
 }
 
-//获取人员详细信息公共函数 $str="1,2,3,4,5,6"格式
+/**
+ * @param $str 传递参数 $str="1,2,3,4,5,6"格式,数字对应用户uid
+ * @return array 返回携带用户信息数组,包含字段,姓名,公司,电话
+ */
 function uid_to_get_detail($str){
-    $people_arr=explode(',',$str);
-    $temp_arr=array();
-    foreach($people_arr as $k=>$v){
-        $name=D('Field')->where(array('uid'=>$v,'field_id'=>38))->find();//38姓名
-        $compay=D('Field')->where(array('uid'=>$v,'field_id'=>50))->find();//50工作单位
-        $phone=D('Field')->where(array('uid'=>$v,'field_id'=>62))->find();//62电话
-        $temp_arr[$k]['uid']=$v;
-        $temp_arr[$k]['truename']=$name['field_data'];
-        $temp_arr[$k]['company']=$compay['field_data'];
-        $temp_arr[$k]['phone']=$phone['field_data'];
+    $m = D('User/User');
+    $m->setModel(TEAM);
+    $users_team = $m->getUsers(['m.uid '=>['in',$str]],['名称','联络员','联系方式']);
+    $users_team = $users_team ? $users_team : [];
+    foreach($users_team as &$v){
+        $v['truename'] = $v['联络员'];
+        $v['company'] = $v['名称'];
+        $v['phone'] = $v['联系方式'];
     }
-    return $temp_arr;
+    $m->setModel(WEIYUAN);
+    $users_weiyuan = $m->getUsers(['m.uid '=>['in',$str]],['名称','工作单位','手机号']) ;
+    foreach($users_weiyuan as &$v){
+        $v['truename'] = $v['名称'];
+        $v['company'] = $v['工作单位'];
+        $v['phone'] = $v['手机号'];
+    }
+    $users_weiyuan = $users_weiyuan ? $users_weiyuan : [];
+    $m->setModel(ZWHXX);
+    $users_zwhxx = $m->getUsers(['m.uid '=>['in',$str]],['名称','姓名','手机号']);
+    $users_zwhxx =  $users_zwhxx ?  $users_zwhxx : [];
+    foreach($users_zwhxx as &$v){
+        $v['truename'] = $v['姓名'];
+        $v['company'] = $v['名称'];
+        $v['phone'] = $v['手机号'];
+    }
+    $users_zwhxx = $users_zwhxx ? $users_zwhxx : [];
+    $temp= array_merge_recursive($users_weiyuan,$users_team,$users_zwhxx);
+    $data = [];
+    foreach($temp as $i=>&$j){
+        $tmp['uid']=$j['uid'];
+        $tmp['truename']=$j['truename'];
+        $tmp['company']=$j['company'];
+        $tmp['phone']=$j['phone'];
+        array_push($data,$tmp);
+        unset($tmp);
+    }
+    return $data;
 }
 /*
  * 参数说明string  type:只能为  event ，meet，message(分别为活动通知，会议通知，公告通知)
@@ -1765,3 +1793,33 @@ function get_event_type(){
 }
 
 
+function get_user_detail($uid){
+    $m = D('User/User');
+    if(get_permission($uid,['委员'])){
+        $m->setModel(WEIYUAN);
+        $user =  $m->getUser($uid);
+        $attend['truename'] = $user['名称'];
+        $attend['company'] = $user['工作单位'];
+        $attend['phone'] = $user['手机号'];
+        $attend['zwh'] = $user['专委会组'];
+        $attend['jdllw'] = $user['街道联络委'];
+        $attend['jiebie'] = $user['界别'];
+    }elseif(get_permission($uid,['集体'])){
+        $m->setModel(TEAM);
+        $user =  $m->getUser($uid);
+        $attend['truename'] = $user['联络员'];
+        $attend['company'] = $user['名称'];
+        $attend['phone'] = $user['联系方式'];
+        $attend['jdllw'] = $user['名称'];
+    }elseif(get_permission($uid,['专委会信息员'])){
+        $m->setModel(ZWHXX);
+        $user =  $m->getUser($uid);
+        $attend['truename'] = $user['姓名'];
+        $attend['company'] = $user['名称'];
+        $attend['phone'] = $user['手机号'];
+    }
+    $user =  $m->getUser($uid);
+    $user = array_merge($user,$attend);
+
+    return $user;
+}

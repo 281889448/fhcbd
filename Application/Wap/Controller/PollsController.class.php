@@ -65,7 +65,8 @@ class PollsController extends BaseController
      * create: 2016/10/14
 	 */
 	public function add(){
-
+        $member = get_user_detail(get_uid());
+        $this->assign('member',$member);
 
         $this->display();
     }

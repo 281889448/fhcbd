@@ -337,6 +337,7 @@ class ConfigController extends BaseController
             }
         }
         $data['data'] = serialize(array_filter($newdata));
+
         $data['pre_data'] = $old_data;
         $data['uid'] = $uid;
         $data['create_time'] = time();

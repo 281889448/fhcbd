@@ -132,8 +132,8 @@ class ProposalController extends BaseController
 	    if($proposal_id){
 	        $content = D('Proposal')->find($proposal_id);
         }
-
-        $mu = D('User/User');
+        $user = get_user_detail(get_uid());
+        /*$mu = D('User/User');
         $user_id = get_uid();
 
         if(get_permission(get_uid(),['委员'])){$group_id = WEIYUAN;}
@@ -152,7 +152,7 @@ class ProposalController extends BaseController
                 $user['sjh'] = $user['联系方式'];
                 break;
         }
-
+        */
 
         //提出期间处理
         $meetbetween_conrfig = C('MEET_BETWEEN');
@@ -317,6 +317,18 @@ class ProposalController extends BaseController
 
             $str = $content['status']==1 ? '保存': '提交';
             if ($rs) {
+
+                $proposals = D('ProposalJoint')->where('proposal_id='.$proposal_id)->select();
+                $users[] = $content['author'];
+                if($proposals){
+                    $uids = array_column($proposals,'user_id');
+                    foreach($uids as $uid){
+                        $user = get_user_detail($uid);
+                        $users[] = $user['名称'];
+                    }
+                }
+                D('Proposal')->where('id='.$proposal_id)->setField('author',join(',',$users));
+
                 $this->success($str.'成功。',$back_url);
             } else {
                 $this->success($str.'失败。', '');

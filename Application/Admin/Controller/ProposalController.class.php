@@ -153,6 +153,7 @@ class ProposalController extends AdminController
      * crreate: 2016/09/26
      */
     public function makeScore(){
+        $meet_id = D('ConfigMeet')->where("meet='".C('PROPOSAL_MEET')."'")->getField('id');
         //首先查找出所有的委员
         $m = D('User/User');
         $m->setModel(WEIYUAN);
@@ -168,6 +169,7 @@ class ProposalController extends AdminController
             $meet_id_qh = D('Meet')->where(['meet_type'=>'全会'])->order('id desc')->getField('id');
             if($meet_id_qh){
                 $qh = D('Attendance')->where(['record_id'=>$meet_id_qh,'type'=>'meet','uid'=>$u['uid'],$map])->order('create_time desc')->find();
+
               /*  if($u['uid'] == 128){getsql();exit;}*/
                 $y_mark_qh = $qh['y_mark'];
                 $s_mark_qh = $qh['s_mark'];
@@ -192,16 +194,23 @@ class ProposalController extends AdminController
 
             //盘点 参加区政协办公室、委员工作委员会组织的活动  会议 20
             $meet_id_qzx = D('Meet')->where(['meet_type'=>['in',['主席会','临时会','专题协商会']]])->order('id desc')->getField('id',true);
-            if($meet_id_qzx){
-                $y_mark_qzx_m = D('Attendance')->where(['record_id'=>['in',implode(',',$meet_id_qzx)],'type'=>'meet','uid'=>$u['uid'],$map])->sum('y_mark');
-                $s_mark_qzx_m = D('Attendance')->where(['record_id'=>['in',implode(',',$meet_id_qzx)],'type'=>'meet','uid'=>$u['uid'],$map])->sum('s_mark');
 
-                $event_id_qzx = D('Event')->where(['meet_type'=>['in',['区政协组织']]])->order('id desc')->getField('id',true);
+            if($meet_id_qzx) {
+                $y_mark_qzx_m = D('Attendance')->where(['record_id' => ['in', implode(',', $meet_id_qzx)], 'type' => 'meet', 'uid' => $u['uid'], $map])->sum('y_mark');
+                $s_mark_qzx_m = D('Attendance')->where(['record_id' => ['in', implode(',', $meet_id_qzx)], 'type' => 'meet', 'uid' => $u['uid'], $map])->sum('s_mark');
+            }
+
+                $event_id_qzx = D('Event')->where(['event_type'=>['in',['区政协组织']]])->order('id desc')->getField('id',true);
+
+             if($event_id_qzx){
                 $y_mark_qzx_e = D('Attendance')->where(['record_id'=>['in',implode(',',$event_id_qzx)],'type'=>'event','uid'=>$u['uid'],$map])->sum('y_mark');
+
                 $s_mark_qzx_e = D('Attendance')->where(['record_id'=>['in',implode(',',$event_id_qzx)],'type'=>'event','uid'=>$u['uid'],$map])->sum('s_mark');
 
             }
+
             $score_qzx = ($y_mark_qzx_m + $y_mark_qzx_e) ? (20 * ($s_mark_qzx_m + $s_mark_qzx_e) / ($y_mark_qzx_m + $y_mark_qzx_e)) : 0;
+
             //盘点 参加专委会（组）、街道联络委员会组织的活动 20
 
             $meet_id_zwhjdllw = D('Meet')->where(['meet_type'=>['in',['对口协商会','部门协商会','专委会','街道联络委会']]])->order('id desc')->getField('id',true);
@@ -243,31 +252,37 @@ class ProposalController extends AdminController
             $msm = D('StocktakMeet');
 
             $map_sm['uid'] = $u['uid'];
-            $map_sm['create_time'] = ['between',$time[0].','.$time[1]];
+            $map_sm['create_time'] = ['between',strtotime($time[0]).','.strtotime($time[1])];
             //全会
             $map_sm['type'] = 'qh';
             $qh_flag = $msm->where($map_sm)->find();
             $data_sm_qh['uid'] = $u['uid'];
             $data_sm_qh['type'] = 'qh';
-            $data_sm_qh['mark']= $s_mark_cwh;
-            $data_sm_qh['score'] = $score_cwh;
+            $data_sm_qh['mark']= $s_mark_qh;
+            $data_sm_qh['score'] = round($score_qh);
             $data_sm_qh['create_time'] = time();
+
             if($qh_flag){
                 $msm->where($map_sm)->save($data_sm_qh);
+
             }else{
                 $msm->add($data_sm_qh);
+
             }
 
             //常委会活动
             $map_sm['type'] = 'cwh';
             $cwh_flag = $msm->where($map_sm)->find();
+
             $data_sm_cwh['uid'] = $u['uid'];
             $data_sm_cwh['type'] = 'cwh';
             $data_sm_cwh['mark']= $s_mark_cwh;
-            $data_sm_cwh['score'] = $score_cwh;
+            $data_sm_cwh['score'] = round($score_cwh);
             $data_sm_cwh['create_time'] = time();
+
             if($cwh_flag){
                 $msm->where($map_sm)->save($data_sm_cwh);
+
             }else{
                 $msm->add($data_sm_cwh);
             }
@@ -278,7 +293,7 @@ class ProposalController extends AdminController
             $data_sm_qzx['uid'] = $u['uid'];
             $data_sm_qzx['type'] = 'qzx';
             $data_sm_qzx['mark']= $s_mark_qzx_m + $s_mark_qzx_e;
-            $data_sm_qzx['score'] = $score_qzx;
+            $data_sm_qzx['score'] = round($score_qzx);
             $data_sm_qzx['create_time'] = time();
             if($qzx_flag){
                 $msm->where($map_sm)->save($data_sm_qzx);
@@ -293,7 +308,7 @@ class ProposalController extends AdminController
             $data_sm_zwhjdllw['uid'] = $u['uid'];
             $data_sm_zwhjdllw['type'] = 'zwhjdllw';
             $data_sm_zwhjdllw['mark']= $s_mark_zwhjdllw_m + $s_mark_zwhjdllw_e;
-            $data_sm_zwhjdllw['score'] = $score_zwhjdllw;
+            $data_sm_zwhjdllw['score'] = round($score_zwhjdllw);
             $data_sm_zwhjdllw['create_time'] = time();
             if($zwhjdllw_flag){
                 $msm->where($map_sm)->save($data_sm_zwhjdllw);
@@ -301,10 +316,23 @@ class ProposalController extends AdminController
                 $msm->add($data_sm_zwhjdllw);
             }
 
-
-
+            //历史积分存储
+            $m_hs = D('HistoryScore');
+            $rs = $m_hs->where("meet_id={$meet_id} and uid={$u['uid']}")->find();
+            $m_hs->uid = $u['uid'];
+            $m_hs->create_time = time();
+            $m_hs->meet_id = $meet_id;
+            $m_hs->score = D('Member')->where('uid='.$u['uid'])->getField('score');
+            if($rs){
+                 $m_hs->save();
+            }else{
+                $m_hs->add();
+            }
 
         }
+
+
+
 
             $this->success('盘点积分更新完成');
 

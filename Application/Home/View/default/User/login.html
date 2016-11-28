@@ -1,38 +1,66 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-
+<!doctype html>
+<html lang="en">
 <head>
-    <include file="Public/head"/>
-
+	<meta charset="UTF-8" />
+	<title>登录</title>
+	<style>
+		body{
+			background: url(./Public/img/000.jpg) repeat-x;
+			width: 100%;
+			height: 100%;
+		}
+		.box{
+			width: 906px;
+			margin: 120px auto 0 200px;
+			background: #A7CDFF;
+			padding-bottom: 20px;
+		}
+		.input{
+			height: 30px;
+			width: 300px;
+			border: 1px solid #6CA8F6;
+			border-radius: 5px;
+			outline: none;
+			text-indent: 10px;
+		}
+		.loginbtn{
+			height: 32px;
+			width: 300px;
+			text-align: center;
+			border: 1px solid #6CA8F6;
+			display: inline-block;
+			cursor: pointer;
+			border-radius: 5px;
+			background: #4DB4FE;
+			color: white;
+			margin-top: 10px;
+			margin-left: 353px;
+		}
+	</style>
 </head>
-
 <body>
-<div class="form-bottom" id="login">
-                        	<h3>江汉区政协委员履职管理与服务信息系统</h3>
-			                    <form role="form" action="" method="post" class="login-form">
-			                    	<div class="form-group">
-			                    		<label class="sr-only" for="form-username">用户名</label>
-			                        	<input type="text" name="username" placeholder="用户名..." class="form-username form-control" id="form-username">
-			                        </div>
-			                        <div class="form-group">
-			                        	<label class="sr-only" for="form-password">密码</label>
-			                        	<input type="password" name="password" placeholder="密码..." class="form-password form-control" id="form-password">
-			                        </div>
-			                        <button type="submit" class="btn">登录</button>
-			                    </form>
-		                    </div>
-               
-	
-    <!-- bootstrop js -->
-    <include file="Public/footer"/>
+
+
+
+
+<div class="box">
+	<img src="./Public/img/00.jpg" alt="" />
+	<form role="form" action="" method="post" class="login-form" style="overflow:hidden; padding:50px 0 0 0;">
+		<div style="text-align: center;">
+			<h3 style="width: 100px;display: inline-block;">用户名：</h3><input type="text" name="username" class="input"/>
+		</div>
+		<div style="text-align: center;">
+			<h3 style="width: 100px;display: inline-block;">密  码：</h3><input type="password" name="password" class="input"/>
+		</div>
+		<div>
+			<button type="submit" class="loginbtn">登录</button>
+		</div>
+	</form>
+	<p style="text-align:right;color:#BF1010;font-size:12px;padding-right:250px;">如忘记账号密码，请致电027-85481646</p>
+
+
+</div>
 </body>
-
 </html>
-
-
-
-
-
-
 
 

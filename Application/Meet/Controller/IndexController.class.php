@@ -63,6 +63,7 @@ class IndexController extends BaseController
             $temp_arr[$k] = $name['field_data'];
         }
         $markset = D('Meet_markset')->where(array('meet_id' => $id))->select();
+        $this->assign('meet_type', get_meet_type());
         $this->assign('markset', $markset);
         $this->assign('people', $temp_arr);
         $this->assign('edit', $edit);
@@ -94,7 +95,7 @@ class IndexController extends BaseController
         $markset = D('Meet_markset')->where(array('meet_id' => $id))->select();
         $edit = D('Meet')->where(array('id' => $id))->find();
         //查找参会名称
-        $temp_arr = $this->uid_to_get_detail($edit['people']);
+        $temp_arr =uid_to_get_detail($edit['people']);
         $this->assign('people', $temp_arr);
         $this->assign('markset', $markset);
         $this->assign('meet_type', get_meet_type());
@@ -159,7 +160,8 @@ class IndexController extends BaseController
         if ($result == null) {
             $this->error("添加失败", U('Meet/Index/add'));
         } else {
-            $temp_arr = $this->uid_to_get_detail($data['people']);//签到名单人员
+            $temp_arr =uid_to_get_detail($data['people']);//签到名单人员
+
             for ($i = 1; $i < $count; $i++) {
                 $mark_set_arr[$i] = array(
                     'meet_id' => $result,
@@ -180,7 +182,6 @@ class IndexController extends BaseController
             foreach ($temp_arr as $k => $v) {
                 $temp_arr[$k]['meet_id'] = $result;
                 $temp_arr[$k]['status'] = 0;
-                $temp_arr[$k]['name'] = $v['truename'];
                 //添加参会详情
                 D('Meet_attend')->add($temp_arr[$k]);//保存参会人员
                     $temp_arr[$k]['record_id'] = $result;//参会率
@@ -195,39 +196,6 @@ class IndexController extends BaseController
 
 
     }
-
-    //获取人员详细信息公共函数 $str="1,2,3,4,5,6"格式
-    public function uid_to_get_detail($str)
-    {
-        $m = D('User/User');
-
-        $m->setModel(TEAM);
-
-        $users_team = $m->getUsers(['m.uid '=>['in',$str]],['名称','联络员','联系方式']);
-        $users_team = $users_team ? $users_team : [];
-        $m->setModel(WEIYUAN);
-
-        $users_weiyuan = $m->getUsers(['m.uid '=>['in',$str]],['名称','工作单位','手机号']) ;
-        $users_weiyuan = $users_weiyuan ? $users_weiyuan : [];
-        $m->setModel(ZWHXX);
-        $users_zwhxx = $m->getUsers(['m.uid '=>['in',$str]],['名称','姓名','手机号']);
-        $users_zwhxx =  $users_zwhxx ?  $users_zwhxx : [];
-
-        return array_merge_recursive($users_weiyuan,$users_team,$users_zwhxx);
-        /*$people_arr = explode(',', $str);
-        $temp_arr = array();
-        foreach ($people_arr as $k => $v) {
-            $truename = D('Field')->where(array('uid' => $v, 'field_id' => 38))->find();//38姓名
-            $compay = D('Field')->where(array('uid' => $v, 'field_id' => 50))->find();//50工作单位
-            $phone = D('Field')->where(array('uid' => $v, 'field_id' => 62))->find();//62电话
-            $temp_arr[$k]['uid'] = $v;
-            $temp_arr[$k]['truename'] = $truename['field_data'];
-            $temp_arr[$k]['company'] = $compay['field_data'];
-            $temp_arr[$k]['phone'] = $phone['field_data'];
-        }*/
-
-    }
-
     //修改会议
     public function save()
     {
@@ -287,7 +255,7 @@ class IndexController extends BaseController
         if ($result == null) {
             $this->error("修改失败", U('Meet/Index/add'));
         } else {
-            $temp_arr = $this->uid_to_get_detail($data['people']);//签到名单人员
+            $temp_arr =uid_to_get_detail($data['people']);//签到名单人员
 
             //删除减少人员
             $people_arr = explode(',', $data['people']);
@@ -316,9 +284,9 @@ class IndexController extends BaseController
                     $temp_arr[$k]['meet_id'] = $id;
                     $temp_arr[$k]['status'] = 0;
                     $temp_arr[$k]['mark_sort'] = $i;
-                        $map['meet_id']=$id;
-                        $map['uid']=$temp_arr[$k]['uid'];
-                        $map['mark_sort']=$i;
+                    $map['meet_id']=$id;
+                    $map['uid']=$temp_arr[$k]['uid'];
+                    $map['mark_sort']=$i;
                     $markuser=D('Meet_marknum')->where($map)->find();
                     if(!$markuser)D('Meet_marknum')->add($temp_arr[$k]);//保存所有签到数据
                 }
@@ -328,14 +296,12 @@ class IndexController extends BaseController
             //保存参会人员名单,保存参会率名单
 
             foreach ($temp_arr as $k => $v) {
-                $temp_arr[$k]['meet_id'] = $id;
-                $temp_arr[$k]['status'] = 0;
-                $temp_arr[$k]['name'] = $v['名称'];
-                $temp_arr[$k]['phone'] = $v['手机号'] ? $v['手机号'] : $v['联系方式'];
-                $temp_arr[$k]['record_id'] = $id;//参会率
-                $temp_arr[$k]['type'] = 'meet';//参会率
-                $temp_arr[$k]['creat_time'] = time();//参会率
-                $temp_arr[$k]['y_mark'] = $count-1;//参会率
+                $tem_arr[$k]['meet_id'] = $id;
+                $tem_arr[$k]['status'] = 0;
+                $tem_arr[$k]['record_id'] = $id;//参会率
+                $tem_arr[$k]['type'] = 'meet';//参会率
+                $tem_arr[$k]['creat_time'] = time();//参会率
+                $tem_arr[$k]['y_mark'] = $count-1;//参会率
                 unset($temp_arr[$k]['id']);
                         //查找条件
                    $map['meet_id']=$id;
@@ -465,8 +431,8 @@ class IndexController extends BaseController
         }
         $m = D('User/User');
 
-        foreach ($attend as $key => $val) {
-            if(get_permission($val['uid'],['委员'])){
+        foreach ($attend as $key => &$val) {
+            /*if(get_permission($val['uid'],['委员'])){
                 $m->setModel(WEIYUAN);
                 $user =  $m->getUser($val['uid']);
                 $attend[$key]['truename'] = $user['名称'];
@@ -485,11 +451,11 @@ class IndexController extends BaseController
                 $attend[$key]['company'] = $user['名称'];
                 $attend[$key]['phone'] = $user['手机号'];
             }
-           $user =  $m->getUser($val['uid']);
-
-
+           $user =  $m->getUser($val['uid']);*/
+            $val = get_user_detail($val['uid']);
 
         }
+
         $total_count=count(D('Meet_attend')->where(array('meet_id' => $id))->select());
         $this->assign('total_count',$total_count);
         $this->assign('data', $attend);
@@ -634,7 +600,6 @@ class IndexController extends BaseController
         $last_uids=D('MeetAttend')->where(array('meet_id'=>$id,'status'=>0))->getField('uid',true);
         $map['id'] = array('in', $last_uids);
         $userdata = D('UcenterMember')->where($map)->field('username,openid')->select();
-
         $wxapi = new WeixinApi();
         $time = 0;
         foreach ($userdata as $key => $val) {

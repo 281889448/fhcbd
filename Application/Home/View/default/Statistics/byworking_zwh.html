@@ -1,0 +1,24 @@
+<extend name="Base/common"/>
+
+<block name="body">
+ <div class="ar_content">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="tableWrap">
+                    	<h4 style="padding: 5px;">按专委会统计</h4>
+                        <table border="" cellspacing="" cellpadding="" class="table table-bordered">
+                        	<tr><th>专委会</th><th>数量</th>
+                            </tr>
+	                        <volist name="data" id="d">
+                        	<tr><td>{$d.name}</td><td>{$d.count.countnum}</td>
+                            </tr>
+	                        </volist>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>

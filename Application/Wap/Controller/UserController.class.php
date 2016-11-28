@@ -144,7 +144,10 @@ class UserController extends BaseController
         $map_od['is_now'] = 1;
         $map_od['uid'] = get_uid();
         $old_data = M('UserHistory')->where( $map_od)->getField('data');
-
+        if(!$old_data){
+            $old_data = M('Field')->where('uid='.get_uid())->getField('field_id,field_data');
+            $old_data  = serialize($old_data);
+        }
 
         //委员资料入库历史记录
         $rs = $this->insertHistory(get_uid(),$data,$old_data);
@@ -254,6 +257,7 @@ class UserController extends BaseController
             }
         }
         $data['data'] = serialize(array_filter($newdata));
+
         $data['pre_data'] = $old_data;
         $data['uid'] = $uid;
         $data['create_time'] = time();

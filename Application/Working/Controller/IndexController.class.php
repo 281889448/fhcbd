@@ -401,11 +401,18 @@ class IndexController extends BaseController
         ksort($group);
         $this->assign('contact_group',$group);
         $m = D('User/User');
-        $m->setModel(WEIYUAN);
-        $member = $m->getUser(get_uid());
+        if(get_permission(get_uid(),['委员'])){
+            $m->setModel(WEIYUAN);
+            $member = $m->getUser(get_uid());
+        }elseif(get_permission(get_uid(),['集体'])){
+            $m->setModel(TEAM);
+            $member = $m->getUser(get_uid());
+            $member['jdllw'] = $member['名称'];
+        }
         $name = $member['名称'];
 
         $this->assign('name',$name);
+        $this->assign('member',$member);
        
         $time= time();
         $this->assign('time',$time);
@@ -429,6 +436,8 @@ class IndexController extends BaseController
         $data['time']= time();
 	      $data['status']  = $data['status'];
 	      $data['uid'] = get_uid();
+        $data_tj = $this->get_tjinfo(get_uid());
+        $data = array_merge($data,$data_tj);
          $rs = D('Working')->add($data);
 	
 	
@@ -935,6 +944,32 @@ class IndexController extends BaseController
         $pid = D('WorkingProcess')->add($data);
 
         return $pid;
+    }
+
+    /**
+     * 获取用户信息对应的统计字段信息
+     *
+     */
+    private function get_tjinfo($uid){
+        if(!$uid){
+            return [];
+        }
+        $m = D('User/User');
+        $data = [];
+        if(get_permission($uid,['委员'])){
+            $m->setModel(WEIYUAN);
+            $user = $m->getUser($uid);
+            $data['zwh'] = $user['专委会组'];
+            $data['jdllw'] = $user['街道联络委'];
+            $data['jiebie'] = $user['界别'];
+        }elseif(get_permission($uid,['集体'])){
+            $m->setModel(TEAM);
+            $user = $m->getUser($uid);
+
+            $data['jdllw'] = $user['名称'];
+
+        }
+        return $data;
     }
 
 }

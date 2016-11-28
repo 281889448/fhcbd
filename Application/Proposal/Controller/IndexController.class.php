@@ -203,7 +203,7 @@ class IndexController extends BaseController
 
 			$map['p.title'] = $map_r['title'] ? ['like',"%{$map_r['title']}%"] : '';
             $map['p.author'] = $map_r['author'] ? ['like',"%{$map_r['author']}%"] : '';
-            $map['p.type_id'] = $map_r['type_id'] ? ['eq',$map_r['author']] : '';
+            $map['p.type_id'] = $map_r['type_id'] ? ['eq',$map_r['type_id']] : '';
             $map['p.jiebie'] = $map_r['jiebie'] ? ['eq',$map_r['jiebie']] : '';
             $map['p.meet_type'] = $map_r['meet_type'] ? ['eq',$map_r['meet_type']] : '';
 	
@@ -491,6 +491,16 @@ class IndexController extends BaseController
 	        
 						$str = $content['status']==1 ? '保存': '提交';
             if ($rs) {
+                $proposals = D('ProposalJoint')->where('proposal_id='.$ids)->select();
+                $users[] = $content['author'];
+                if($proposals){
+                    $uids = array_column($proposals,'user_id');
+                    foreach($uids as $uid){
+                       $user = get_user_detail($uid);
+                        $users[] = $user['名称'];
+                    }
+                }
+                D('Proposal')->where('id='.$ids)->setField('author',join(',',$users));
                 $this->success($str.'成功。',$back_url);
             } else {
                 $this->error($str.'失败。', '');
@@ -506,6 +516,7 @@ class IndexController extends BaseController
                 $user = query_user(array('username', 'nickname'), is_login());
                 D('Common/Message')->sendMessage(C('USER_ADMINISTRATOR'), "{$user['nickname']}发布了一个活动，请到后台审核。", $title = '活动发布提醒', U('Admin/Proposal/verify'), is_login(), 2);
             }
+
             $rs = M('Proposal')->add($content);
 
 	        //更新附件

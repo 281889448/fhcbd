@@ -20,7 +20,10 @@
     <section class="ui-container">
 
 <form action="{:U('Wap/Polls/doPost')}" method="post">
-    <input type="hidden" name="status" value="2">
+    <input type="hidden" name="status" value="2"/>
+    <input type="hidden" name="zwh" value="{$member.zwh}"/>
+    <input type="hidden" name="jdllw" value="{$member.jdllw}"/>
+    <input type="hidden" name="jiebie" value="{$member.jiebie}" />
 <div class="search-box">
     <input type="text" name="time" id="USER_AGE" value="{$Think.NOW_TIME|date='Y-m-d',###}" readonly class="input" placeholder="开始时间"  />
     <select name="type_id" >

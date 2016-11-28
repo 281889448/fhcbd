@@ -89,7 +89,7 @@ class IndexController extends BaseController
         $markset = D('Event_markset')->where(array('event_id' => $id))->select();
         $edit = D('Event')->where(array('id' => $id))->find();
         //查找参会名称
-        $temp_arr = $this->uid_to_get_detail($edit['people']);
+        $temp_arr =uid_to_get_detail($edit['people']);
         $this->assign('event_type', get_event_type());
         $this->assign('people', $temp_arr);
         $this->assign('markset', $markset);
@@ -148,12 +148,13 @@ class IndexController extends BaseController
         $data['explain'] = $_POST['explain'];
         $data['people'] = $_POST['people'];
         $data['address'] = $_POST['address'];
+        $data['people_view'] = I('post.people_view');
         $data['create_time'] = time();
         $result = D('Event')->add($data);
         if ($result == null) {
             $this->error("添加失败", U('Event/Index/add'));
         } else {
-            $temp_arr = $this->uid_to_get_detail($data['people']);//签到名单人员
+            $temp_arr =uid_to_get_detail($data['people']);//签到名单人员
             for ($i = 1; $i < $count; $i++) {
                 $mark_set_arr[$i] = array(
                     'event_id' => $result,
@@ -163,9 +164,9 @@ class IndexController extends BaseController
                 D('Event_markset')->add($mark_set_arr[$i]);//保存签到设置
 
                 foreach ($temp_arr as $k => $v) {
-                        $temp_arr[$k]['event_id'] = $result;
-                        $temp_arr[$k]['status'] = 0;
-                        $temp_arr[$k]['mark_sort'] = $i;
+                    $temp_arr[$k]['event_id'] = $result;
+                    $temp_arr[$k]['status'] = 0;
+                    $temp_arr[$k]['mark_sort'] = $i;
                     //添加签到详情
                     D('Event_marknum')->add($temp_arr[$k]);//保存所有签到数据
                 }
@@ -174,39 +175,19 @@ class IndexController extends BaseController
             foreach ($temp_arr as $k => $v) {
                 $temp_arr[$k]['event_id'] = $result;
                 $temp_arr[$k]['status'] = 0;
-                $temp_arr[$k]['name'] = $v['truename'];
-                //添加参会详情
                 D('Event_attend')->add($temp_arr[$k]);//保存参会人员
-                    $temp_arr[$k]['record_id'] = $result;//参会率
-                    $temp_arr[$k]['type'] = 'event';//参会率
-                    $temp_arr[$k]['create_time'] = time();//参会率
-                    $temp_arr[$k]['y_mark'] = $count-1;//参会率
+                $temp_arr[$k]['record_id'] = $result;//参会率
+                $temp_arr[$k]['type'] = 'event';//参会率
+                $temp_arr[$k]['create_time'] = time();//参会率
+                $temp_arr[$k]['y_mark'] = $count-1;//参会率
                 D('Attendance')->add($temp_arr[$k]);//保存参会率
+
             }
             $this->success("添加成功", U('Event/Index/index'));
         }
 
 
     }
-
-
-    //获取人员详细信息公共函数 $str="1,2,3,4,5,6"格式
-    public function uid_to_get_detail($str)
-    {
-        $people_arr = explode(',', $str);
-        $temp_arr = array();
-        foreach ($people_arr as $k => $v) {
-            $truename = D('Field')->where(array('uid' => $v, 'field_id' => 38))->find();//38姓名
-            $compay = D('Field')->where(array('uid' => $v, 'field_id' => 50))->find();//50工作单位
-            $phone = D('Field')->where(array('uid' => $v, 'field_id' => 62))->find();//62电话
-            $temp_arr[$k]['uid'] = $v;
-            $temp_arr[$k]['truename'] = $truename['field_data'];
-            $temp_arr[$k]['company'] = $compay['field_data'];
-            $temp_arr[$k]['phone'] = $phone['field_data'];
-        }
-        return $temp_arr;
-    }
-
     //修改活动
     public function save()
     {
@@ -257,13 +238,17 @@ class IndexController extends BaseController
         $data['title'] = $_POST['title'];
         $data['explain'] = $_POST['explain'];
         $data['people'] = $_POST['people'];
+        $data['people_view'] =  I('post.people_view');
         $data['address'] = $_POST['address'];
         $data['create_time'] = time();
+
         $result = D('Event')->where(array('id' => $id))->save($data);
+
         if ($result == null) {
             $this->error("修改失败", U('Event/Index/add'));
         } else {
-            $temp_arr = $this->uid_to_get_detail($data['people']);//签到名单人员
+            $temp_arr =uid_to_get_detail($data['people']);//签到名单人员
+
             //删除减少人员
             $people_arr = explode(',', $data['people']);
             $old_user=D('Event_attend')->where(array('event_id' => $id))->select();
@@ -294,38 +279,44 @@ class IndexController extends BaseController
                     $map['event_id']=$id;
                     $map['uid']=$temp_arr[$k]['uid'];
                     $map['mark_sort']=$i;
+                    $temp_arr[$k]['uid'] = $v['uid'];
                     $markuser=D('Event_marknum')->where($map)->find();
                     if(!$markuser)D('Event_marknum')->add($temp_arr[$k]);//保存所有签到数据
                 }
 
             }
-            //保存参会人员名单
+
+            //保存参会人员名单,保存参会率名单
+
             foreach ($temp_arr as $k => $v) {
                 $temp_arr[$k]['event_id'] = $id;
                 $temp_arr[$k]['status'] = 0;
-                $temp_arr[$k]['name'] = $v['truename'];
                 $temp_arr[$k]['record_id'] = $id;//参会率
                 $temp_arr[$k]['type'] = 'event';//参会率
-                $temp_arr[$k]['create_time'] = time();//参会率
+                $temp_arr[$k]['creat_time'] = time();//参会率
                 $temp_arr[$k]['y_mark'] = $count-1;//参会率
+                unset($temp_arr[$k]['id']);
                 //查找条件
                 $map['event_id']=$id;
                 $map['uid']=$temp_arr[$k]['uid'];
-                $user = D('Event_attend')->where($map)->find();
+                $user = D('EventAttend')->where($map)->find();
                 if (!$user) D('Event_attend')->add($temp_arr[$k]);
-                    $attend_map['uid']=$temp_arr[$k]['uid'];
-                    $attend_map['record_id']=$id;
-                    $attend_map['type']='event';
+                $attend_map['uid']=$temp_arr[$k]['uid'];
+                $attend_map['record_id']=$id;
+                $attend_map['type']='event';
                 $attend_user=D('Attendance')->where($attend_map)->find();
                 //更新应签总数
                 if($attend_user['y_mark']!=($count-1)){
                     D('Attendance')->where(array('id'=>$attend_user['id']))->save($temp_arr[$k]);
+
                 }
                 if(!$attend_user)D('Attendance')->add($temp_arr[$k]);//保存所有签到数据
             }
+
             $this->success("修改成功", U('Event/Index/index'));
         }
     }
+
     public function add()
     {
         //查找人员名单
@@ -615,14 +606,14 @@ public function back($id){
     public function leave(){
         //审核活动或者会议类型
         $event_type=auth_apply('event',get_uid());
-        print_r($event_type);
+
         $mapp['event_type']=array('in',$event_type['type']);
         if($event_type['findmembers']){
             $mapp['uid']=get_uid();//谁建的会议会谁审核
-            echo get_uid();
+
         }
         $eventdb=D('Event')->where($mapp)->getField('id',true);
-        print_r($eventdb);
+
         $map['status']=2;
         $map['event_id']=array('in',$eventdb);
         //是否需要查看管理成员

@@ -61,6 +61,7 @@ class SearchController extends BaseController {
 		
 		if(!empty($map['ycode'])){
 			$map['ycode'] = array('like',"%{$map['ycode']}%");
+            $map['code'] = ['like',"%{$map['ycode']}%"];
 		}
 		
 		if(!empty($map['title'])){
@@ -123,7 +124,7 @@ class SearchController extends BaseController {
      * MR.Z <327778155@qq.com>
      * create: 2016/11/15
      */
-	public function export_list($page=1){
+	public function export_list(){
         $map = I('get.');
         $map  = array_filter($map);
 
@@ -131,7 +132,7 @@ class SearchController extends BaseController {
         $tree = D('ProposalType')->where(array('status' => 1))->select();
         $this->assign('tree', $tree);
 
-        $proposals = $m->where($map)->order('create_time desc')->page($page,16)->select();
+        $proposals = $m->where($map)->order('create_time desc')->select();
 
         $totalCount = $m->where($map)->count();
 

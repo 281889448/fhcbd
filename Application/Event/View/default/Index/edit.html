@@ -23,7 +23,7 @@
                                     <td colspan="5">
                                         <select name="event_type" class="form-control input-sm span4" value="{$edit.event_type}">
                                             <volist name="event_type" id="vo">
-                                            <option value="{$vo.title}">{$vo.title}</option>
+                                            <option value="{$vo.title}" <if condition="$edit['event_type'] eq $vo['title']"> selected</if>>{$vo.title}</option>
                                             </volist>
                                         </select>
                                     </td>

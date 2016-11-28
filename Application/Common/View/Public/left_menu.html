@@ -189,7 +189,12 @@
 	                <li><a href="{:U('Usercenter/Index/search')}">委员统计</a></li>
 					</if>
 					<if condition="get_permission(get_uid(),['政府督查室','秘书长','主席','提案委','政协工作人员']) ">
-                    <li><a href="{:U('Home/Statistics/index')}">提案统计</a></li>
+						<php>
+							$meet_name = C('PROPOSAL_MEET');
+							$meet_id = M('ConfigMeet')->where("meet='$meet_name '")->getField('id');
+
+						</php>
+                    <li><a href="{:U('Home/Statistics/index',['meet_id'=>$meet_id])}">提案统计</a></li>
 					</if>
 					<if condition="get_permission(get_uid(),['秘书长','主席']) || $roler">
                     <li><a href="{:U('Home/Statistics/weiyuans')}"  >委员量化统计</a></li>
@@ -256,8 +261,8 @@
 				   </if>
 				   <ul>
 
-						   <li><a href="{:U('UserCenter/User/index')}">委员列表</a></li>
-						   <li><a href="{:U('UserCenter/User/review')}">委员审核</a></li>
+						   <li><a href="{:U('Usercenter/User/index')}">委员列表</a></li>
+						   <li><a href="{:U('Usercenter/User/review')}">委员审核</a></li>
 
 
 

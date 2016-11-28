@@ -120,7 +120,6 @@ class UserModel extends Model
 				}
             $fields = $fields_tmp;
 
-
 				$map['group_id'] = $this->group_id;
 				$map['status'] = 1;
                 $map = array_filter($map);
@@ -136,7 +135,7 @@ class UserModel extends Model
 				$field_group_ids = array_column($field_group, 'id');
 				$map_profile['profile_group_id'] = array('in', array($this->expand_id));
 				$fields_list = D('field_setting')->where($map_profile)->getField('id,field_name,form_type'); //TODO
-		
+
 				$fields_list = array_combine(array_column($fields_list, 'field_name'), $fields_list);
 
 			//如果设置了展示字段

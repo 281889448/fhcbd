@@ -22,13 +22,9 @@
                                     </td>
                                     <td colspan="5">
                                         <select name="meet_type" class="form-control input-sm span4" value="{$edit.meet_type}">
-                                            <option value="全会">全会</option>
-                                            <option value="常委会">常委会</option>
-                                            <option value="主席会">主席会</option>
-                                            <option value="临时会">临时会</option>
-                                            <option value="专题协商会">专题协商会</option>
-                                            <option value="对口协商会">对口协商会</option>
-                                            <option value="部门协商会">部门协商会</option>
+                                            <volist name="meet_type" id="vo">
+                                                <option value="{$vo.title}" <if condition="$edit['meet_type'] eq $vo['title']"> selected</if>>{$vo.title}</option>
+                                            </volist>
                                         </select>
                                     </td>
                                 </tr>

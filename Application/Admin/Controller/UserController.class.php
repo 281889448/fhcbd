@@ -985,9 +985,9 @@ str;
                 $highestColumn = $sheet->getHighestColumn(); // 取得总列数
                 //headArr 里均为扩展字段
                 $headArr = ['A' => ['38', '姓名'], 'B' => ['39', '曾用名'], 'C' => ['62', '手机号码'], 'D' => ['75', '宗教'], 'E' => ['41', '出生日期'], 'F' => ['40', '性别'], 'G' => ['42', '民族'], 'H' => ['43', '籍贯'], 'I' => ['46', '文化程度'], 'J' => ['73', '属地'], 'K' => ['103', '政治面貌'], 'L' => ['48', '党派职务'], 'M' => ['74', '婚姻'], 'N' => ['36', '身份证号'], 'O' => ['65', '电子邮箱'], 'P' => ['47', '职称'], 'Q' => ['44', '邮编'], 'R' => ['67', '社会阶级'], 'S' => ['50', '工作单位'], 'T' => ['52', '单位地址'], 'U' => ['54', '参加工作时间'], 'V' => ['49', '现任职务'], 'W' => ['51', '推荐单位'], 'X' => ['53', '办公电话'], 'Y' => ['63', '家庭电话'], 'Z' => ['64', '家庭住址'], 'AA' => ['66', 'QQ号码'], 'AB' => ['55', '加入党派日期'], 'AC' => ['68', '本人简历'], 'AD' => ['69', '有否港澳台关系及联系'], 'AE' => ['70', '兴趣爱好及特长'], 'AF' => ['71', '备注'], 'AG' => ['76', '加入政协日期'], 'AH' => ['77', '退出政协日期'], 'AI' => ['60', '是否省委员'], 'AJ' => ['61', '是否区委员'], 'AK' => ['59', '是否常委'], 'AL' => ['72', '委员状态'], 'AM' => ['96', '届别'], 'AN' => ['56', '专委会'], 'AO' => ['93', '专委会组'], 'AP' => ['57', '街道联络委'], 'AQ' => ['58', '界别小姐'], 'AR' => ['98', '调整，变动原因'], 'AS' => ['97', '调整变动时间']];
+
                 for ($i = 2; $i < $highestRow; $i++) {
                     //首先在用户主表里添加一条用户记录  得到UID
-                    $User = new UserApi;
 
                     $username = $objExcel->getActiveSheet()->getCell('C'.$i)->getValue();
                     $idcart = $objExcel->getActiveSheet()->getCell('N'.$i)->getValue();
@@ -996,16 +996,22 @@ str;
 
 
                     $email =(string) $objExcel->getActiveSheet()->getCell('O'.$i)->getValue();
+                    if(empty($username) || empty($password) || empty($email) ){
+                        continue;
+                    }
+                    /* 调用注册接口注册用户 */
+                    $User = new UserApi;
                     $uid = $User->register($username, $username, $password, $email);
-
-
+                    print_r($uid);
                     if (0 < $uid) { //注册成功
                         $user = array('uid' => $uid, 'nickname' => $username, 'status' => 1);
                         M('Member')->add($user);
-                        //通过用户UID 以及字段ID  字段值 插入扩展字段
-
-
                         $this->import_expandinfo($uid, $i, $headArr, $objExcel);
+                  //      $this->success('用户添加成功！', U('index'));
+
+                    } else { //注册失败，显示错误信息
+
+                        $this->error($this->showRegError($uid));
                     }
 
                 }

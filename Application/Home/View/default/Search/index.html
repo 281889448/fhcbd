@@ -14,6 +14,7 @@
               <tr><th>
                 <select name="type_id" class="form-control input-sm">
                 <option disabled="" selected="" hidden="">--提案类别--</option>
+                  <option value="">--请选择提案类别--</option>
                 <volist name="tree" id="top">
                   <option value="{$top.id}" <eq name="map.type_id" value="$top.id">selected</eq> >
                     {$top.title}
