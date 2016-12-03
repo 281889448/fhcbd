@@ -206,7 +206,7 @@ class WeixinController extends BaseController {
                     $id=D('Event_marknum')->where(array('id'=>$data['id']))->save($data);
                     if($id){
                         //增加一次签到
-                        D('Attendance')->where(array('uid'=>$this->uid,'record_id'=>$data['event_id']))->setInc('s_mark',1);
+                        D('Attendance')->where(array('uid'=>$this->uid,'record_id'=>$data['event_id'],'type'=>'event'))->setInc('s_mark',1);
                     }
                     $exit=$this->return_exit_arr($id,'签到成功！','签到失败');
                 }
@@ -247,7 +247,7 @@ class WeixinController extends BaseController {
                     $id=D('Meet_marknum')->where(array('id'=>$data['id']))->save($data);
                     if($id){
                         //增加一次签到
-                        $ss=D('Attendance')->where(array('uid'=>$this->uid,'record_id'=>$data['meet_id']))->setInc('s_mark',1);
+                        $ss=D('Attendance')->where(array('uid'=>$this->uid,'record_id'=>$data['meet_id'],'type'=>'meet'))->setInc('s_mark',1);
                     }
                     $exit=$this->return_exit_arr($id,'签到成功！','签到失败');
                 }

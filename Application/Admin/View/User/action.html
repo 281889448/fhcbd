@@ -34,12 +34,12 @@
             <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}" /></td>
 			<td>{$vo.id} </td>
 			<td>{$vo.name}</td>
-			<td><a href="{:U('editAction?id='.$vo['id'])}">{$vo.title}</a></td>
+			<td><a href="{:U('editaction?id='.$vo['id'])}">{$vo.title}</a></td>
 			<td><span>{:get_action_type($vo['type'])}</span></td>
 			<td>{$vo.remark}</td>
             <td><a href="{:U('User/setMake?Model=action&ids='.$vo['id'].'&is_make='.abs(1-$vo['is_make']))}" class="ajax-get">{$vo.is_make|show_status_bool}</a></td>
 			<td>{$vo.status_text}</td>
-			<td><a href="{:U('User/editAction?id='.$vo['id'])}">编辑</a>
+			<td><a href="{:U('User/editaction?id='.$vo['id'])}">编辑</a>
 				<a href="{:U('User/setStatus?Model=action&ids='.$vo['id'].'&status='.abs(1-$vo['status']))}" class="ajax-get">{$vo.status|show_status_op}</a>
 				<a href="{:U('User/setStatus?Model=action&status=-1&ids='.$vo['id'])}" class="confirm ajax-get">删除</a>
                 </td>

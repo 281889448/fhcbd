@@ -602,7 +602,7 @@ class IndexController extends BaseController
                   $msg = "您的“".$proposal['title']."”提案已结案";
                   $wxapi->sendTempMsg_proposal($member['openid'],$proposal['title'],$msg);
                   self::$sms->send($member['username'],$msg);
-                  action_log('weiyuan_proposal_do','proposal',$ids,$proposal['uid']);
+                 // action_log('weiyuan_proposal_do','proposal',$ids,$proposal['uid']);
 			      
 			      break;
 
@@ -1258,7 +1258,7 @@ class IndexController extends BaseController
 			foreach($contents as &$v){
 				$v['type'] = $this->getType($v[type_id]);
 			}
-			
+
 			$this->assign('contents',$contents);
 			$this->display();
 		}

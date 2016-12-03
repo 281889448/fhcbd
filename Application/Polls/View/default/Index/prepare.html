@@ -16,12 +16,13 @@
                             </tr>
                             </thead>
                             <php>
-                                $htmlstatus_polls = 1;
 
+                                $htmlstatus_polls1 = 1;
                                 if(get_permission(get_uid(),['政协工作人员','秘书长'])){
                                     if(in_array($polls['status'],[2,3])){
                                          $htmlstatus_polls1 = 0;
                                     }
+
                                 }
 
 

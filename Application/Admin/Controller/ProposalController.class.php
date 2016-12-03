@@ -190,6 +190,7 @@ class ProposalController extends AdminController
 
             }
 
+
             $score_cwh = $y_mark_cwh ? (20 * $s_mark_cwh / $y_mark_cwh) : 0;
 
             //盘点 参加区政协办公室、委员工作委员会组织的活动  会议 20
@@ -319,10 +320,12 @@ class ProposalController extends AdminController
             //历史积分存储
             $m_hs = D('HistoryScore');
             $rs = $m_hs->where("meet_id={$meet_id} and uid={$u['uid']}")->find();
+
             $m_hs->uid = $u['uid'];
             $m_hs->create_time = time();
             $m_hs->meet_id = $meet_id;
             $m_hs->score = D('Member')->where('uid='.$u['uid'])->getField('score');
+
             if($rs){
                  $m_hs->save();
             }else{

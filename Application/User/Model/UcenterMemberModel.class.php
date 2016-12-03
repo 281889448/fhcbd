@@ -39,7 +39,7 @@ class UcenterMemberModel extends Model
      //   array('username', '4,30', -1, self::EXISTS_VALIDATE, 'length'), //用户名长度不合法
         array('username', 'checkDenyMember', -2, self::EXISTS_VALIDATE, 'callback'), //用户名禁止注册
         array('username', 'checkUsername', -20, self::EXISTS_VALIDATE, 'callback'),
-        array('username', '', -3, self::EXISTS_VALIDATE, 'unique'), //用户名被占用
+     //   array('username', '', -3, self::EXISTS_VALIDATE, 'unique'), //用户名被占用
 
         /* 验证密码 */
         array('password', '6,30', -4, self::EXISTS_VALIDATE, 'length'), //密码长度不合法

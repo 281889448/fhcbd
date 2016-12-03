@@ -12,7 +12,11 @@
                                 <th>被区级领导批示</th><th>被市级领导批示</th><th>被省级领导批示</th><th>被中央领导批示</th>
                             </tr>
 	                        <volist name="data" id="d">
+<<<<<<< HEAD
                         	<tr><td>{$d.name}</td><td>{$d['countnum']?$d['countnum']:''}</td><td>{$d.count.adopt_qzx}</td><td>{$d.count.adopt_szx}</td><td>{$d.count.adopt_shzx}</td><td>{$d.count.adopt_qgzx}</td>
+=======
+                        	<tr><td>{$d.name}</td><td>{$d.count|count}</td><td>{$d.count.adopt_qzx}</td><td>{$d.count.adopt_szx}</td><td>{$d.count.adopt_shzx}</td><td>{$d.count.adopt_qgzx}</td>
+>>>>>>> origin/master
                             <td>{$d.count.make_qzx}</td><td>{$d.count.make_szx}</td><td>{$d.count.make_shzx}</td><td>{$d.count.make_qgzx}</td>
                             </tr>
 	                        </volist>

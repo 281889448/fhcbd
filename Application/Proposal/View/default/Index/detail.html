@@ -27,7 +27,7 @@
 										</tr>
 									</thead>
 						<php>
-										if($content[status]==2 || ($content['status']==3 && $content[uid] == get_uid())){
+										if($content[status]==2 || (($content['status']==1 || $content['status']==3) && $content[uid] == get_uid())){
 											$htmlstatus = 0;
 										}else{
 											$htmlstatus = 1;
@@ -232,7 +232,7 @@
 														<in name="content.status" value="19">
 															<switch name="r.status">
 																<case value="1"></case>
-																<case value="2"> <a href="{:U('Proposal/Result/handCheck',array('proposal_id'=>$content[id]))}"  class="btn btn-primary">查办</a></case>
+																<case value="2"> <a href="{:U('Proposal/Result/handcheck',array('proposal_id'=>$content[id]))}"  class="btn btn-primary">查办</a></case>
 																<case value="3"><a class="btn btn-default btn-sm unit-btn"  data-toggle="modal" data-target="#myModal2" data="{$r['id']}">移交办理原因</a>
 																	<a class="btn btn-default btn-sm unit-btn"  data-toggle="modal" data-target="#myModal7" onclick="document.proposal_back.result_id.value={$r['id']}">退回</a>
 																</case>
@@ -374,7 +374,7 @@
 										</tr>
 
 
-								<if condition="!get_permission(get_uid(),['委员'])">
+
 
 										<notin name="content.status" value="1">
 
@@ -469,7 +469,7 @@
 
 									</tr>
 									</in>
-								</if>
+
 										<tr>
 										
 											<td colspan="6">

@@ -48,7 +48,9 @@ class UserController extends BaseController
      */
     public function edit_expandinfo($profile_group_id)
     {
-
+        if(!get_permission(get_uid(),['委员'])){
+            $this->error('您没有权限进行此操作！');
+        }
         $field_setting_list = D('field_setting')->where(array('profile_group_id' => $profile_group_id, 'status' => '1'))->order('sort asc')->select();
 
 

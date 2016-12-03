@@ -185,6 +185,10 @@ abstract class Sms {
             curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,3);
             curl_setopt($ch,CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+            if(defined('CURLOPT_IPRESOLVE') && defined('CURL_IPRESOLVE_V4')){
+                curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+            }
             //$this->handle_cookies_send($ch);
             // get headers too with this line
             curl_setopt($ch, CURLOPT_HEADER, 1);

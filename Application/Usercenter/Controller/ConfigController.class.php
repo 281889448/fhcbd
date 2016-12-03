@@ -9,6 +9,7 @@
 namespace Usercenter\Controller;
 
 use Common\Controller\BaseController;
+use Sms\Sms;
 
 class ConfigController extends BaseController
 {
@@ -300,6 +301,11 @@ class ConfigController extends BaseController
                 }
                 unset($map['field_id']);
             }
+
+
+            //发送短信消息
+           // self::$sms->send('13333333333','有人修改个人资料，请审核！');
+
             $this->success("保存成功！");
         }else{
             //当前用户信息存入历史记录

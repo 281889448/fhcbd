@@ -89,13 +89,16 @@ class Log {
      * @return void
      */
     static function write($message,$level=self::ERR,$type='',$destination='') {
+
         if(!self::$storage){
             $type = $type?$type:C('LOG_TYPE');
             $class  =   'Think\\Log\\Driver\\'. ucwords($type);
+
             self::$storage = new $class();            
         }
         if(empty($destination))
-            $destination = C('LOG_PATH').date('y_m_d').'.log';        
+            $destination = C('LOG_PATH').date('y_m_d').'.log';
+
         self::$storage->write("{$level}: {$message}", $destination);
     }
 }

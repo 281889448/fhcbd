@@ -228,28 +228,30 @@ public function save($id){
     $speak =  min(I('post.speak'));
 
 //    在调研报告按篇加分之前，对之前数据进行清除
+    $author = explode(',',I('post.author_id'));
 
-    del_action_log('weiyuan_survey_allfy','survey',$id,get_uid());
-    del_action_log('weiyuan_survey_allsm','survey',$id,get_uid());
-    del_action_log('weiyuan_survey_cwfy','survey',$id,get_uid());
-    del_action_log('weiyuan_survey_cwsm','survey',$id,get_uid());
+    foreach($author as $v){
+        del_action_log('weiyuan_survey_allfy','survey',$id,$v);
+        del_action_log('weiyuan_survey_allsm','survey',$id,$v);
+        del_action_log('weiyuan_survey_cwfy','survey',$id,$v);
+        del_action_log('weiyuan_survey_cwsm','survey',$id,$v);
 
 
-    switch($speak){
-        case 1:
-            action_log('weiyuan_survey_allfy','survey',$id,get_uid());
-            break;
-        case 2:
-            action_log('weiyuan_survey_allsm','survey',$id,get_uid());
-            break;
-        case 3:
-            action_log('weiyuan_survey_cwfy','survey',$id,get_uid());
-            break;
-        case 4:
-            action_log('weiyuan_survey_cwsm','survey',$id,get_uid());
-            break;
+        switch($speak){
+            case 1:
+                action_log('weiyuan_survey_allfy','survey',$id,$v);
+                break;
+            case 2:
+                action_log('weiyuan_survey_allsm','survey',$id,$v);
+                break;
+            case 3:
+                action_log('weiyuan_survey_cwfy','survey',$id,$v);
+                break;
+            case 4:
+                action_log('weiyuan_survey_cwsm','survey',$id,$v);
+                break;
+        }
     }
-
 
 
         if($model->where(array('id'=>$id))->save($data)){

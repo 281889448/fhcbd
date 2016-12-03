@@ -990,7 +990,9 @@ function execute_action($rules = false, $action_id = null, $user_id = null)
 		   if(is_numeric($rule['cycle'])){
 			     $map['create_time'] = array('gt', NOW_TIME - intval($rule['cycle']) * 3600);
 		    }elseif($rule['cycle'] == 'STOCKTAK_DATE'){
-		    	  $map['create_time'] == array('lt',strtotime(C('STOCKTAK_DATE')));
+		          $stocktak = explode('~',C('STOCKTAK_DATE'));
+
+		    	  $map['create_time'] == ['between',strtotime($stocktak[0]).','.strtotime($stocktak[1])];
 		    }
 
 

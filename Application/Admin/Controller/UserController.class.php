@@ -58,7 +58,10 @@ class UserController extends AdminController
      * @author 麦当苗儿 <zuojiazi@vip.qq.com>
      */
     public function index()
-    {
+    {   /*$map_um['id'] = ['in',[142]];
+        $map_um['status'] = 1;
+        $flag = $this->delete('UcenterMember',$map_um);
+print_r($flag);exit;*/
         $nickname = I('nickname');
         $map['status'] = array('egt', 0);
         if (is_numeric($nickname)) {
@@ -69,13 +72,8 @@ class UserController extends AdminController
         $list = $this->lists('Member', $map);
         $list  = array_combine(array_column($list,'uid'),$list);
         //清除这个筛选条件，字段不一至
-        unset($map['uid|nickname']);
-        $list_u = $this->lists('UcenterMember',$map);
-        $list_u  = array_combine(array_column($list_u,'id'),$list_u);
-
-
-
-
+        $map_um['id'] = ['in',array_column($list,'uid')];
+        $list_u = D('UcenterMember')->where($map_um)->getField('id,id,openid');
 
 	      foreach($list as $k=>&$v){
 	      	  $v['group'] = implode(',',get_group($v['uid']));
@@ -849,7 +847,10 @@ str;
                 $this->resume('Member', $map);
                 break;
             case 'deleteuser':
+
                 $this->delete('Member', $map);
+
+
                 break;
             default:
                 $this->error('参数非法');
@@ -1002,7 +1003,7 @@ str;
                     /* 调用注册接口注册用户 */
                     $User = new UserApi;
                     $uid = $User->register($username, $username, $password, $email);
-                    print_r($uid);
+
                     if (0 < $uid) { //注册成功
                         $user = array('uid' => $uid, 'nickname' => $username, 'status' => 1);
                         M('Member')->add($user);
@@ -1039,7 +1040,7 @@ str;
         $date = ['E','U','AB','AG','AH','AS'];
         foreach($headArr as $k=>$v){
             $data['field_data'] = $objExcel->getActiveSheet()->getCell($k.$i)->getValue();
-            if(in_array($k.$i,$date)){
+            if(in_array($k,$date)){
                 $data['field_data'] = strtotime( $data['field_data']);
             }
 

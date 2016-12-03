@@ -31,18 +31,9 @@ class IndexController extends BaseController
     public function detail($id){
         $resaut=D('Message')->where(array('id' => $id))->find();
         //查询人员名称
-        $people_str = $resaut['people'];
-        $people_str = $resaut['people'];
-        $people_arr = explode(',', $people_str);
-        $temp_arr = array();
-        foreach ($people_arr as $k => $v) {
-            $name = D('Field')->where(array('uid' => $v, 'field_id' => 38))->find();
-            $temp_arr[$k] = $name['field_data'];
-        }
-
         $this->assign('back_url',I('server.HTTP_REFERER'));
+        $temp_arr =uid_to_get_detail($resaut['people']);
         $this->assign('people', $temp_arr);
-
         $this->assign('resaut',$resaut);
         $this->display();
     }
@@ -65,7 +56,7 @@ class IndexController extends BaseController
         $this->assign('contact_group', $group);
 
         //查找人员名称
-        $temp_arr = $this->uid_to_get_detail($me['people']);
+        $temp_arr =uid_to_get_detail($me['people']);
         $this->assign('people', $temp_arr);
 
         $this->assign('me',$me);
@@ -73,21 +64,6 @@ class IndexController extends BaseController
     }
     //获取人员详细信息公共函数 $str="1,2,3,4,5,6"格式
 
-    public function uid_to_get_detail($str)
-    {
-        $people_arr = explode(',', $str);
-        $temp_arr = array();
-        foreach ($people_arr as $k => $v) {
-            $truename = D('Field')->where(array('uid' => $v, 'field_id' => 38))->find();//38姓名
-            $compay = D('Field')->where(array('uid' => $v, 'field_id' => 50))->find();//50工作单位
-            $phone = D('Field')->where(array('uid' => $v, 'field_id' => 62))->find();//62电话
-            $temp_arr[$k]['uid'] = $v;
-            $temp_arr[$k]['truename'] = $truename['field_data'];
-            $temp_arr[$k]['company'] = $compay['field_data'];
-            $temp_arr[$k]['phone'] = $phone['field_data'];
-        }
-        return $temp_arr;
-    }
 
     //删除
     public function del($id){
@@ -135,7 +111,9 @@ class IndexController extends BaseController
         $wxapi = new WeixinApi();
         $time = 0;
         foreach ($userdata as $key => $val) {
-            $res = $wxapi->sendTempMsg_Event_Meet($val['openid'], $arr,$tempid);
+            if($val['openid']) {
+                $res = $wxapi->sendTempMsg_Event_Meet($val['openid'], $arr, $tempid);
+            }
             if ($res['rt']) $time++;
         }
         echo json_encode(array('time' => $time));

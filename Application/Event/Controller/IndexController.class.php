@@ -585,7 +585,9 @@ public function back($id){
         $wxapi = new WeixinApi();
         $time = 0;
         foreach ($userdata as $key => $val) {
-            $res = $wxapi->sendTempMsg_Event_Meet($val['openid'], $arr,$tempid);
+            if($val['openid']) {
+                $res = $wxapi->sendTempMsg_Event_Meet($val['openid'], $arr, $tempid);
+            }
             self::$sms->send($val['username'],$data['explain']);
             if ($res['rt']) $time++;
         }
@@ -606,7 +608,7 @@ public function back($id){
     public function leave(){
         //审核活动或者会议类型
         $event_type=auth_apply('event',get_uid());
-
+       
         $mapp['event_type']=array('in',$event_type['type']);
         if($event_type['findmembers']){
             $mapp['uid']=get_uid();//谁建的会议会谁审核

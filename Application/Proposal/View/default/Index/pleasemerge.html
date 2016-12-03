@@ -84,7 +84,7 @@
                     <input type="checkbox" name="ids[]" id="" value="{$c.id}" onchange="chtrue($(this))"/>
                   </td>
                   <td>
-                    {$c.id}
+                    {$c['code']?$c['code']:$c['ycode']}
                   </td>
                   <td>
                     {$c.type.title}

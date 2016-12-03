@@ -603,7 +603,9 @@ class IndexController extends BaseController
         $wxapi = new WeixinApi();
         $time = 0;
         foreach ($userdata as $key => $val) {
-            $res = $wxapi->sendTempMsg_Event_Meet($val['openid'], $arr,$tempid);
+            if($val['openid']){
+                 $res = $wxapi->sendTempMsg_Event_Meet($val['openid'], $arr,$tempid);
+            }
             //发送短信消息
             self::$sms->send($val['username'],$data['explain']);
            

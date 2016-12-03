@@ -20,12 +20,12 @@
 			   {/*-------------------------usercenter end---------------------------------------*/}
 
 			   {/*-------------------------proposal start---------------------------------------*/}
-			   <if condition="get_permission(get_uid(),['集体','委员','主席','政府督查室','办理单位','提案委'])">
+			   <if condition="get_permission(get_uid(),['集体','委员','主席','政府督查室','办理单位','提案委','秘书长'])">
                 <h3 <if condition="$current == 'proposal'">class="on"</if>><em></em>提案管理</h3>
                 <ul>
 				<!--政府督查室1 委员5 集体6 提案委7-->
 
-				<if condition="get_permission(get_uid(),['集体','委员','主席'])">
+				<if condition="get_permission(get_uid(),['集体','委员','主席','秘书长'])">
 
 						 <li><a href="{:U('Proposal/Index/index',array('status'=>'1'))}">委员提案及办理</a></li>
 
@@ -258,7 +258,7 @@
 				   <h3
 				   <php>if($current=='user'){echo  "class='on'";}</php>
 				   ><em></em>委员管理</h3>
-				   </if>
+
 				   <ul>
 
 						   <li><a href="{:U('Usercenter/User/index')}">委员列表</a></li>
@@ -273,7 +273,10 @@
 
 
 			   {/*-------------------------help start---------------------------------------*/}
-			   <h3><em></em><a href="{:U('Home/Index/help')}">帮助中心</a></h3>
+			   <h3><em></em>帮助中心</h3>
+			   <ul style="display: block;">
+			   <li><a href="{:U('Home/Index/help')}">帮助中心</a></li>
+			   </ul>
 			   {/*-------------------------help start---------------------------------------*/}
 
             </div>

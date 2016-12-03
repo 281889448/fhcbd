@@ -144,42 +144,51 @@ class IndexController extends BaseController
 	    $peoples = array_unique(array_filter(explode(',',$polls['people'].','.$polls['uid'])));
 	    $adopt = max(I('post.adopt'));
 	    $make = max(I('post.make'));
+
+        $sort = ['adopt_1','make_1','adopt_2','make_2','adopt_3','make_3','adopt_4','make_4'];
+        if($adopt){
+            $adopt_sort = array_keys($sort,'adopt_'.$adopt);
+        }
+        if($make){
+            $make_sort = array_keys($sort,'make_'.$make);
+        }
+        $flag = $adopt_sort > $make_sort ? 'adopt_'.$adopt : 'make_'.$make;
 	    
 	    if($data['status']==6){
 	        $uids = $peoples ;
             foreach($uids as $uid ){
-                switch($adopt){
-                    case 1:
+                switch($flag){
+                    case 'adopt_1':
                         update_action_log('weiyuan_polls_adopt_q','polls',$id,$uid);
                         break;
-                    case 2:
+                    case 'adopt_2':
                         update_action_log('weiyuan_polls_adopt_s','polls',$id,$uid);
                         break;
-                    case 3:
+                    case 'adopt_3':
                         update_action_log('weiyuan_polls_adopt_shen','polls',$id,$uid);
                         break;
-                    case 4:
+                    case 'adopt_4':
                         update_action_log('weiyuan_polls_adopt_g','polls',$id,$uid);
                         break;
-                }
 
-                switch($make){
-                    case 1:
+                    case 'make_1':
 
                         update_action_log('weiyuan_polls_awaiting_q','polls',$id,$uid);
                         break;
-                    case 2:
+                    case 'make_2':
 
                         update_action_log('weiyuan_polls_awaiting_s','polls',$id,$uid);
                         break;
-                    case 3:
+                    case 'make_3':
 
                         update_action_log('weiyuan_polls_awaiting_shen','polls',$id,$uid);
                         break;
-                    case 4:
+                    case 'make_4':
                         update_action_log('weiyuan_polls_awaiting_z','polls',$id,$uid);
                         break;
                 }
+
+
             }
 	    }
 	    
